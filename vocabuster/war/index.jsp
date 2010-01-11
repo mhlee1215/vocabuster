@@ -11,11 +11,12 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>Hello App Engine</title>
+    <title>Buster your vocabulary!</title>
   </head>
   <body>
-    <h1>Hello App Engine!!!</h1>
+    <h1>Welcome vocabulary buster.</h1>
 	<p>Greetings, it is now <c:out value="${now}"/></p>
+	<p>한글 사용 테스트 입니다.</p>
     <table>
       <tr>
         <td colspan="2" style="font-weight:bold;">Available Servlets:</td>        

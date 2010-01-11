@@ -24,6 +24,10 @@ public class SignGuestbookServlet extends HttpServlet {
         Date date = new Date();
         Greeting greeting = new Greeting(user, content, date);
 
+        System.out.println("user : "+user);
+        System.out.println("content : "+content);
+        System.out.println("date : "+date);
+        
         PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             pm.makePersistent(greeting);
