@@ -1,4 +1,4 @@
-package org.wordbuster;
+package org.wordbuster.domain;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;

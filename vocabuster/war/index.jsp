@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@page contentType="text/html;charset=utf-8"%>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!-- The HTML 4.01 Transitional DOCTYPE declaration-->
 <!-- above set at the top of the file will set     -->
 <!-- the browser's rendering engine into           -->
@@ -13,10 +13,17 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Buster your vocabulary!</title>
   </head>
+  <%@include file="header.jsp"%>
   <body>
+  <script type="text/javascript"> 
+			$(function(){
+				// Tabs
+				$('#tabs').tabs();
+			});
+  </script>
     <h1>Welcome vocabulary buster.</h1>
-	<p>Greetings, it is now <c:out value="${now}"/></p>
 	<p>한글 사용 테스트 입니다.</p>
+	 <p>Greetings, it is now ${now}</p>
     <table>
       <tr>
         <td colspan="2" style="font-weight:bold;">Available Servlets:</td>        
@@ -25,12 +32,15 @@
         <td><a href="/testapp2">TestApp</a></td>
       </tr>
     </table>
-    <% 
-       out.println(request.getAttribute("now"));
-  %>
-  <h1>out with escapeXml=false</h1>
-<c:out value="${test}" escapeXml="true" /><br>
-<h3>out with escapeXml=false</h3>
-<c:out value="${test}" escapeXml="false" />
+
+<div id="tabs"> 
+	<ul> 
+		<li><a href="/task/homeInfo.jsp"><span>Home</span></a></li>
+		<li><a href="/task/addWords.jsp"><span>Add words</span></a></li> 
+		<li><a href="/task/startQuz.jsp"><span>Start quiz</span></a></li> 
+		<li><a href="/task/showWords.jsp"><span>Word list</span></a></li> 
+	</ul> 
+</div>
+
   </body>
 </html>

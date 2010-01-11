@@ -1,4 +1,4 @@
-package org.wordbuster;
+package org.wordbuster.servlet;
 
 import java.io.IOException;
 import java.util.Date;
@@ -9,8 +9,8 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-import org.wordbuster.Greeting;
 import org.wordbuster.PMF;
+import org.wordbuster.domain.Greeting;
 
 public class SignGuestbookServlet extends HttpServlet {
     private static final Logger log = Logger.getLogger(SignGuestbookServlet.class.getName());

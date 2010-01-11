@@ -4,38 +4,38 @@
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
-<%@ page import="org.wordbuster.Greeting" %>
+<%@ page import="org.wordbuster.domain.Greeting" %>
 <%@ page import="org.wordbuster.PMF" %>
 
 <html>
   <body>
 
 <%
-    UserService userService = UserServiceFactory.getUserService();
+	UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     if (user != null) {
 %>
-<p>Hello, <%= user.getNickname() %>! (You can
-<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
+<p>Hello, <%=user.getNickname()%>! (You can
+<a href="<%=userService.createLogoutURL(request.getRequestURI())%>">sign out</a>.)</p>
 <%
-    } else {
+	} else {
 %>
 <p>Hello!
-<a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
+<a href="<%=userService.createLoginURL(request.getRequestURI())%>">Sign in</a>
 to include your name with greetings you post.</p>
 <%
-    }
+	}
 %>
 
 <%
-    PersistenceManager pm = PMF.get().getPersistenceManager();
+	PersistenceManager pm = PMF.get().getPersistenceManager();
     String query = "select from " + Greeting.class.getName();
     List<Greeting> greetings = (List<Greeting>) pm.newQuery(query).execute();
     if (greetings.isEmpty()) {
 %>
 <p>The guestbook has no messages.</p>
 <%
-    } else {
+	} else {
         for (Greeting g : greetings) {
             if (g.getAuthor() == null) {
 %>
