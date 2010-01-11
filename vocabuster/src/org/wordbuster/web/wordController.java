@@ -37,7 +37,7 @@ public class wordController  {
 
 		
 		ModelAndView result = new ModelAndView("ajaxResult/addWordsResult");
-		result.addObject("resutStr", "hihihi");
+		result.addObject("resultStr", "hihihi");
 		return result;
 	}
 }
