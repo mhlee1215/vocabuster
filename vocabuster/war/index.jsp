@@ -18,7 +18,7 @@
   <script type="text/javascript"> 
 			$(function(){
 				// Tabs
-				$('#tabs').tabs();
+				$('#tabs').tabs({ spinner: 'Retrieving data...' });
 			});
   </script>
     <h1>Welcome vocabulary buster.</h1>
