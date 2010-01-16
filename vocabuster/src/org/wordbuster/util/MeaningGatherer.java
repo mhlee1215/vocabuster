@@ -6,8 +6,13 @@ import java.util.Vector;
 
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
-import org.wordbuster.domain.wordInfo;
+import org.wordbuster.domain.VBWordInfo;
 
+/**
+ * Designed for Google dictionary
+ * @author sutting
+ *
+ */
 public class MeaningGatherer {
 	HtmlCrowler crowler = null;
 	int maxMeaningNum = 3;
@@ -16,7 +21,7 @@ public class MeaningGatherer {
 		crowler = new HtmlCrowler();
 	}
 	
-	public List<wordInfo> getMeaning(String word) throws IOException{
+	public List<VBWordInfo> getMeaning(String word) throws IOException{
 		String url = "http://www.google.co.kr/dictionary?langpair=en|ko&q="+word+"&hl=ko&aq=f";
 		System.out.println("call Url : "+url);
 		String resultHtml = crowler.getHtml(url);
@@ -29,16 +34,23 @@ public class MeaningGatherer {
 			return null;
 		}
 		TagNode[] divNodes = ulNodes[0].getElementsByName("div", true);
-		Vector<wordInfo> resultVector = new Vector<wordInfo>();
+		Vector<VBWordInfo> resultVector = new Vector<VBWordInfo>();
+		
+		int insertedMeaningNum = 0;
 		
 		for(int k = 0 ; k < divNodes.length ; k++){
+			if(!(insertedMeaningNum < maxMeaningNum || maxMeaningNum == 0 ))
+				break;
+			
 			if("dct-em".equals(divNodes[k].getAttributeByName("class"))){
 				TagNode[] myNodes = divNodes[k].getElementsByAttValue("class", "dct-tt", true, true);
-				for(int i = 0 ; i < myNodes.length && (i < maxMeaningNum || maxMeaningNum == 0 ) ; i++){
+				//의미
+				for(int i = 0 ; i < myNodes.length ; i++){
+					insertedMeaningNum++;
 					String meaning = myNodes[i].getText().toString().trim();
-					//System.out.println(i+", "+myNodes[i].getText().toString().trim());
-					wordInfo wi = new wordInfo();
-					wi.setCategory("");
+					//System.out.println("max :"+maxMeaningNum+", "+i+", "+myNodes[i].getText().toString().trim());
+					VBWordInfo wi = new VBWordInfo();
+					wi.setCategory("N/A");
 					wi.setMeaning(meaning);
 					resultVector.add(wi);
 				}

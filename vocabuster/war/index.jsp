@@ -19,6 +19,7 @@
 			$(function(){
 				// Tabs
 				$('#tabs').tabs({ spinner: 'Retrieving data...' });
+				$('#tabs2').tabs({ spinner: 'Retrieving data...' });
 			});
   </script>
     <h1>Welcome vocabulary buster.</h1>
@@ -39,8 +40,7 @@
 		<li><a href="/task/addWords.jsp"><span>Add words</span></a></li> 
 		<li><a href="/task/startQuz.jsp"><span>Start quiz</span></a></li> 
 		<li><a href="/task/showWords.jsp"><span>Word list</span></a></li> 
-	</ul> 
+	</ul> 	
 </div>
-
   </body>
 </html>

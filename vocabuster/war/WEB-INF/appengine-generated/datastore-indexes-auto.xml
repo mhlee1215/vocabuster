@@ -1,4 +1,10 @@
-<!-- Indices written at Mon, 11 Jan 2010 15:49:01 UTC -->
+<!-- Indices written at Sat, 16 Jan 2010 18:36:00 UTC -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 6 times in query history -->
+    <datastore-index kind="VBWordInfo" ancestor="true" source="auto">
+        <property name="wordInfoList_INTEGER_IDX" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>

@@ -1,5 +1,5 @@
 package org.wordbuster.domain;
 
-public class CategoryMap {
+public class VBWordMap {
 
 }

@@ -1,5 +1,5 @@
 package org.wordbuster.domain;
 
-public class word {
-	
+public class VBCategoryMap {
+
 }
