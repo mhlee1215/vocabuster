@@ -27,13 +27,13 @@ public class VBWord {
 	private List<VBWordCategory> wordCategory;
 
 	@Persistent
-	private int insertedCount;
+	private Integer insertedCount = 0;
 	
-	public int getInsertedCount() {
+	public Integer getInsertedCount() {
 		return insertedCount;
 	}
 
-	public void setInsertedCount(int insertedCount) {
+	public void setInsertedCount(Integer insertedCount) {
 		this.insertedCount = insertedCount;
 	}
 

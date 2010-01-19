@@ -20,7 +20,12 @@ import org.wordbuster.PMF;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordCategory;
 import org.wordbuster.domain.VBWordInfo;
+import org.wordbuster.domain.VBWordMap;
 import org.wordbuster.util.MeaningGatherer;
+
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 
 @Controller
@@ -29,11 +34,21 @@ public class wordController  {
 	@RequestMapping("/addWords.do")
 	public ModelAndView addWords(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+        
 		req.setCharacterEncoding("utf-8");
 		String wordStr = req.getParameter("content");
 		Vector<String> wordList = new Vector<String>();
 		
 		HashMap<String, List<VBWordInfo>> meaningVector = new HashMap<String, List<VBWordInfo>>();
+		
+		
+	        
+		VBWordMap userWordMap = new VBWordMap();
+		userWordMap.setUser(user);
+		Vector<VBWord> userWordList = new Vector<VBWord>();
+		
 		
 		if(wordStr == null) wordStr = "testify";
 		
@@ -54,18 +69,25 @@ public class wordController  {
 				wordList.add(words[i]);
 				meaningVector.put(words[i], wordInfoList);
 				
+				
+				
 				VBWord word = new VBWord();
 				word.setWordName(words[i]);
 				word.setWordInfoList(wordInfoList);
 				
+				//단어 모음에 추가
 				PersistenceManager pm = PMF.get().getPersistenceManager();
 				try {
 					pm.makePersistent(word);
 				} finally {
 					pm.close();
 				}
+				
+				userWordList.add(word);
 			}
 		}
+		
+		userWordMap.setWords(userWordList);
 		
 		ModelAndView result = new ModelAndView("ajaxResult/addWordsResult");
 		result.addObject("wordList", wordList);
