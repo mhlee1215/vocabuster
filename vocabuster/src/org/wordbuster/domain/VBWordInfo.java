@@ -21,7 +21,7 @@ public class VBWordInfo {
 	private String meaning;
 	
 	@Persistent
-	private String category;
+	private VBWordCategory vBWordCategory;
 	
 	
 	public Key getKey() {
@@ -42,12 +42,10 @@ public class VBWordInfo {
 	public void setMeaning(String meaning) {
 		this.meaning = meaning;
 	}
-	public String getCategory() {
-		return category;
-	}
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	
-	
+    public VBWordCategory getvBWordCategory() {
+        return vBWordCategory;
+    }
+    public void setvBWordCategory(VBWordCategory vBWordCategory) {
+        this.vBWordCategory = vBWordCategory;
+    }
 }

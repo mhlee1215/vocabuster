@@ -50,7 +50,7 @@ public class MeaningGatherer {
 					String meaning = myNodes[i].getText().toString().trim();
 					//System.out.println("max :"+maxMeaningNum+", "+i+", "+myNodes[i].getText().toString().trim());
 					VBWordInfo wi = new VBWordInfo();
-					wi.setCategory("N/A");
+					//wi.setCategory("N/A");
 					wi.setMeaning(meaning);
 					resultVector.add(wi);
 				}

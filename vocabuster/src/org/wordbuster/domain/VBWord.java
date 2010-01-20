@@ -23,8 +23,8 @@ public class VBWord {
 	@Persistent(mappedBy = "word")
 	private List<VBWordInfo> wordInfoList;
 	
-	@NotPersistent//(mappedBy = "word")
-	private List<VBWordCategory> wordCategory;
+	@Persistent(mappedBy = "word")
+	private List<VBCategory> CategoryList;
 
 	@Persistent
 	private Integer insertedCount = 0;
@@ -61,14 +61,11 @@ public class VBWord {
 		this.wordInfoList = wordInfoList;
 	}
 
-	public List<VBWordCategory> getWordCategory() {
-		return wordCategory;
-	}
+    public List<VBCategory> getCategoryList() {
+        return CategoryList;
+    }
 
-	public void setWordCategory(List<VBWordCategory> wordCategory) {
-		this.wordCategory = wordCategory;
-	}
-	
-	
-	
+    public void setCategoryList(List<VBCategory> categoryList) {
+        CategoryList = categoryList;
+    }
 }

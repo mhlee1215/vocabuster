@@ -3,9 +3,13 @@
 add words....<br></br>
 
  <form name="wordForm" action="/addWords.do" method="post">
+   <div>
+   <select id="wordCategory" name="wordCategory">
+   		<option value="etc">기타</option>
+   </select>
+   </div>	
    <div><textarea id="wordContent" name="content" rows="3" cols="60">test</textarea></div>
    <a href="#" onclick="submitData();">add</a>
-   <div><button>Submit</button></div>
  </form>
 
 </div> 
