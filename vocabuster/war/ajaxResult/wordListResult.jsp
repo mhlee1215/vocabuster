@@ -6,14 +6,20 @@
 
 <ul>
 	<c:forEach items="${wordList}" var="word">
-	<li>${word.wordName}, ${word.insertedCount }
+	<li><h2>${word.wordName}, ${word.insertedCount }</h2>
+		사전용
 		<ul>
 		<c:forEach items="${word.wordInfoList}" var="wordInfo">
-		
 		<li>${wordInfo.meaning}</li>
-			
 		</c:forEach>
 		</ul>
+		테스트용
+		<ul>
+		<c:forEach items="${word.wordInfoList}" var="wordInfo">
+		<li>${wordInfo.shortMeaning}</li>
+		</c:forEach>
+		</ul>
+		<hr></hr>
 	</c:forEach>
 	</li>
 </ul>

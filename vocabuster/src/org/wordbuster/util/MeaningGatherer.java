@@ -48,10 +48,12 @@ public class MeaningGatherer {
 				for(int i = 0 ; i < myNodes.length ; i++){
 					insertedMeaningNum++;
 					String meaning = myNodes[i].getText().toString().trim();
+					String shortMeaning = meaning.split(",")[0];
 					//System.out.println("max :"+maxMeaningNum+", "+i+", "+myNodes[i].getText().toString().trim());
 					VBWordInfo wi = new VBWordInfo();
 					//wi.setCategory("N/A");
 					wi.setMeaning(meaning);
+					wi.setShortMeaning(shortMeaning);
 					resultVector.add(wi);
 				}
 			}

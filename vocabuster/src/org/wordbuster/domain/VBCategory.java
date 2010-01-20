@@ -16,8 +16,19 @@ public class VBCategory {
 
 	@Persistent
 	private String name;
+	
+	@Persistent
+	private VBWord word;
 
-    public Key getKey() {
+    public VBWord getWord() {
+		return word;
+	}
+
+	public void setWord(VBWord word) {
+		this.word = word;
+	}
+
+	public Key getKey() {
         return key;
     }
 
