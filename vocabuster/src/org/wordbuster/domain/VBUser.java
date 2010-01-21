@@ -9,21 +9,49 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class VBUser {
+	/**
+	 * 프라이머리 키
+	 */
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;
 	
+    /**
+     * 구글 계정 사용자
+     */
     @Persistent
 	private User user;
     
+    /**
+     * 최초 사용일
+     */
     @Persistent
     private Date firstUseDate;
     
+    /**
+     * 마지막 사용일
+     */
     @Persistent
     private Date latestUseDate;
+    
+    /**
+     * 보유한 단어
+     */
+    @Persistent
+    private Set<Key> wordMapKey;
+    
+    public VBUser(){
+    	
+    }
+    
+    public VBUser(String nickName){
+    	
+    }
     
     public VBUser(Key key, User user, Date firstUseDate, Date latestUseDate){
     	this.key = key;
@@ -31,6 +59,16 @@ public class VBUser {
     	this.firstUseDate = firstUseDate;
     	this.latestUseDate = latestUseDate;
     }
+    
+//	public List<VBWordMap> getWordMap() {
+//		return wordMap;
+//	}
+//
+//
+//	public void setWordMap(List<VBWordMap> wordMap) {
+//		this.wordMap = wordMap;
+//	}
+
 
 	public Key getKey() {
 		return key;

@@ -1,6 +1,7 @@
 package org.wordbuster.domain;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -20,15 +21,35 @@ public class VBWord {
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	public String wordName;
 	
+	@Persistent//(mappedBy = "word")
+	private Set<Key> wordMapKey;//VBWordMap wordMap;
+	
 	@Persistent(mappedBy = "word")
 	private List<VBWordInfo> wordInfoList;
 	
 	@Persistent(mappedBy = "word")
 	private List<VBCategory> CategoryList;
 
+	public Set<Key> getWordMapKey() {
+		return wordMapKey;
+	}
+
+	public void setWordMapKey(Set<Key> wordMapKey) {
+		this.wordMapKey = wordMapKey;
+	}
+
 	@Persistent
 	private Integer insertedCount = 0;
 	
+	
+//	public VBWordMap getWordMap() {
+//		return wordMap;
+//	}
+//
+//	public void setWordMap(VBWordMap wordMap) {
+//		this.wordMap = wordMap;
+//	}
+
 	public Integer getInsertedCount() {
 		return insertedCount;
 	}

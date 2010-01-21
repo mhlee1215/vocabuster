@@ -17,11 +17,29 @@ public class VBWordMap {
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;
 	
-	@Persistent
+	@Persistent//(mappedBy = "wordMap")
 	private User user;
 	
+	
+	@Persistent//(mappedBy = "wordMap")
+	private Key wordKey;
+
 	@Persistent
-	private List<VBWord> words;
+	private Integer score = 0;
+	
+	public void wrong(){
+		score-=5;
+	}
+	public void correct(){
+		score+=1;
+	}
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
 
 	public Key getKey() {
 		return key;
@@ -30,20 +48,18 @@ public class VBWordMap {
 	public void setKey(Key key) {
 		this.key = key;
 	}
-
 	public User getUser() {
 		return user;
 	}
-
 	public void setUser(User user) {
 		this.user = user;
 	}
-
-	public List<VBWord> getWords() {
-		return words;
+	public Key getWordKey() {
+		return wordKey;
+	}
+	public void setWordKey(Key wordKey) {
+		this.wordKey = wordKey;
 	}
 
-	public void setWords(List<VBWord> words) {
-		this.words = words;
-	}
+	
 }

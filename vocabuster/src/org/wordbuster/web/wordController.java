@@ -23,6 +23,8 @@ import org.wordbuster.domain.VBWordInfo;
 import org.wordbuster.domain.VBWordMap;
 import org.wordbuster.util.MeaningGatherer;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -45,8 +47,8 @@ public class wordController  {
 		
 		
 	        
-		VBWordMap userWordMap = new VBWordMap();
-		userWordMap.setUser(user);
+		
+		//userWordMap.setUser(user);
 		Vector<VBWord> userWordList = new Vector<VBWord>();
 		
 		
@@ -72,6 +74,8 @@ public class wordController  {
 				
 				
 				VBWord word = new VBWord();
+				Key wordKey = KeyFactory.createKey(VBWord.class.getSimpleName(), words[i]);
+				word.setKey(wordKey);
 				word.setWordName(words[i]);
 				word.setWordInfoList(wordInfoList);
 				
@@ -83,11 +87,22 @@ public class wordController  {
 					pm.close();
 				}
 				
+				VBWordMap userWordMap = new VBWordMap();
+				Key wordMapKey = KeyFactory.createKey(VBWordMap.class.getSimpleName(), words[i]);
+				userWordMap.setKey(wordMapKey);
+				userWordMap.setWordKey(wordKey);
+				//유저 맵에 추가
+				try {
+					pm.makePersistent(userWordMap);
+				} finally {
+					pm.close();
+				}
+				
 				userWordList.add(word);
 			}
 		}
 		
-		userWordMap.setWords(userWordList);
+		//userWordMap.setWords(userWordList);
 		
 		ModelAndView result = new ModelAndView("ajaxResult/addWordsResult");
 		result.addObject("wordList", wordList);

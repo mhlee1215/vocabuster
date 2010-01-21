@@ -6,7 +6,7 @@
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
-<%@ page import="org.wordbuster.domain.Greeting" %>
+<%@page import="org.wordbuster.domain.VBUser"%>
 <%@ page import="org.wordbuster.PMF" %>
 
 <!-- The HTML 4.01 Transitional DOCTYPE declaration-->
@@ -16,7 +16,11 @@
 <!-- with a "Standards Mode" doctype is supported, -->
 <!-- but may lead to some differences in layout.   -->
 
-<html>
+
+
+
+<%@page import="com.google.appengine.api.datastore.Key"%>
+<%@page import="com.google.appengine.api.datastore.KeyFactory"%><html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Buster your vocabulary!</title>
@@ -24,9 +28,22 @@
   <%@include file="header.jsp"%>
   <body>
     <%
+    PersistenceManager pm = PMF.get().getPersistenceManager();
 	UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
+    VBUser vBUser = null;
+    boolean isFindVBUser = false;
+    
     if (user != null) {
+    	String query = "select from " + VBUser.class.getName()+" "+
+    					"where key == userKey " +
+        				"parameters String userKey ";
+    	Key userKey = KeyFactory.createKey(VBUser.class.getSimpleName(), user.getEmail());
+    	List<VBUser> userList = (List<VBUser>) pm.newQuery(query).execute(userKey);
+    	if(userList.size() > 0) isFindVBUser = true;
+    }
+    
+    if (user != null && isFindVBUser) {
 	%>
 	<h1>Welcome vocabulary buster.</h1>
 	<p>안녕, <%=user.getNickname()%>! (로그아웃 하려면 ->
@@ -39,18 +56,6 @@
 				$('#tabs2').tabs({ spinner: 'Retrieving data...' });
 			});
 	  </script>
-	    
-		<p>한글 사용 테스트 입니다.</p>
-		 <p>Greetings, it is now ${now}</p>
-	    <table>
-	      <tr>
-	        <td colspan="2" style="font-weight:bold;">Available Servlets:</td>        
-	      </tr>
-	      <tr>
-	        <td><a href="/testapp2">TestApp</a></td>
-	      </tr>
-	    </table>
-	
 	<div id="tabs"> 
 		<ul> 
 			<li><a href="/task/homeInfo.jsp"><span>Home</span></a></li>
@@ -61,11 +66,17 @@
 	</div>
 	<%
 		} else {
+			if(user == null){
 	%>
 	<p>Hello!
 	<a href="<%=userService.createLoginURL(request.getRequestURI())%>">Sign in</a>
 	로긴 자비좀 ㄷㄷㄷㄷ</p>
 	<%
+			}else if(!isFindVBUser){
+	%>
+		<a href="/addUser.do">가입 자비좀 ㄷㄷ</a>
+	<% 
+			}
 		}
 	%>
   
