@@ -2,8 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@include file="/task/showWords.jsp"%>
-
+<%@include file="/task/showMyWords.jsp"%>
 ${ fn:length(wordList) }개 찾아쑴... 
 
 <ul>

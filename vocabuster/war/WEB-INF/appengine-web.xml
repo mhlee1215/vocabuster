@@ -7,5 +7,6 @@
 	<system-properties>
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
 	</system-properties>
-	
+	<!-- 세션에 값 저장 할 수 있도록 함. -->
+	<sessions-enabled>true</sessions-enabled>
 </appengine-web-app>

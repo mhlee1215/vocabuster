@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.wordbuster.PMF;
 import org.wordbuster.domain.VBUser;
+import org.wordbuster.service.VBUserService;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -24,26 +25,11 @@ public class userController {
 
 	@RequestMapping("/addUser.do")
 	public ModelAndView addUser(HttpServletRequest req, HttpServletResponse resp){
-		ModelAndView result = new ModelAndView("/index");
+		ModelAndView result = new ModelAndView("index");
 		
-		UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
-        Key userKey = KeyFactory.createKey(VBUser.class.getSimpleName(), user.getEmail());
-        Calendar c = Calendar.getInstance();
-        Date firstUseDate = c.getTime();
-        
-        VBUser vBUser = new VBUser();
-        vBUser.setKey(userKey);
-        vBUser.setUser(user);
-        vBUser.setFirstUseDate(firstUseDate);
-        
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        try {
-            pm.makePersistent(vBUser);
-        } finally {
-            pm.close();
-        }
-        
+		
+		VBUserService.addUser(req);
+		        
 		return result;
 	}
 }

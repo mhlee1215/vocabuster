@@ -18,3 +18,15 @@
 </ul> 	
 <br></br>
 </c:forEach>
+<br></br>
+
+다음의 단어는 이미 존재하는 단어입니다.
+<c:forEach items="${wordListAlreadyExisted}" var="word">
+	<h2>${word}</h2>
+</c:forEach>
+<br></br>
+
+다음의 단어는 오타 혹은 기타의 이유로 사전적 의미를 찾지못한 경우입니다.
+<c:forEach items="${wordListTypo}" var="word">
+	<h2>${word}</h2>
+</c:forEach>

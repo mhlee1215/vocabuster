@@ -39,7 +39,7 @@ public class VBWord {
 	}
 
 	@Persistent
-	private Integer insertedCount = 0;
+	private Integer insertedCount;
 	
 	
 //	public VBWordMap getWordMap() {
@@ -88,5 +88,10 @@ public class VBWord {
 
     public void setCategoryList(List<VBCategory> categoryList) {
         CategoryList = categoryList;
+    }
+    
+    public void increaseInsertedCount(){
+    	if(insertedCount == null) insertedCount = 1;
+    	else insertedCount++;
     }
 }

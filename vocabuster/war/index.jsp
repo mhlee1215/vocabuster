@@ -20,13 +20,15 @@
 
 
 <%@page import="com.google.appengine.api.datastore.Key"%>
-<%@page import="com.google.appengine.api.datastore.KeyFactory"%><html>
+<%@page import="com.google.appengine.api.datastore.KeyFactory"%>
+<%@page import="org.wordbuster.service.VBUserService"%><html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Buster your vocabulary!</title>
   </head>
   <%@include file="header.jsp"%>
   <body>
+    <a href="http://code.google.com/intl/ko-KR/appengine/docs/java/datastore/queriesandindexes.html">Queries and Indexes</a>
     <%
     PersistenceManager pm = PMF.get().getPersistenceManager();
 	UserService userService = UserServiceFactory.getUserService();
@@ -35,12 +37,8 @@
     boolean isFindVBUser = false;
     
     if (user != null) {
-    	String query = "select from " + VBUser.class.getName()+" "+
-    					"where key == userKey " +
-        				"parameters String userKey ";
-    	Key userKey = KeyFactory.createKey(VBUser.class.getSimpleName(), user.getEmail());
-    	List<VBUser> userList = (List<VBUser>) pm.newQuery(query).execute(userKey);
-    	if(userList.size() > 0) isFindVBUser = true;
+    	vBUser = VBUserService.getVBUser(request);
+    	if(vBUser != null) isFindVBUser = true;
     }
     
     if (user != null && isFindVBUser) {
@@ -60,8 +58,9 @@
 		<ul> 
 			<li><a href="/task/homeInfo.jsp"><span>Home</span></a></li>
 			<li><a href="/task/addWords.jsp"><span>Add words</span></a></li> 
-			<li><a href="/task/startQuz.jsp"><span>Start quiz</span></a></li> 
-			<li><a href="/task/showWords.jsp"><span>Word list</span></a></li> 
+			<li><a href="/task/startQuz.jsp"><span>Start quiz</span></a></li>
+			<li><a href="/myWordListForm.do"><span>My Word</span></a></li> 
+			<li><a href="/wordListForm.do"><span>Word list</span></a></li> 
 		</ul> 	
 	</div>
 	<%

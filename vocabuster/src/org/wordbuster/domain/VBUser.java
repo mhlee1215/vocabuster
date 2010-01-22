@@ -45,7 +45,15 @@ public class VBUser {
     @Persistent
     private Set<Key> wordMapKey;
     
-    public VBUser(){
+    public Set<Key> getWordMapKey() {
+		return wordMapKey;
+	}
+
+	public void setWordMapKey(Set<Key> wordMapKey) {
+		this.wordMapKey = wordMapKey;
+	}
+
+	public VBUser(){
     	
     }
     
