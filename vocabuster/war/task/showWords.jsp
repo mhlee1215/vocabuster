@@ -7,6 +7,15 @@
 <form:option value="name">단어명</form:option>
 <form:option value="meaning">의미</form:option>
 </form:select>
+<form:select id="wordListOrderType" path="searchOrder">
+<form:option value="wordName asc">알파벳순</form:option>
+<form:option value="wrongOrder desc">입력횟수순</form:option>
+<form:option value="wrongOrder">오답순</form:option>
+<form:option value="correctOrder">정답순</form:option>
+<form:option value="correctRateOrder">정답률순</form:option>
+<form:option value="wrongRateOrder">오답률순</form:option>
+<form:option value="admindateOrder">등록일순</form:option>
+</form:select>
 <form:input id="wordListSearchKeyword" path="searchKeyword"></form:input>
 <a href="#" onclick="searchWords();">search</a>
 </form:form>
@@ -16,7 +25,8 @@
 function searchWords(){
 	var data = { 
 		searchType : $("#wordListSearchType").val(),
-		searchKeyword : $("#wordListSearchKeyword").val() 
+		searchKeyword : $("#wordListSearchKeyword").val(),
+		searchOrder :  $("#wordListOrderType").val()
 	};
 	$('#wordListPanel').load('/wordList.do', data); 
 } 

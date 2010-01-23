@@ -49,6 +49,9 @@ public class MeaningGatherer {
 					insertedMeaningNum++;
 					String meaning = myNodes[i].getText().toString().trim();
 					String shortMeaning = meaning.split(",")[0];
+					shortMeaning = shortMeaning.replaceAll("【.*】", "");
+					shortMeaning = shortMeaning.replaceAll("〈.*〉", "");
+					shortMeaning = shortMeaning.replaceAll("《.*》", "");
 					//System.out.println("max :"+maxMeaningNum+", "+i+", "+myNodes[i].getText().toString().trim());
 					VBWordInfo wi = new VBWordInfo();
 					//wi.setCategory("N/A");
@@ -63,7 +66,11 @@ public class MeaningGatherer {
 	
 	public static void main(String[] argv) throws IOException{
 		MeaningGatherer mg = new MeaningGatherer();
-		mg.getMeaning("testify");
+		List<VBWordInfo> result = mg.getMeaning("testify");
+		for(int i = 0 ; i < result.size() ; i++)
+		{
+			System.out.println(result.get(i).getShortMeaning());
+		}
 		
 		
 	}
