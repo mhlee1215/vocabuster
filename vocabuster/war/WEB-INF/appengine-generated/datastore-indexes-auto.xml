@@ -1,8 +1,8 @@
-<!-- Indices written at Sat, 23 Jan 2010 18:21:11 UTC -->
+<!-- Indices written at Sun, 24 Jan 2010 15:17:46 UTC -->
 
 <datastore-indexes>
 
-    <!-- Used 15 times in query history -->
+    <!-- Used 36 times in query history -->
     <datastore-index kind="VBWordInfo" ancestor="true" source="auto">
         <property name="wordInfoList_INTEGER_IDX" direction="asc"/>
     </datastore-index>

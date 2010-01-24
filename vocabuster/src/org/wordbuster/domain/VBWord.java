@@ -3,6 +3,7 @@ package org.wordbuster.domain;
 import java.util.List;
 import java.util.Set;
 
+import com.google.appengine.api.datastore.Text;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -28,6 +29,23 @@ public class VBWord {
 	
 	@Persistent(mappedBy = "word")
 	private List<VBCategory> CategoryList;
+	
+	@Persistent
+	private String imageUrl;
+	
+	@Persistent
+	private Text soundHtml;
+	
+	@Persistent
+	private Integer insertedCount;
+
+	public Text getSoundHtml() {
+		return soundHtml;
+	}
+
+	public void setSoundHtml(Text soundHtml) {
+		this.soundHtml = soundHtml;
+	}
 
 	public Set<Key> getWordMapKey() {
 		return wordMapKey;
@@ -37,17 +55,13 @@ public class VBWord {
 		this.wordMapKey = wordMapKey;
 	}
 
-	@Persistent
-	private Integer insertedCount;
-	
-	
-//	public VBWordMap getWordMap() {
-//		return wordMap;
-//	}
-//
-//	public void setWordMap(VBWordMap wordMap) {
-//		this.wordMap = wordMap;
-//	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 
 	public Integer getInsertedCount() {
 		return insertedCount;
@@ -93,4 +107,12 @@ public class VBWord {
     	if(insertedCount == null) insertedCount = 1;
     	else insertedCount++;
     }
+
+	@Override
+	public String toString() {
+		return "VBWord [insertedCount=" + insertedCount + ", wordName="
+				+ wordName + "]";
+	}
+    
+    
 }

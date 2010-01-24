@@ -1,28 +1,27 @@
-sart Quz...
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div id="wordQuizPanel">
+시작해볼까? ㄷㄷㄷ<br></br>
 
-<a href="#">start</a>
+보기 수: 
+<select id="selectionCount">
+	<option value="2">2개</option>
+	<option value="3">3개</option>
+	<option selected="selected" value="4">4개</option>
+	<option value="5">5개</option>
+	<option value="6">6개</option>
+	<option value="7">7개</option>
+	<option value="8">8개</option>
+</select>
+<a href="#" onclick="startQuiz();">start</a>
 
- <script type="text/javascript"> 
-			$(function(){
-				// Tabs
-				$('#progressbar').progressbar({
-					value: 0 
-				});
-			});
-  </script>
-<h2 class="demoHeaders">Progressbar</h2>	
-<div id="progressbar"></div>
-
-<script type="text/javascript">
-var maxTic = 10;
-var curTic = 0;
-function progress(){
-	
-	curTic++;
-	$('#progressbar').progressbar('option', 'value', curTic*100/maxTic);
-	if(curTic == maxTic)
-		clearInterval(timeoutID);
-		
-}
-var timeoutID = setInterval(progress, eval(50));
+</div>
+<script language="text/javascript" >
+function startQuiz(){
+	var data = { 
+		selectionCount: $("#selectionCount").val(),
+		questionCount: 0
+	};
+	$('#wordQuizPanel').load('/getWordQuestion.do', data); 
+} 
 </script>

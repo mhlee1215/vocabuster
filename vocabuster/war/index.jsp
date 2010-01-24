@@ -60,7 +60,8 @@
 			<li><a href="/task/addWords.jsp"><span>Add words</span></a></li> 
 			<li><a href="/task/startQuz.jsp"><span>Start quiz</span></a></li>
 			<li><a href="/myWordListForm.do"><span>My Word</span></a></li> 
-			<li><a href="/wordListForm.do"><span>Word list</span></a></li> 
+			<li><a href="/wordListForm.do"><span>Word list</span></a></li>
+			<li><a href="/adminForm.do"><span>Admin</span></a></li> 
 		</ul> 	
 	</div>
 	<%

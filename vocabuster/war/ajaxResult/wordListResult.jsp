@@ -8,7 +8,7 @@ ${ fn:length(wordList) }개 찾아쑴...
 
 <ul>
 	<c:forEach items="${wordList}" var="word">
-	<li><h2>${word.wordName}, ${word.insertedCount }</h2>
+	<li><h2>${word.wordName}<span>${word.soundHtml.value }</span>, ${word.insertedCount }</h2>
 		사전용
 		<ul>
 		<c:forEach items="${word.wordInfoList}" var="wordInfo">

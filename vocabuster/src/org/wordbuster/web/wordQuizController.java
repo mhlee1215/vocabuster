@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 
@@ -32,6 +33,7 @@ import org.wordbuster.domain.VBWordMap;
 import org.wordbuster.domain.VBWordQuizVO;
 import org.wordbuster.domain.VBWordSearchVO;
 import org.wordbuster.service.VBUserService;
+import org.wordbuster.service.VBWordService;
 import org.wordbuster.util.MeaningGatherer;
 
 import com.google.appengine.api.datastore.Key;
@@ -49,9 +51,10 @@ public class wordQuizController extends MultiActionController {
 	public ModelAndView getWordQuestion(HttpServletRequest req, HttpServletResponse resp) throws Exception{
 		VBWordQuizVO vBWordQuizVO = new VBWordQuizVO();
 		bind(req, vBWordQuizVO);
+		System.out.println("VO: "+vBWordQuizVO);
 		VBUser vbuser = VBUserService.getVBUser(req);
 		Set<Key> wordMapKey = vbuser.getWordMapKey();
-		List<VBWord> wordList = null;
+		//List<VBWord> wordList = null;
 		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		
@@ -66,51 +69,52 @@ public class wordQuizController extends MultiActionController {
 		List<VBWordMap> wordMapList = null;
 		try {
 			wordMapList = (List<VBWordMap>)query.execute(wordMapKey);
-			
-			//pm.get
-			//pm.makePersistent(word);
-		} finally {
-			//pm.close();
-			query.closeAll();
-		}
-		
-		Set<Key> wordKey = new LinkedHashSet<Key>();
-		System.out.println("myWodList: "+wordKey.size());
-		for(int i = 0 ; i < wordMapList.size() ; i++)
-		{
-			VBWordMap wordMap = wordMapList.get(i);
-			wordKey.add(wordMap.getWordKey());
-		}
-		
-		Query searchWordQuery = pm.newQuery(VBWord.class);
-		searchWordQuery.setFilter("key == searchWordKey");
-		searchWordQuery.declareParameters("String searchWordKey");
-		searchWordQuery.setRange(0, 1);
-		
-		try {
-			wordList = (List<VBWord>)searchWordQuery.execute(wordKey);
-			
 		} finally {
 			query.closeAll();
 		}
-		
+
+		Integer selectionSize = vBWordQuizVO.getSelectionCount();
 		VBWord targetWord = null;
 		int answerNumber = 0;
-		for(int i = 0 ; i < wordList.size(); i++){
-			targetWord = wordList.get(i);
+		Random nRandom = new Random();
+		answerNumber = nRandom.nextInt(selectionSize);
+		boolean isFindTarget = false;
+		while(!isFindTarget){
+			for(int i = 0 ; i < wordMapList.size(); i++){
+				wordMapList.get(i).init();
+				System.out.println(wordMapList.get(i));
+				if(wordMapList.get(i).isPossibleToSelect()){
+					targetWord = VBWordService.getVBWord(wordMapList.get(i).getWordKey());
+					wordMapList.get(i).setDelay();
+					
+					//단어 맵 동기화
+					PersistenceManager wordMapPm = JDOHelper.getPersistenceManager(wordMapList.get(i));
+					if(wordMapPm == null)
+						wordMapPm = PMF.get().getPersistenceManager();
+					try {
+						wordMapPm.makePersistent(wordMapList.get(i));
+					} finally {
+						wordMapPm.close();
+					}
+					isFindTarget = true;
+					break;
+				}else{
+					wordMapList.get(i).decreaseDelay();
+				}
+			}
 		}
+		System.out.println("targetWord: "+targetWord);
 		
-		List<VBWord> selections = new LinkedList<VBWord>();
-		selections.add(targetWord);
+		//Integer maxCount = VBWordService.getVBWordCount();
 		
-		
-		for(int i = 0 ; i < wordList.size() ; i++)
-			System.out.println("i: "+i+", "+wordList.get(i).getWordName());
+		List<String> selectionList = VBWordService.makeSelection(targetWord, selectionSize, answerNumber);
+		for(int i = 0 ; i < selectionList.size() ;i++)
+			System.out.println(selectionList.get(i));
 		
 		ModelAndView result = new ModelAndView("ajaxResult/wordQuiz");
 		result.addObject("targetWord", targetWord);
 		result.addObject("answerNumber", answerNumber);
-		result.addObject("selections", selections);
+		result.addObject("selectionList", selectionList);
 		result.addObject("vBWordQuizVO", vBWordQuizVO);
 		
 		return result;

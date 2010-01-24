@@ -218,5 +218,15 @@ public class VBWordMap {
 	public void setInsertCount(Integer insertCount) {
 		this.insertCount = insertCount;
 	}
+
+	@Override
+	public String toString() {
+		return "VBWordMap [answerCount=" + answerCount + ", answerRate="
+				+ answerRate + ", delayCount=" + delayCount + ", insertCount="
+				+ insertCount + ", score=" + score + ", totalCount="
+				+ totalCount + ", wordName=" + wordName + ", wrongCount="
+				+ wrongCount + ", wrongRate=" + wrongRate + "]";
+	}
+	
 	
 }
