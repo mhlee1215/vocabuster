@@ -70,7 +70,7 @@ public class VBWordService {
 			wordList = (List<VBWord>)wordQuery.execute(targetWord.getKey());
 			System.out.println("list size : "+wordList.size());
 			result = wordList.get(index);
-			
+			System.out.println("selected choice: "+result.getWordName());
 			resultMeaning = getRandomMeaning(result);
 		} finally{
 			

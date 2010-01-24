@@ -29,7 +29,7 @@ function submitData(){
 	var data = { content : $("#wordContent").val() };
 	var htmlContent = ''
 	words = $("#wordContent").val().split('\n');
-
+	words = truncateArray(words);
 	maxProgress = words.length;
 	curProgress = 0;
 
@@ -48,13 +48,14 @@ function submitData(){
 		htmlContent+='<td id="detail_'+i+'" width="50" align="center">';
 		htmlContent+='..';
 		htmlContent+='</td>';
-		htmlContent+='<td id="wordResult_'+i+'" width="50" align="center">';
+		htmlContent+='<td id="wordResult_'+i+'" width="100" align="center">';
 		htmlContent+='..';
 		htmlContent+='</td>';
-		htmlContent+='<td id="wordMapResult_'+i+'" width="50" align="center">';
+		htmlContent+='<td id="wordMapResult_'+i+'" width="100" align="center">';
 		htmlContent+='..';
 		htmlContent+='</td>';
 		htmlContent+='</tr>';
+		
 	}
 	htmlContent+='</table>';
 
@@ -81,16 +82,15 @@ function addWord(index, word){
 			var Result = msg;
 			var resultPart = Result.split('_/');
 			var isSuccess;
-			if(resultPart[0] == '1')
+			if(eval(resultPart[0]) == 1)
 				isSuccess = true;
 			else
 				isSuccess = false;
-
 			
-			addFinishMark(index, true, resultPart[1], resultPart[2]);
+			addFinishMark(index, isSuccess, resultPart[1], resultPart[2]);
 			progress();
 
-			if(words.length >= index+1 && isProcessing)
+			if(words.length > index+1 && isProcessing)
 				addWord(index+1, words[index+1]);
 		}
 	});
@@ -120,5 +120,17 @@ function progress(){
 
 function addMore(){
 	$('#addWordPanel').show('slow'); 
+}
+
+function truncateArray(array){
+	var truncatedArray = new Array();
+	var insertCount = 0;
+	for(var i = 0 ; i < array.length ; i++){
+		if(trim(array[i]) != ''){
+			truncatedArray[insertCount] = array[i];
+			insertCount++;
+		}
+	}
+	return truncatedArray;
 }
 </script>

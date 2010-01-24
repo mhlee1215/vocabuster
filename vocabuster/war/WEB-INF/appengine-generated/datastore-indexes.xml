@@ -6,8 +6,19 @@
     <datastore-index kind="VBWordMap" ancestor="false" source="auto">
         <property name="key" direction="asc"/>
         <property name="wordName" direction="asc"/>
+        <property name="insertCount" direction="desc"/>
     </datastore-index>
-
+    
+     <datastore-index kind="VBWordMap" ancestor="true" source="manual">
+        <property name="wordMapList_INTEGER_IDX" direction="asc"/>
+    </datastore-index>
+    
+    
+    <datastore-index kind="VBWord" ancestor="false" source="auto">
+        <property name="wordName" direction="asc"/>
+        <property name="insertedCount" direction="desc"/>
+    </datastore-index>
+    
     <!-- Used 23 times in query history -->
     <datastore-index kind="VBWordInfo" ancestor="true" source="auto">
         <property name="wordInfoList_INTEGER_IDX" direction="asc"/>

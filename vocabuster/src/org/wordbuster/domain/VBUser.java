@@ -17,6 +17,11 @@ import java.util.Set;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class VBUser implements Serializable{
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5901428787783894579L;
+
+	/**
 	 * 프라이머리 키
 	 */
 	@PrimaryKey
@@ -47,7 +52,19 @@ public class VBUser implements Serializable{
     @Persistent
     private Set<Key> wordMapKey;
     
-    public Set<Key> getWordMapKey() {
+    @Persistent
+    private List<VBWordMap> wordMapList;
+
+    
+    public List<VBWordMap> getWordMapList() {
+		return wordMapList;
+	}
+
+	public void setWordMapList(List<VBWordMap> wordMapList) {
+		this.wordMapList = wordMapList;
+	}
+
+	public Set<Key> getWordMapKey() {
 		return wordMapKey;
 	}
 

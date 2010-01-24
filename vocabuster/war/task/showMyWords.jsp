@@ -16,7 +16,6 @@
 <form:option value="wrongRateOrder">오답률순</form:option>
 <form:option value="admindateOrder">등록일순</form:option>
 </form:select>
-<form:input id="myWordListSearchKeyword" path="searchKeyword"></form:input>
 <a href="#" onclick="searchWords();">search</a>
 </form:form>
 </div> 
@@ -25,7 +24,6 @@
 function searchWords(){
 	var data = {
 		searchType : $("#myWordListSearchType").val(),
-		searchKeyword : $("#myWordListSearchKeyword").val(),
 		searchOrder : $("#myWordListOrderType").val() 
 	};
 	$('#myWordListPanel').load('/myWordList.do', data); 

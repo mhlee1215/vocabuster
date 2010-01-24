@@ -48,7 +48,7 @@ $(function(){
 	.focus(function(){$(this).blur();});
 	
 	// Tabs
-	$('#progressbar').progressbar({
+	$('#quizProgressbar').progressbar({
 		value: 0 
 	});
 });
@@ -63,7 +63,7 @@ function startQuiz(){
 } 
 </script>
 <h2 class="demoHeaders">Progressbar</h2>	
-<div id="progressbar"></div>
+<div id="quizProgressbar" style="height:5px;"></div>
 
 <script type="text/javascript">
 var maxTic = 10;
@@ -71,7 +71,7 @@ var curTic = 0;
 function progress(){
 	
 	curTic++;
-	$('#progressbar').progressbar('option', 'value', curTic*100/maxTic);
+	$('#quizProgressbar').progressbar('option', 'value', curTic*100/maxTic);
 	if(curTic == maxTic)
 		clearInterval(timeoutID);
 		

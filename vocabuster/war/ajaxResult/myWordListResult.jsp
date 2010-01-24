@@ -3,7 +3,7 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="/task/showMyWords.jsp"%>
-${ fn:length(wordList) }개 찾아쑴... 
+${ fn:length(wordMapList) }개 찾아쑴... 
 
 <ul>
 	<c:forEach items="${wordMapList}" var="wordMap">

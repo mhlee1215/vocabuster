@@ -56,22 +56,22 @@ public class wordQuizController extends MultiActionController {
 		Set<Key> wordMapKey = vbuser.getWordMapKey();
 		//List<VBWord> wordList = null;
 		
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		//PersistenceManager pm = PMF.get().getPersistenceManager();
 		
-		Query query = pm.newQuery(VBWordMap.class);
-		//query.setOrdering("insertedCount desc");
-		
-		
-		query.setFilter("key == wordMapKey");
-		query.declareParameters("String wordMapKey");
+//		Query query = pm.newQuery(VBWordMap.class);
+//		//query.setOrdering("insertedCount desc");
+//		
+//		
+//		query.setFilter("key == wordMapKey");
+//		query.declareParameters("String wordMapKey");
 		
 	    
-		List<VBWordMap> wordMapList = null;
-		try {
-			wordMapList = (List<VBWordMap>)query.execute(wordMapKey);
-		} finally {
-			query.closeAll();
-		}
+		List<VBWordMap> wordMapList = vbuser.getWordMapList();
+//		try {
+//			wordMapList = (List<VBWordMap>)query.execute(wordMapKey);
+//		} finally {
+//			query.closeAll();
+//		}
 
 		Integer selectionSize = vBWordQuizVO.getSelectionCount();
 		VBWord targetWord = null;
@@ -103,6 +103,17 @@ public class wordQuizController extends MultiActionController {
 				}
 			}
 		}
+		
+		PersistenceManager wordMapPm = JDOHelper.getPersistenceManager(wordMapList);
+		if(wordMapPm == null)
+			wordMapPm = PMF.get().getPersistenceManager();
+		try {
+			//유저 맵에 추가
+			wordMapPm.makePersistentAll(wordMapList);
+		} finally {
+			wordMapPm.close();
+		}
+		
 		System.out.println("targetWord: "+targetWord);
 		
 		//Integer maxCount = VBWordService.getVBWordCount();

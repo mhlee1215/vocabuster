@@ -119,6 +119,9 @@ public class MeaningGatherer {
 				TagNode secondNode = cleaner.clean(secondResultHtml);
 				wordInfoList = getMeaning(secondNode);
 				soundTag = getSoundTag(secondNode);
+			}else{
+				//뜻을 못찾은 경우
+				return null;
 			}
 		}
 		
@@ -138,6 +141,8 @@ public class MeaningGatherer {
 		if(myNodes.length > 0)
 		{
 			TagNode[] subNodes = myNodes[0].getElementsByAttValue("class", "p", true, true);
+			if(subNodes.length == 0)
+				return result;
 			result = subNodes[0].getAttributeByName("href");
 			String[] resultPart = result.split("&");
 			resultPart = resultPart[0].split("q=");
