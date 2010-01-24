@@ -14,7 +14,8 @@
 	<option value="8">8개</option>
 </select>
 <a href="#" onclick="startQuiz();">start</a>
-
+</div>
+<div id="wordQuizAnswerPanel">
 </div>
 <script language="text/javascript" >
 function startQuiz(){
