@@ -47,6 +47,19 @@ public class MeaningGatherer {
 		return result;
 	}
 	
+	public String getSoundSymbol(TagNode node) throws IOException{
+		String result = "";
+		TagNode[] myNodes = node.getElementsByAttValue("class", "dct-tp", true, true);
+		for(int i = 0 ; i < myNodes.length ; i++)
+		{
+			//System.out.println(myNodes[i].getText());
+			//if(!myNodes[i].getText().equals(""))
+			if(i == 1)
+				result = myNodes[i].getText().toString();
+		}
+		return result;
+	}
+	
 	public Text getSoundTag(TagNode node) throws IOException{
 		HtmlCleaner cleaner = new HtmlCleaner();
 		CleanerProperties props = cleaner.getProperties(); // cleaner의 속성을 정의하기 위한.. 변수
@@ -54,12 +67,9 @@ public class MeaningGatherer {
 		StringBuffer sb = new StringBuffer();
 
 		Writer writer = new StringWriter();
-		//String url = "http://images.google.co.kr/images?imgtbs=zt&gbv=2&hl=ko&tbo=1&newwindow=1&tbs=isch:1&q="+word+"&ei=AxBcS8uIM4XgtgPvypSaAg&sa=X&oi=tool&resnum=1&ct=tlink&ved=0CAoQpwU#start=0&imgtbs=tz&tbs=isch:1&imgsz=m&imgtype=clipart&tbo=1";
 		Text result = null;//new Text("");
 		
 		TagNode[] myNodes = node.getElementsByAttValue("class", "prn-btn", true, true);
-		//System.out.println("length: " + myNodes.length);
-		
 		for (int i = 0; i < myNodes.length; i++) {
 			try {
 				if(i == 0)
@@ -69,6 +79,7 @@ public class MeaningGatherer {
 			}
 		}
 		
+		//얻어낸 소리 플래쉬 태그에 절대 경로 http://www.google.co.kr 붙이기
 		String[] resultPart = writer.toString().split("\n");
 		if(resultPart.length > 1){
 			String resultStr = writer.toString().split("\n")[1];
@@ -104,6 +115,7 @@ public class MeaningGatherer {
 		
 		List<VBWordInfo> wordInfoList = getMeaning(node);
 		Text soundTag = getSoundTag(node);
+		String soundSymbol = getSoundSymbol(node);
 		
 		//단어를 못찾은 경우, 추천 단어를 한번 더 고려함
 		if(wordInfoList == null){
@@ -119,6 +131,7 @@ public class MeaningGatherer {
 				TagNode secondNode = cleaner.clean(secondResultHtml);
 				wordInfoList = getMeaning(secondNode);
 				soundTag = getSoundTag(secondNode);
+				soundSymbol = getSoundSymbol(secondNode);
 			}else{
 				//뜻을 못찾은 경우
 				return null;
@@ -129,6 +142,7 @@ public class MeaningGatherer {
 			word.setWordName(wordStr);
 			word.setWordInfoList(wordInfoList);
 			word.setSoundHtml(soundTag);
+			word.setSoundSymbol(soundSymbol);
 			word.setInsertedCount(0);
 		}
 		return word;
@@ -194,7 +208,7 @@ public class MeaningGatherer {
 		
 		//System.out.println(test.getValue());
 		MeaningGatherer mg = new MeaningGatherer();
-		VBWord result = mg.analysisWord(null, "naivee");
+		VBWord result = mg.analysisWord(null, "testify");
 		//List<VBWordInfo> wordInfoList = result.getWordInfoList();
 //		for(int i = 0 ; i < wordInfoList.size() ; i++)
 //		{

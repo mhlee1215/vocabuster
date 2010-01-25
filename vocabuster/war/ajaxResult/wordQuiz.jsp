@@ -34,6 +34,7 @@ answer : ${answerNumber }
 <hr></hr>
 <a href="#" onclick="startQuiz();">next</a>
 </body>
+
 <script type="text/javascript"> 
 $(function(){
 	$('.quiz_button')
@@ -47,33 +48,27 @@ $(function(){
 	.mouseout(function(){$(this).removeClass("ui-state-active");})
 	.focus(function(){$(this).blur();});
 	
-	// Tabs
+	//프로그래스 바 생성
 	$('#quizProgressbar').progressbar({
 		value: 0 
 	});
 });
 </script>
-<script language="text/javascript" >
-function startQuiz(){
-	var data = { 
-		selectionCount: ${vBWordQuizVO.selectionCount},
-		questionCount: ${vBWordQuizVO.questionCount+1}
-	};
-	$('#wordQuizPanel').load('/getWordQuestion.do', data); 
-} 
-</script>
+<!-- 프로그래스 바 태그 -->
 <h2 class="demoHeaders">Progressbar</h2>	
 <div id="quizProgressbar" style="height:5px;"></div>
-
 <script type="text/javascript">
+//프로그래스바 증가..
 var maxTic = 10;
 var curTic = 0;
 function progress(){
-	
 	curTic++;
 	$('#quizProgressbar').progressbar('option', 'value', curTic*100/maxTic);
-	if(curTic == maxTic)
+	if(curTic == maxTic){
 		clearInterval(timeoutID);
+		//answer....
+		answerTimeUp();
+	}
 		
 }
 var timeoutID = setInterval(progress, eval(50));

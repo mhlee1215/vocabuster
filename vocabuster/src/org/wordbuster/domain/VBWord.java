@@ -21,23 +21,101 @@ public class VBWord {
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	public String wordName;
 	
+	/**
+	 * 사용 wordmap key 리스트
+	 */
 	@Persistent//(mappedBy = "word")
 	private Set<Key> wordMapKey;//VBWordMap wordMap;
 	
+	/**
+	 * 뜻 리스트
+	 */
 	@Persistent(mappedBy = "word")
 	private List<VBWordInfo> wordInfoList;
 	
+	/**
+	 * 카테고리 리스트
+	 */
 	@Persistent(mappedBy = "word")
 	private List<VBCategory> CategoryList;
 	
+	/**
+	 * 관련 이미지
+	 */
 	@Persistent
 	private String imageUrl;
 	
+	/**
+	 * 발음 태그 HTML
+	 */
 	@Persistent
 	private Text soundHtml;
 	
+	/**
+	 * 발음기호
+	 */
+	private String soundSymbol;
+	
+	/**
+	 * 입력수
+	 */
 	@Persistent
 	private Integer insertedCount;
+	
+	/**
+	 * 문제로 사용 수
+	 */
+	@Persistent
+	private Integer solvedCount;
+
+	/**
+	 * 단어 언어
+	 */
+	@Persistent
+	private String wordLanguage;
+	/**
+	 * 뜻 언어
+	 */
+	@Persistent
+	private String meaningLanauge;
+	
+	
+	public String getSoundSymbol() {
+		return soundSymbol;
+	}
+
+	public void setSoundSymbol(String soundSymbol) {
+		this.soundSymbol = soundSymbol;
+	}
+
+	public void init(){
+		if(insertedCount == null) insertedCount = 0;
+		if(solvedCount == null) solvedCount = 0;
+	}
+	
+	public Integer getSolvedCount() {
+		return solvedCount;
+	}
+
+	public void setSolvedCount(Integer solvedCount) {
+		this.solvedCount = solvedCount;
+	}
+
+	public String getWordLanguage() {
+		return wordLanguage;
+	}
+
+	public void setWordLanguage(String wordLanguage) {
+		this.wordLanguage = wordLanguage;
+	}
+
+	public String getMeaningLanauge() {
+		return meaningLanauge;
+	}
+
+	public void setMeaningLanauge(String meaningLanauge) {
+		this.meaningLanauge = meaningLanauge;
+	}
 
 	public Text getSoundHtml() {
 		return soundHtml;
@@ -106,6 +184,11 @@ public class VBWord {
     public void increaseInsertedCount(){
     	if(insertedCount == null) insertedCount = 1;
     	else insertedCount++;
+    }
+    
+    public void increaseSolvedCount(){
+    	init();
+    	solvedCount++;
     }
 
 	@Override

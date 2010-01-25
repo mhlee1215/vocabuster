@@ -51,7 +51,6 @@ public class VBWordMap {
 	private VBWord word;
 	
 	
-	
 	/**
 	 * 맞춘 횟수
 	 */
@@ -86,6 +85,7 @@ public class VBWordMap {
 		if(score == null) score = 0;
 		if(answerCount == null) answerCount = 0;
 		if(wrongCount == null) wrongCount = 0;
+		if(insertCount == null) insertCount = 0;
 		if(totalCount == null) totalCount = 0;
 		if(delayCount == null) delayCount = 0;
 		if(answerRate == null) answerRate = 0.0f;

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<div id="wordQuizPanel">
+<div id="leftWordQuizPanel">
 시작해볼까? ㄷㄷㄷ<br></br>
 
 보기 수: 
@@ -17,12 +17,37 @@
 </div>
 <div id="wordQuizAnswerPanel">
 </div>
+<div id="rightWordQuizPanel">
+</div>
 <script language="text/javascript" >
-function startQuiz(){
+//다음 퀴즈..
+var currentQuiz = 0;
+function getQuiz(div, selectionCount, questionCount, callback){
 	var data = { 
-		selectionCount: $("#selectionCount").val(),
-		questionCount: 0
+		selectionCount: selectionCount,
+		questionCount: questionCount
 	};
-	$('#wordQuizPanel').load('/getWordQuestion.do', data); 
+	$('#'+div).load('/getWordQuestion.do', data, callback);	
+}
+
+function startQuiz(){
+	getQuiz('leftWordQuizPanel', ${vBWordQuizVO.selectionCount}, currentQuiz++, null);
+	getQuiz('rightWordQuizPanel', ${vBWordQuizVO.selectionCount}, currentQuiz++, null);
+	$('#leftWordQuizPanel').show('slow');
+	$('#wordQuizAnswerPanel').hide('slow');
+	$('#rightWordQuizPanel').show('slow');
 } 
+
+function showAnswer(){
+	$('#wordQuizPanel').hide('slow');
+	$('#wordQuizAnswerPanel').html('');
+} 
+
+function answerTimeUp(){
+	
+}
 </script>
+
+
+
+

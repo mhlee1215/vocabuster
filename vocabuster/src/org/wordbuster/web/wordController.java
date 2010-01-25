@@ -116,22 +116,31 @@ public class wordController extends MultiActionController {
 		
 		if(word != null){
 			//Now, we have to determine whether the user have already got the word which wanna to register
-			VBWordMap userWordMap = null;
 			Key wordMapKey = VBWordMap.createKey(user, wordStr);
-			if(userWordMapKey.contains(wordMapKey)){
-				
-				pm = PMF.get().getPersistenceManager();
-				Query findWordMapQuery = pm.newQuery(VBWordMap.class);
-			    query.setFilter("key == wordMapKey");
-			    query.declareParameters("String wordMapKey");
-				List<VBWordMap> foundWordMap = (List<VBWordMap>)findWordMapQuery.execute(wordMapKey);
-				if(foundWordMap.size() > 0 ){
-					userWordMap = foundWordMap.get(0);
+			pm = PMF.get().getPersistenceManager();
+			
+			Query findWordMapQuery = pm.newQuery(VBWordMap.class);
+			findWordMapQuery.setFilter("key == wordMapKey");
+			findWordMapQuery.declareParameters("String wordMapKey");
+			List<VBWordMap> foundWordMap = (List<VBWordMap>)findWordMapQuery.execute(wordMapKey);
+			VBWordMap userWordMap = null;
+			if(foundWordMap.size() > 0)
+				userWordMap = foundWordMap.get(0);
+			
+			System.out.println("wordMapKey: "+wordMapKey);
+			//if(userWordMapKey.contains(wordMapKey)){
+			if(userWordMap != null){	
+				//
+								
+				//List<VBWordMap> foundWordMap = (List<VBWordMap>)findWordMapQuery.execute(wordMapKey);
+				//if(foundWordMap.size() > 0 ){
+					//userWordMap = pm.getObjectById(VBWordMap.class, wordMapKey);
+					System.out.println(":::"+userWordMap.getWordName()+", "+userWordMap.getInsertCount());
 					userWordMap.increaseInsertCount();
-				}
-				else{
-					System.out.println("error!!!!!!!!!");
-				}
+				//}
+				//else{
+				//	System.out.println("error!!!!!!!!!");
+				//}
 				addWordMapResult = "existed";
 			}else{
 				userWordMapKey.add(wordMapKey);
@@ -146,17 +155,17 @@ public class wordController extends MultiActionController {
 				vbuser.getWordMapKey().add(wordMapKey);
 				vbuser.getWordMapList().add(userWordMap);
 				System.out.println("user's map#: "+vbuser.getWordMapList().size());
-				PersistenceManager wordMapPm = JDOHelper.getPersistenceManager(userWordMap);
-				if(wordMapPm == null)
-					wordMapPm = PMF.get().getPersistenceManager();
-				try {
-					//유저 맵에 추가
-					wordMapPm.makePersistent(userWordMap);
-				} finally {
-					wordMapPm.close();
-				}
-				
 				addWordMapResult = "new";
+			}
+			PersistenceManager wordMapPm = JDOHelper.getPersistenceManager(userWordMap);
+			if(wordMapPm == null)
+				wordMapPm = PMF.get().getPersistenceManager();
+			try {
+				//유저 맵에 추가
+				wordMapPm.makePersistent(userWordMap);
+				System.out.println("insertedCount: "+userWordMap.getInsertCount());
+			} finally {
+				wordMapPm.close();
 			}
 		}else{
 			addWordMapResult = "fail";
@@ -288,7 +297,7 @@ public class wordController extends MultiActionController {
 					userWordMap.setWordName(word.getWordName());
 					
 					System.out.println("added! vbuser: "+vbuser.getUser().getEmail());
-					vbuser.getWordMapKey().add(wordMapKey);
+					//vbuser.getWordMapKey().add(wordMapKey);
 					
 					PersistenceManager wordMapPm = PMF.get().getPersistenceManager();
 					try {
@@ -382,33 +391,35 @@ public class wordController extends MultiActionController {
 		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		
+		
+		
 		Query query = pm.newQuery(VBWordMap.class);
 		
 		query.setOrdering("wordName asc");
 		if(!vBWordSearchVO.getSearchOrder().equals(""))
 			query.setOrdering(vBWordSearchVO.getSearchOrder());
 		
-//		String filterStr = "key == wordMapKey";
-//		String parameterStr = "String wordMapKey, String searchWordName";
-//		if(!vBWordSearchVO.getSearchKeyword().equals(""))
-//			filterStr +=" && wordName == searchWordName";
+		String filterStr = "userKey == searchUserKey";
+		String parameterStr = "String searchUserKey, String searchWordName";
+		if(!vBWordSearchVO.getSearchKeyword().equals(""))
+			filterStr +=" && wordName == searchWordName";
 		
-//		query.setFilter(filterStr);
-//		query.declareParameters(parameterStr);
+		query.setFilter(filterStr);
+		query.declareParameters(parameterStr);
 //		query.setRange(0, 30);
 	    
-		List<VBWordMap> wordMapList = vbuser.getWordMapList();
-		System.out.println("wordMapList: "+wordMapList);
-//		try {
-//			HashMap<String, Object> params = new HashMap<String, Object>();
-//			System.out.println("wordMapKeySize: "+wordMapKey.size());
-//			params.put("wordMapKey", wordMapKey);
-//			params.put("searchWordName", vBWordSearchVO.getSearchKeyword());
-//			wordMapList = (List<VBWordMap>)query.executeWithMap(params);
-//			
-//		} finally {
-//			query.closeAll();
-//		}
+		List<VBWordMap> wordMapList = null;//vbuser.getWordMapList();
+		//System.out.println("wordMapList: "+wordMapList);
+		try {
+			HashMap<String, Object> params = new HashMap<String, Object>();
+			System.out.println("searchUserKey: "+vbuser.getKey());
+			params.put("searchUserKey", vbuser.getKey());
+			params.put("searchWordName", vBWordSearchVO.getSearchKeyword());
+			wordMapList = (List<VBWordMap>)query.executeWithMap(params);
+			
+		} finally {
+			query.closeAll();
+		}
 		VBWordService.syncWordMapWithWord(wordMapList);
 		
 		ModelAndView result = new ModelAndView("ajaxResult/myWordListResult");
