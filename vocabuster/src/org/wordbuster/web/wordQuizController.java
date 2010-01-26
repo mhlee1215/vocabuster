@@ -47,31 +47,34 @@ import com.google.appengine.api.users.UserServiceFactory;
 public class wordQuizController extends MultiActionController {
 	static Logger logger = Logger.getLogger(wordQuizController.class);
 	
+	
+	
 	@RequestMapping("/getWordQuestion.do")
 	public ModelAndView getWordQuestion(HttpServletRequest req, HttpServletResponse resp) throws Exception{
 		VBWordQuizVO vBWordQuizVO = new VBWordQuizVO();
+		vBWordQuizVO.initVO();
 		bind(req, vBWordQuizVO);
 		System.out.println("VO: "+vBWordQuizVO);
 		VBUser vbuser = VBUserService.getVBUser(req);
-		Set<Key> wordMapKey = vbuser.getWordMapKey();
 		//List<VBWord> wordList = null;
 		
-		//PersistenceManager pm = PMF.get().getPersistenceManager();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query query = pm.newQuery(VBWordMap.class);
+		query.setOrdering("insertCount desc");
+		String filterStr = "userKey == searchUserKey";
+		String parameterStr = "String searchUserKey";
+		query.setFilter(filterStr);
+		query.declareParameters(parameterStr);
 		
-//		Query query = pm.newQuery(VBWordMap.class);
-//		//query.setOrdering("insertedCount desc");
-//		
-//		
-//		query.setFilter("key == wordMapKey");
-//		query.declareParameters("String wordMapKey");
-		
-	    
-		List<VBWordMap> wordMapList = vbuser.getWordMapList();
-//		try {
-//			wordMapList = (List<VBWordMap>)query.execute(wordMapKey);
-//		} finally {
-//			query.closeAll();
-//		}
+		List<VBWordMap> wordMapList = null;//vbuser.getWordMapList();
+		try {
+			HashMap<String, Object> params = new HashMap<String, Object>();
+			System.out.println("searchUserKey: "+vbuser.getKey());
+			params.put("searchUserKey", vbuser.getKey());
+			wordMapList = (List<VBWordMap>)query.executeWithMap(params);
+		} finally {
+			query.closeAll();
+		}
 
 		Integer selectionSize = vBWordQuizVO.getSelectionCount();
 		VBWord targetWord = null;

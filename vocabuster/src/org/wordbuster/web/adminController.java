@@ -2,6 +2,7 @@ package org.wordbuster.web;
 
 import java.util.List;
 
+import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,10 @@ public class adminController extends MultiActionController {
 	
 	@RequestMapping("/adminForm.do")
 	public ModelAndView adminForm(HttpServletRequest req, HttpServletResponse resp) throws Exception{
+		VBWordSearchVO vBWordSearchVO = new VBWordSearchVO();
+		bind(req, vBWordSearchVO);
 		ModelAndView result = new ModelAndView("task/adminPage");
+		result.addObject("vBWordSearchVO", vBWordSearchVO);
 		return result;
 	}
 	
@@ -38,9 +42,12 @@ public class adminController extends MultiActionController {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(VBWord.class);
 		query.setOrdering("insertedCount desc");
-		
+		if(!vBWordSearchVO.getSearchKeyword().equals("")){
+			query.setFilter("wordName == searchWordName");
+			query.declareParameters("String searchWordName");
+		}
 		try {
-			wordList = (List<VBWord>)query.execute();
+			wordList = (List<VBWord>)query.execute(vBWordSearchVO.getSearchKeyword());
 		} finally {
 			query.closeAll();
 		}
@@ -57,10 +64,20 @@ public class adminController extends MultiActionController {
 				//wordInfoPm.makePersistentAll(wordInfoList);
 				//wordInfoPm.close();
 				String wordStr = wordList.get(i).getWordName();
-				mg.analysisWord(wordList.get(i), wordStr);
+				VBWord word = mg.analysisWord(wordList.get(i), wordStr);
+				System.out.println("rcrowling.."+word);
+				//PersistenceManager deletePm = JDOHelper.getPersistenceManager(vbuser);
+				if(word == null){
+					pm.deletePersistent(wordList.get(i));
+					//wordList.remove(i);
+					//i--;
+				}
+				else
+					pm.makePersistent(word);
 				//wordList.set(i, mg.analysisWord(wordStr));
+				//deletePm.close();
 			}
-			pm.makePersistentAll(wordList);
+			//pm.makePersistentAll(wordList);
 		} finally{
 			pm.close();
 		}

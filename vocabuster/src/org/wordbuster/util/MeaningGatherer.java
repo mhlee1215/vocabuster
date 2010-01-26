@@ -118,12 +118,13 @@ public class MeaningGatherer {
 		String soundSymbol = getSoundSymbol(node);
 		
 		//단어를 못찾은 경우, 추천 단어를 한번 더 고려함
-		if(wordInfoList == null){
-			
+		if(wordInfoList.size() == 0){
+			System.out.println("couldn't find meaning information.");
 			
 			String correctedWord = getCorrectedWord(node);
 			//추천 단어를 찾았다면,
 			if(!"n/a".equals(correctedWord)){
+				System.out.println("correctedWord: "+correctedWord);
 				wordStr = correctedWord;
 				url = makeGoogleUrl(correctedWord);
 				System.out.println("call second Url : "+url);

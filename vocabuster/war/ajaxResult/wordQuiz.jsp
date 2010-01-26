@@ -32,7 +32,8 @@ answer : ${answerNumber }
 </c:forEach>
 </table>
 <hr></hr>
-<a href="#" onclick="startQuiz();">next</a>
+<a href="#" onclick="nextQuiz();">next</a>
+<a href="#" onclick="showAnswer();">answer</a>
 </body>
 
 <script type="text/javascript"> 
@@ -55,11 +56,10 @@ $(function(){
 });
 </script>
 <!-- 프로그래스 바 태그 -->
-<h2 class="demoHeaders">Progressbar</h2>	
 <div id="quizProgressbar" style="height:5px;"></div>
 <script type="text/javascript">
 //프로그래스바 증가..
-var maxTic = 10;
+var maxTic = 30;
 var curTic = 0;
 function progress(){
 	curTic++;
@@ -73,4 +73,5 @@ function progress(){
 }
 var timeoutID = setInterval(progress, eval(50));
 </script>
+
 </html>

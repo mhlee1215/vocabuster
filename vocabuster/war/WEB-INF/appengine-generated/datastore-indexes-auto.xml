@@ -1,16 +1,27 @@
-<!-- Indices written at Mon, 25 Jan 2010 17:35:44 UTC -->
+<!-- Indices written at Tue, 26 Jan 2010 18:07:09 UTC -->
 
 <datastore-indexes>
 
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="VBWordMap" ancestor="false" source="auto">
-        <property name="userKey" direction="asc"/>
+    <!-- Used 3 times in query history -->
+    <datastore-index kind="VBWord" ancestor="false" source="auto">
         <property name="wordName" direction="asc"/>
+        <property name="insertedCount" direction="desc"/>
     </datastore-index>
 
-    <!-- Used 216 times in query history -->
+    <!-- Used 117 times in query history -->
+    <datastore-index kind="VBCategory" ancestor="true" source="auto">
+        <property name="CategoryList_INTEGER_IDX" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 580 times in query history -->
     <datastore-index kind="VBWordInfo" ancestor="true" source="auto">
         <property name="wordInfoList_INTEGER_IDX" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 58 times in query history -->
+    <datastore-index kind="VBWordMap" ancestor="false" source="auto">
+        <property name="userKey" direction="asc"/>
+        <property name="insertCount" direction="desc"/>
     </datastore-index>
 
 </datastore-indexes>

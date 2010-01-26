@@ -46,6 +46,11 @@ public class VBWordQuizVO {
 				+ quizWordName + ", selectionCount=" + selectionCount + "]";
 	}
 	
+	public void initVO(){
+		selectionCount = 4;
+		questionCount = 0;
+	}
+	
 	
 	
 }
