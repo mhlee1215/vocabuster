@@ -1,5 +1,6 @@
 package org.wordbuster.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -14,7 +15,13 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class VBWordMap {
+public class VBWordMap implements Serializable{
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8800596332153397994L;
 	private final int MAX_DELAY_COUNT = 5;
 	private final int ANSWER_WEIGHT = 1;
 	private final int WRONG_WEIGHT = 5;

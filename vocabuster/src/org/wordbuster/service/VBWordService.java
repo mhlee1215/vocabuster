@@ -6,8 +6,10 @@ import java.util.Vector;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.servlet.http.HttpServletRequest;
 
 import org.wordbuster.PMF;
+import org.wordbuster.domain.VBUser;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
 import org.wordbuster.domain.VBWordMap;
@@ -42,6 +44,23 @@ public class VBWordService {
 		Integer wordQueryResult = null;
 		try {
 			wordQueryResult = (Integer) wordQuery.execute();
+		} finally {
+			wordQuery.closeAll();
+		}
+		return wordQueryResult;
+	}
+	
+	public static Integer getVBUserWordCount(HttpServletRequest req){
+		VBUser vbuser = VBUserService.getVBUser(req);
+		
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query wordQuery = pm.newQuery(VBWordMap.class);
+		wordQuery.setResult("count(this)");
+		wordQuery.setFilter("userKey == searchUserKey");
+		wordQuery.declareParameters("String searchUserKey");
+		Integer wordQueryResult = null;
+		try {
+			wordQueryResult = (Integer) wordQuery.execute(vbuser.getKey());
 		} finally {
 			wordQuery.closeAll();
 		}

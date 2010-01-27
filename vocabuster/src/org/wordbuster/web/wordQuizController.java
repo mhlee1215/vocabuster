@@ -169,9 +169,19 @@ public class wordQuizController extends MultiActionController {
 				targetWordMap.wrong();
 				System.out.println(vBWordQuizVO.getQuizWordName()+" is wrong..");
 			}
+			
+			PersistenceManager wordMapPm = JDOHelper.getPersistenceManager(targetWordMap);
+			try {
+				//유저 맵에 추가
+				wordMapPm.makePersistent(targetWordMap);
+			} finally {
+				wordMapPm.close();
+			}
+			
 		}else{
 			System.out.println("Couldn't find word to check..[2]");
 		}
+		
 		
 		return null;
 	}

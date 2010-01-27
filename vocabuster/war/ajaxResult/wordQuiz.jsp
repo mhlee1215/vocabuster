@@ -5,6 +5,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<c:set var="maxQuizPanel" value="2" />
 <title>Insert title here</title>
 </head>
 <body>
@@ -22,7 +23,7 @@ answer : ${answerNumber }
 <tr height="40">	
 </c:if>
 	<td>
-	<a href="javascript:fncBlank();" id="${vBWordQuizVO.questionCount}_${selection}_btn" class="ui-state-default ui-corner-all quiz_button">
+	<a href="javascript:fncBlank();" onclick="submitAnswer${vBWordQuizVO.questionCount%maxQuizPanel}(${status.count-1 == answerNumber ? 'true' : 'false'})" id="${vBWordQuizVO.questionCount}_${selection}_btn" class="ui-state-default ui-corner-all quiz_button">
 		<span class="ui-icon ui-icon-circle-triangle-e"></span>${selection}
 	</a>
 	</td>
@@ -50,29 +51,63 @@ $(function(){
 	.focus(function(){$(this).blur();});
 	
 	//프로그래스 바 생성
-	$('#quizProgressbar').progressbar({
+	$('#quizProgressbar${vBWordQuizVO.questionCount%maxQuizPanel}').progressbar({
 		value: 0 
 	});
 });
 </script>
 <!-- 프로그래스 바 태그 -->
-<div id="quizProgressbar" style="height:5px;"></div>
+<div id="quizProgressbar${vBWordQuizVO.questionCount%maxQuizPanel}" style="height:5px;"></div>
+<div id="quizWordAnswer${vBWordQuizVO.questionCount%maxQuizPanel}" style="display:none">
+<h1 style="font-size:40;">${targetWord.wordName}${targetWord.soundSymbol}</h1>
+<ul>
+<c:forEach items="${targetWord.wordInfoList}" var="meaning" varStatus="status">
+	<li>${meaning.shortMeaning}</li>
+</c:forEach>
+</ul>
+</div>
 <script type="text/javascript">
 //프로그래스바 증가..
-var maxTic = 30;
-var curTic = 0;
-function progress(){
-	curTic++;
-	$('#quizProgressbar').progressbar('option', 'value', curTic*100/maxTic);
-	if(curTic == maxTic){
-		clearInterval(timeoutID);
+var maxTic${vBWordQuizVO.questionCount%maxQuizPanel} = 50;
+var curTic${vBWordQuizVO.questionCount%maxQuizPanel} = 0;
+function progress${vBWordQuizVO.questionCount%maxQuizPanel}(){
+	curTic${vBWordQuizVO.questionCount%maxQuizPanel}++;
+	$('#quizProgressbar${vBWordQuizVO.questionCount%maxQuizPanel}').progressbar('option', 'value', curTic${vBWordQuizVO.questionCount%maxQuizPanel}*100/maxTic${vBWordQuizVO.questionCount%maxQuizPanel});
+	if(curTic${vBWordQuizVO.questionCount%maxQuizPanel} == maxTic${vBWordQuizVO.questionCount%maxQuizPanel}){
+		clearInterval(timeoutID${vBWordQuizVO.questionCount%maxQuizPanel});
 		//answer....
-		answerTimeUp();
+		
+		//answerTimeUp();
+		//시간다되면 틀린거임
+		submitAnswer${vBWordQuizVO.questionCount%maxQuizPanel}(false);
 	}
 }
-var timeoutID;// = setInterval(progress, eval(50));
-function quizProgressStart(){
-	timeoutID = setInterval(progress, eval(50));
+var timeoutID${vBWordQuizVO.questionCount%maxQuizPanel};// = setInterval(progress, eval(50));
+function quizProgressStart${vBWordQuizVO.questionCount%maxQuizPanel}(){
+	timeoutID${vBWordQuizVO.questionCount%maxQuizPanel} = setInterval(progress${vBWordQuizVO.questionCount%maxQuizPanel}, eval(100));
+}
+
+function submitAnswer${vBWordQuizVO.questionCount%maxQuizPanel}(isCorrect){
+	clearInterval(timeoutID${vBWordQuizVO.questionCount%maxQuizPanel});
+	var data;
+	var isAnswer = false;
+	if(isCorrect){
+		data = {
+				quizWordName:'${targetWord.wordName}',
+				isCorrect:'Y'
+		};
+		isAnswer = true;
+	}
+	else{
+		data = {
+				quizWordName:'${targetWord.wordName}',
+				isCorrect:'N'
+		};
+		isAnswer = false;
+	}
+
+	$.post("/submitAnswer.do", data);
+	answerTimeUp($('#quizWordAnswer${vBWordQuizVO.questionCount%maxQuizPanel}').html(), isAnswer);
 }
 
 </script>

@@ -21,7 +21,11 @@
 
 <%@page import="com.google.appengine.api.datastore.Key"%>
 <%@page import="com.google.appengine.api.datastore.KeyFactory"%>
-<%@page import="org.wordbuster.service.VBUserService"%><html>
+<%@page import="org.wordbuster.service.VBUserService"%>
+
+<%@page import="javax.jdo.Query"%>
+<%@page import="org.wordbuster.domain.VBWord"%>
+<%@page import="org.wordbuster.service.VBWordService"%><html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Buster your vocabulary!</title>
@@ -46,7 +50,8 @@
 	<h1>Welcome vocabulary buster.</h1>
 	<p>안녕, <%=user.getNickname()%>! (로그아웃 하려면 ->
 	<a href="<%=userService.createLogoutURL(request.getRequestURI())%>">sign out</a>.)</p>
-	
+	총 단어 갯수 <%=VBWordService.getVBWordCount()%><br>
+	내 단어 갯수 <%=VBWordService.getVBUserWordCount(request)%>
 	<script type="text/javascript"> 
 			$(function(){
 				// Tabs

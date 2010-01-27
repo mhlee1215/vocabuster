@@ -7,13 +7,17 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.SimpleXmlSerializer;
 import org.htmlcleaner.TagNode;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
+import org.wordbuster.servlet.SignGuestbookServlet;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -25,6 +29,9 @@ import com.google.appengine.api.datastore.Text;
  *
  */
 public class MeaningGatherer {
+	
+	Logger logger = Logger.getLogger(MeaningGatherer.class);
+	
 	HtmlCrowler crowler = null;
 	int maxMeaningNum = 3;
 	
@@ -85,7 +92,7 @@ public class MeaningGatherer {
 			String resultStr = writer.toString().split("\n")[1];
 			resultStr = resultStr.replace("\"/dictionary", "\"http://www.google.co.kr/dictionary");
 			result = new Text(resultStr);
-			System.out.println("soundTag: "+result.toString());
+			//System.out.println("soundTag: "+result.toString());
 		}
 		return result;
 	}
@@ -186,12 +193,38 @@ public class MeaningGatherer {
 				for(int i = 0 ; i < myNodes.length ; i++){
 					insertedMeaningNum++;
 					String meaning = myNodes[i].getText().toString().trim();
-					String[] meaningPart = meaning.split(",");
-					String shortMeaning = meaningPart[0];
+					//System.out.println("::originalMeaning: "+meaning);
+					//단어시험 용도로 간소화 시킴
+					String shortMeaning = meaning;
+					//System.out.println("::BEFORE: "+shortMeaning);
+					shortMeaning = shortMeaning.replaceAll("【[^【^】]*】", "");
+					//System.out.println("::BEFORE1: "+shortMeaning);
+					shortMeaning = shortMeaning.replaceAll("〈[^〈^〉]*〉", "");
+					//System.out.println("::BEFORE2: "+shortMeaning);
+					shortMeaning = shortMeaning.replaceAll("《[^》^《]*》", "");
+					//System.out.println("::BEFORE3: "+shortMeaning);
+					shortMeaning = shortMeaning.replaceAll("\\[[^\\]^\\[]*\\]", "");
+					//System.out.println("::BEFORE4: "+shortMeaning);
+					
+					//System.out.println("::splitStr: "+shortMeaning);
+					String[] meaningPart = shortMeaning.split(",");
+					
+					shortMeaning = meaningPart[0];
+					//Countable or Uncountable 걸러냄 i.e. U,N 뜻.. 
 					if(shortMeaning.length() == 1) shortMeaning+=","+meaningPart[1];
-					shortMeaning = shortMeaning.replaceAll("【.*】", "");
-					shortMeaning = shortMeaning.replaceAll("〈.*〉", "");
-					shortMeaning = shortMeaning.replaceAll("《.*》", "");
+					
+					//괄호로 둘러쌓인 부분 미리 저장(맨 앞부분에 나온것만)
+					String parenPart = "";
+					if(shortMeaning.indexOf(")")>-1 && shortMeaning.indexOf("(")>-1)
+						parenPart = shortMeaning.substring(shortMeaning.indexOf("("), shortMeaning.indexOf(")")+1);
+					
+					//괄호 부분 제거후,
+					shortMeaning = shortMeaning.replaceAll("\\(.*\\)", "");
+					//세미콜론으로 split 후 첫번째 것만 사용
+					shortMeaning = shortMeaning.split(";")[0];
+					//미리저장한 괄호 앞부분을 붙임
+					shortMeaning = parenPart + shortMeaning;
+					
 					//System.out.println("max :"+maxMeaningNum+", "+i+", "+myNodes[i].getText().toString().trim());
 					VBWordInfo wi = new VBWordInfo();
 					//wi.setCategory("N/A");
@@ -208,8 +241,29 @@ public class MeaningGatherer {
 		//Text test = new Text("aa");
 		
 		//System.out.println(test.getValue());
-		MeaningGatherer mg = new MeaningGatherer();
-		VBWord result = mg.analysisWord(null, "testify");
+		//MeaningGatherer mg = new MeaningGatherer();
+		//VBWord result = mg.analysisWord(null, "testify");
+		
+		//Pattern p = Pattern.compile("\\(.*\\)");
+		//Matcher m = p.matcher("(abc;defg).;...kkk(ljlklk)");
+		
+		String test = "(....bbbb.c)ccbsdf";
+		System.out.println(test.indexOf(")"));
+		System.out.println(test.substring(test.indexOf("("), test.indexOf(")")+1));
+		
+		System.out.println("《a》 화장실 《lavatory의 완곡한 말》");
+		//if (m.find()) {
+		    //System.out.println(m.group(0));
+		//}
+		
+//		String input = "(abcdefg)....kkk";
+//		Matcher matcher = Pattern.compile("[^0-9]+([0-9]+)[^0-9]+").matcher(input);
+//		if (matcher.find()) {
+//		    String someNumberStr = matcher.group(1);
+//		    // if you need this to be an int:
+//		    int someNumberInt = Integer.parseInt(someNumberStr);
+//		}
+		
 		//List<VBWordInfo> wordInfoList = result.getWordInfoList();
 //		for(int i = 0 ; i < wordInfoList.size() ; i++)
 //		{

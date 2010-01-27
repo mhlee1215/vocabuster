@@ -72,8 +72,10 @@ public class adminController extends MultiActionController {
 					//wordList.remove(i);
 					//i--;
 				}
-				else
-					pm.makePersistent(word);
+				else{
+					if(word.getWordInfoList() != null && word.getWordInfoList().size() > 0)
+						pm.makePersistent(word);
+				}
 				//wordList.set(i, mg.analysisWord(wordStr));
 				//deletePm.close();
 			}
