@@ -118,7 +118,7 @@ public class MeaningGatherer {
 		String soundSymbol = getSoundSymbol(node);
 		
 		//단어를 못찾은 경우, 추천 단어를 한번 더 고려함
-		if(wordInfoList.size() == 0){
+		if(wordInfoList == null || wordInfoList.size() == 0){
 			System.out.println("couldn't find meaning information.");
 			
 			String correctedWord = getCorrectedWord(node);

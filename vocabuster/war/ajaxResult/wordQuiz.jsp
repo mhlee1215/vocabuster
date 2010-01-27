@@ -69,9 +69,12 @@ function progress(){
 		//answer....
 		answerTimeUp();
 	}
-		
 }
-var timeoutID = setInterval(progress, eval(50));
+var timeoutID;// = setInterval(progress, eval(50));
+function quizProgressStart(){
+	timeoutID = setInterval(progress, eval(50));
+}
+
 </script>
 
 </html>
