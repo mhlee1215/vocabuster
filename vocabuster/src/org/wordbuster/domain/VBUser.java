@@ -46,32 +46,6 @@ public class VBUser implements Serializable{
     @Persistent
     private Date latestUseDate;
     
-    /**
-     * 보유한 단어
-     */
-    @Persistent
-    private Set<Key> wordMapKey;
-    
-    @Persistent
-    private List<VBWordMap> wordMapList;
-
-    
-    public List<VBWordMap> getWordMapList() {
-		return wordMapList;
-	}
-
-	public void setWordMapList(List<VBWordMap> wordMapList) {
-		this.wordMapList = wordMapList;
-	}
-
-	public Set<Key> getWordMapKey() {
-		return wordMapKey;
-	}
-
-	public void setWordMapKey(Set<Key> wordMapKey) {
-		this.wordMapKey = wordMapKey;
-	}
-
 	public VBUser(){
     	
     }

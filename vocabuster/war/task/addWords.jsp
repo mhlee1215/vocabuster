@@ -54,6 +54,9 @@ function submitData(){
 		htmlContent+='<td id="wordMapResult_'+i+'" width="100" align="center">';
 		htmlContent+='..';
 		htmlContent+='</td>';
+		htmlContent+='<td id="wordSampleMeaning_'+i+'" width="100" align="center">';
+		htmlContent+='..';
+		htmlContent+='</td>';
 		htmlContent+='</tr>';
 		
 	}
@@ -87,7 +90,7 @@ function addWord(index, word){
 			else
 				isSuccess = false;
 			
-			addFinishMark(index, isSuccess, resultPart[1], resultPart[2]);
+			addFinishMark(index, isSuccess, resultPart[1], resultPart[2], resultPart[3]);
 			progress();
 
 			if(words.length > index+1 && isProcessing)
@@ -99,7 +102,7 @@ function addWordMark(index){
 	$("#status_"+index).html('<img src="/images/vb-word-loader.gif" />');
 	$("#detail_"+index).html('저장중');
 }
-function addFinishMark(index, isSuccess, addWordResult, addWordMapResult){
+function addFinishMark(index, isSuccess, addWordResult, addWordMapResult, addWordSampleMeaning){
 	if(isSuccess){
 		$("#status_"+index).html('<img src="/images/vb-word-complete.png" />');
 		$("#detail_"+index).html('성공');
@@ -109,6 +112,7 @@ function addFinishMark(index, isSuccess, addWordResult, addWordMapResult){
 	}
 	$("#wordResult_"+index).html(addWordResult);
 	$("#wordMapResult_"+index).html(addWordMapResult);
+$("#wordSampleMeaning_"+index).html(addWordSampleMeaning);
 }
 
 
@@ -127,7 +131,7 @@ function truncateArray(array){
 	var insertCount = 0;
 	for(var i = 0 ; i < array.length ; i++){
 		if(trim(array[i]) != ''){
-			truncatedArray[insertCount] = array[i];
+			truncatedArray[insertCount] = trim(array[i]);
 			insertCount++;
 		}
 	}

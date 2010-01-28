@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import org.wordbuster.PMF;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
+import org.wordbuster.domain.VBWordMap;
 import org.wordbuster.domain.VBWordSearchVO;
 import org.wordbuster.util.MeaningGatherer;
 
@@ -64,8 +65,8 @@ public class adminController extends MultiActionController {
 				//wordInfoPm.makePersistentAll(wordInfoList);
 				//wordInfoPm.close();
 				String wordStr = wordList.get(i).getWordName();
-				VBWord word = mg.analysisWord(wordList.get(i), wordStr);
-				System.out.println("rcrowling.."+word);
+				System.out.println("rcrowling: "+wordStr);
+				VBWord word = mg.analysisWord(wordStr);
 				//PersistenceManager deletePm = JDOHelper.getPersistenceManager(vbuser);
 				if(word == null){
 					pm.deletePersistent(wordList.get(i));
@@ -85,6 +86,82 @@ public class adminController extends MultiActionController {
 		}
 		
 		ModelAndView result = new ModelAndView("ajaxResult/adminRecrowlingResult");
+		return result;
+	}
+	
+	@RequestMapping("/adminWordMapValidation.do")
+	public ModelAndView adminWordMapValidation(HttpServletRequest req, HttpServletResponse resp) throws Exception{
+		System.out.println(":::::::WOrdMapValidation Start:::::");
+		VBWordSearchVO vBWordSearchVO = new VBWordSearchVO();
+		bind(req, vBWordSearchVO);
+		System.out.println("VO: "+vBWordSearchVO);
+		//String keyword = ServletRequestUtils.getStringParameter(req, "keyword", "");
+		List<VBWordMap> wordMapList = null;
+		
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query query = pm.newQuery(VBWordMap.class);
+		
+		try {
+			wordMapList = (List<VBWordMap>)query.execute();
+		} finally {
+			query.closeAll();
+		}
+		
+		
+		PersistenceManager wordPm = PMF.get().getPersistenceManager();
+		for(int i = 0 ; i < wordMapList.size() ; i++){
+			
+			boolean isInvalid = false;
+			try{
+				VBWord word = pm.getObjectById(VBWord.class, wordMapList.get(i).getWordKey());
+				if(word == null) isInvalid = true;
+			}catch(Exception e){
+				isInvalid = true;
+			}
+			
+			if(isInvalid){
+				System.out.println("Can't found "+wordMapList.get(i).getWordName()+"'s info..delete.");
+				pm.deletePersistent(wordMapList.get(i));
+			}
+		}
+		System.out.println(":::::::WOrdMapValidation END:::::");
+		ModelAndView result = new ModelAndView("ajaxResult/adminWordMapValidationResult");
+		return result;
+	}
+	
+	@RequestMapping("/adminDeleteWordMapAll.do")
+	public ModelAndView adminDeleteWordMapAll(HttpServletRequest req, HttpServletResponse resp) throws Exception{
+		List<VBWordMap> wordMapList = null;
+		
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query query = pm.newQuery(VBWordMap.class);
+		
+		try {
+			wordMapList = (List<VBWordMap>)query.execute();
+		} finally {
+			query.closeAll();
+		}
+		pm.deletePersistentAll(wordMapList);
+		
+		ModelAndView result = new ModelAndView("ajaxResult/adminWordMapValidationResult");
+		return result;
+	}
+	
+	@RequestMapping("/adminDeleteWordAll.do")
+	public ModelAndView adminDeleteWordAll(HttpServletRequest req, HttpServletResponse resp) throws Exception{
+		
+		List<VBWord> wordList = null;
+		
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query query = pm.newQuery(VBWord.class);
+		
+		try {
+			wordList = (List<VBWord>)query.execute();
+		} finally {
+			query.closeAll();
+		}
+		pm.deletePersistentAll(wordList);
+		ModelAndView result = new ModelAndView("ajaxResult/adminWordMapValidationResult");
 		return result;
 	}
 }
