@@ -92,7 +92,7 @@ public class VBWordMap implements Serializable{
 		if(score == null) score = 0;
 		if(answerCount == null) answerCount = 0;
 		if(wrongCount == null) wrongCount = 0;
-		if(insertCount == null) insertCount = 0;
+		if(insertCount == null) insertCount = 1;
 		if(totalCount == null) totalCount = 0;
 		if(delayCount == null) delayCount = 0;
 		if(answerRate == null) answerRate = 0.0f;
@@ -101,7 +101,8 @@ public class VBWordMap implements Serializable{
 	
 	public void wrong(){
 		init();
-		score-=WRONG_WEIGHT;
+		if(score >= 0) score = -1;
+		else score--;
 		wrongCount++;
 		totalCount++;
 		wrongRate = (Float)((float)wrongCount/totalCount);

@@ -44,144 +44,128 @@ import com.google.appengine.api.users.UserServiceFactory;
 @Controller
 public class wordController extends MultiActionController {
 	
+	/**
+	 * 하나의 단어를 추가하는 부분
+	 * @param req
+	 * @param resp
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping("/addOneWord.do")
 	public ModelAndView addOneWord(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		
+		//인풋 인코딩 = UTF-8
 		req.setCharacterEncoding("utf-8");
+		//추가할 단어 가져옴
 		String wordStr = req.getParameter("word");
 		System.out.println("wordStr: "+wordStr);
+		//사용자 정보 가져옴 
 		UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser();
 		VBUser vbuser = VBUserService.getVBUser(req);
-		//Set<Key> userWordMapKey = vbuser.getWordMapKey();
-		
+
+		//단어 추가 결과 
 		String addWordResult = "";
+		//유저 단어로 추가 결과
 		String addWordMapResult = "";
+		//성공 여부
 		String isSuccess = "1";
+		//샘플 단어 뜻
 		String sampleMeaning = "";
-		
+		//의미 수집기 생성
 		MeaningGatherer mg = new MeaningGatherer();
 		
-		//Determine whether inserted word is already registered or not
-		VBWord alreadyRegisteredWord = null;
+		PersistenceManager wordPm = PMF.get().getPersistenceManager();
+		PersistenceManager wordMapPm = PMF.get().getPersistenceManager();
 		
-		//Search from total word pool
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query query = pm.newQuery(VBWord.class);
-		query.setFilter("wordName == searchWordName");
-		query.declareParameters("String searchWordName");
-	    
-		try {
-			List<VBWord> registeredWordList = null;
-			registeredWordList = (List<VBWord>)query.execute(wordStr);
-			if(registeredWordList.size() > 0){
-				alreadyRegisteredWord = registeredWordList.get(0);
+		try{
+			//Search from total word pool
+			//Determine whether inserted word is already registered or not
+			VBWord word = null;
+			try{
+				word = wordPm.getObjectById(VBWord.class, VBWord.createKey(wordStr));
+			}catch(Exception e){
+				System.out.println("Couldn't find int word pool.");
 			}
-		} finally {
-			query.closeAll();
-		}
-		
-		VBWord word = null;
-		//If the word is already registered
-		if(alreadyRegisteredWord != null){
-			//wordListAlreadyExisted.add(words[i]);
-			word = alreadyRegisteredWord;
-			word.increaseInsertedCount();
-			addWordResult = "existed";
-		}
-		//It is first time to register
-		else{
-			word = mg.analysisWord(wordStr);
-			addWordResult = "new";
-			if(word == null)
-				addWordResult = "not found";
-		}
-		if(word != null){
-			if(word.getWordInfoList() == null || word.getWordInfoList().size() == 0){
-				isSuccess = "0";
-			}else{
-				isSuccess = "1";
-				sampleMeaning = word.getWordInfoList().get(0).getShortMeaning();
+			//If the word is already registered
+			if(word != null){
+				//wordListAlreadyExisted.add(words[i]);
+				word.increaseInsertedCount();
+				addWordResult = "existed";
 			}
-			
-			PersistenceManager wordPm = JDOHelper.getPersistenceManager(word);
-			if(wordPm == null)
-				wordPm = PMF.get().getPersistenceManager();
-			try {
-				//단어 모음에 추가
-				wordPm.makePersistent(word);
-			} finally {
-				wordPm.close();
-			}
-		}
-		
-		if(word != null){
-			//Now, we have to determine whether the user have already got the word which wanna to register
-			Key wordMapKey = VBWordMap.createKey(user, wordStr);
-			pm = PMF.get().getPersistenceManager();
-			
-			Query findWordMapQuery = pm.newQuery(VBWordMap.class);
-			findWordMapQuery.setFilter("key == wordMapKey");
-			findWordMapQuery.declareParameters("String wordMapKey");
-			List<VBWordMap> foundWordMap = (List<VBWordMap>)findWordMapQuery.execute(wordMapKey);
-			VBWordMap userWordMap = null;
-			if(foundWordMap.size() > 0)
-				userWordMap = foundWordMap.get(0);
-			
-			System.out.println("wordMapKey: "+wordMapKey);
-			//if(userWordMapKey.contains(wordMapKey)){
-			if(userWordMap != null){	
-				//
-								
-				//List<VBWordMap> foundWordMap = (List<VBWordMap>)findWordMapQuery.execute(wordMapKey);
-				//if(foundWordMap.size() > 0 ){
-					//userWordMap = pm.getObjectById(VBWordMap.class, wordMapKey);
-					System.out.println(":::"+userWordMap.getWordName()+", "+userWordMap.getInsertCount());
-					userWordMap.increaseInsertCount();
-				//}
-				//else{
-				//	System.out.println("error!!!!!!!!!");
-				//}
-				addWordMapResult = "existed";
-			}else{
-				//userWordMapKey.add(wordMapKey);
-				userWordMap = new VBWordMap();
-				userWordMap.setKey(wordMapKey);
-				userWordMap.setUserKey(vbuser.getKey());
-				userWordMap.setWordKey(word.getKey());
-				userWordMap.init();
-				userWordMap.setWordName(word.getWordName());
+			//It is first time to register
+			else{
+				word = mg.analysisWord(wordStr);
 				
-				//System.out.println("added! vbuser: "+vbuser.getUser().getEmail());
-				//vbuser.getWordMapKey().add(wordMapKey);
-				//vbuser.getWordMapList().add(userWordMap);
-				//System.out.println("user's map#: "+vbuser.getWordMapList().size());
-				addWordMapResult = "new";
+				addWordResult = "new";
+				if(word == null)
+					addWordResult = "not found";
 			}
-			PersistenceManager wordMapPm = JDOHelper.getPersistenceManager(userWordMap);
-			if(wordMapPm == null)
-				wordMapPm = PMF.get().getPersistenceManager();
-			try {
-				//유저 맵에 추가
-				wordMapPm.makePersistent(userWordMap);
-				System.out.println("insertedCount: "+userWordMap.getInsertCount());
-			} finally {
-				wordMapPm.close();
+			if(word != null){
+				if(word.getWordInfoList() == null || word.getWordInfoList().size() == 0){
+					isSuccess = "0";
+				}else{
+					isSuccess = "1";
+					sampleMeaning = word.getWordInfoList().get(0).getShortMeaning();
+				}
+				
+				//PersistenceManager wordPm = JDOHelper.getPersistenceManager(word);
+				if(wordPm == null)
+					wordPm = PMF.get().getPersistenceManager();
+				try {
+					//단어 모음에 추가
+					wordPm.makePersistent(word);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-		}else{
-			addWordMapResult = "fail";
+			
+			if(word != null){
+				//Now, we have to determine whether the user have already got the word which wanna to register
+				Key wordMapKey = VBWordMap.createKey(user, word.getWordName());
+				
+				VBWordMap userWordMap = null;
+				try{
+					userWordMap = wordMapPm.getObjectById(VBWordMap.class, wordMapKey);
+				}catch(Exception e){
+					System.out.println("Couldn't find in word map pool.");
+				}
+				//유저의 단어로 이미 등록되어 있는 경우
+				if(userWordMap != null){	
+					System.out.println("word "+userWordMap.getWordName()+"is already registered "+userWordMap.getInsertCount()+" time(s).");
+					userWordMap.increaseInsertCount();
+					addWordMapResult = "existed";
+				}
+				//유저의 단어로 처음 등록되는 경우 
+				else{
+					userWordMap = new VBWordMap();
+					userWordMap.setPrimarykey(wordMapKey);
+					userWordMap.setKey(wordMapKey);
+					userWordMap.setUserKey(vbuser.getKey());
+					userWordMap.setWordKey(word.getKey());
+					userWordMap.init();
+					userWordMap.setWordName(word.getWordName());
+					addWordMapResult = "new";
+					
+					try{
+						//유저 맵에 추가
+						wordMapPm.makePersistent(userWordMap);
+						System.out.println("insertedCount: "+userWordMap.getInsertCount());
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+			}else{
+				addWordMapResult = "fail";
+				isSuccess = "0";
+			}
+		}catch(Exception e){
+			addWordMapResult = "error";
 			isSuccess = "0";
+		}finally{
+			wordPm.close();
+			wordMapPm.close();
 		}
-		
-		
-//		PersistenceManager userPm = JDOHelper.getPersistenceManager(vbuser);
-//		if(userPm == null)
-//			userPm = PMF.get().getPersistenceManager();
-//		try {
-//			//사용자 보유 단어 추가 
-//			userPm.makePersistent(vbuser);
-//		} finally {
-//			userPm.close();
-//		}
 		
 		ModelAndView result = new ModelAndView("ajaxResult/addOneWordResult");
 		result.addObject("addWordResult", addWordResult);
@@ -190,146 +174,6 @@ public class wordController extends MultiActionController {
 		result.addObject("sampleMeaning", sampleMeaning);
 		return result;
 	}
-	
-//	@RequestMapping("/addWords.do")
-//	public ModelAndView addWords(HttpServletRequest req, HttpServletResponse resp)
-//			throws IOException {
-//		UserService userService = UserServiceFactory.getUserService();
-//        User user = userService.getCurrentUser();
-//        VBUser vbuser = VBUserService.getVBUser(req);
-//        //Set<Key> userWordMapKey = vbuser.getWordMapKey();
-//		req.setCharacterEncoding("utf-8");
-//		String wordStr = req.getParameter("content");
-//		Vector<String> wordList = new Vector<String>();
-//		Vector<String> wordListAlreadyExisted = new Vector<String>();
-//		Vector<String> wordListTypo = new Vector<String>();
-//		
-//		HashMap<String, List<VBWordInfo>> meaningVector = new HashMap<String, List<VBWordInfo>>();
-//		PersistenceManager pm = PMF.get().getPersistenceManager();
-//		
-//	        
-//		
-//		//userWordMap.setUser(user);
-//		//Vector<VBWord> userWordList = new Vector<VBWord>();
-//		
-//		
-//		if(wordStr == null) wordStr = "testify";
-//		
-//		if(wordStr != null){
-//			String[] words = wordStr.split("\n");
-//			//System.out.println("user : " + user);
-//			System.out.println("wordStr : " + wordStr);
-//			for(int i = 0 ; i < words.length ; i++)
-//				System.out.println("count["+i+"] : "+words[i]);
-//			//System.out.println("date : " + date);
-//			
-//			
-//			MeaningGatherer mg = new MeaningGatherer();
-//			for(int i = 0 ; i < words.length ; i++){
-//				//Determine whether inserted word is already registered or not
-//				VBWord alreadyRegisteredWord = null;
-//				
-//				//Search from total word pool
-//				pm = PMF.get().getPersistenceManager();
-//				Query query = pm.newQuery(VBWord.class);
-//				query.setFilter("wordName == searchWordName");
-//				query.declareParameters("String searchWordName");
-//			    
-//				try {
-//					List<VBWord> registeredWordList = null;
-//					registeredWordList = (List<VBWord>)query.execute(words[i]);
-//					if(registeredWordList.size() > 0){
-//						alreadyRegisteredWord = registeredWordList.get(0);
-//					}
-//				} finally {
-//					query.closeAll();
-//				}
-//				
-//				VBWord word = null;
-//				//If the word is already registered
-//				if(alreadyRegisteredWord != null){
-//					wordListAlreadyExisted.add(words[i]);
-//					word = alreadyRegisteredWord;
-//					word.increaseInsertedCount();
-//				}
-//				//It is first time to register
-//				else{
-//					word = mg.analysisWord(words[i]);
-//					wordList.add(words[i]);
-//					meaningVector.put(words[i], word.getWordInfoList());
-//				}
-//				
-//				PersistenceManager wordPm = JDOHelper.getPersistenceManager(word);
-//				if(wordPm == null)
-//					wordPm = PMF.get().getPersistenceManager();
-//				try {
-//					//단어 모음에 추가
-//					wordPm.makePersistent(word);
-//				} finally {
-//					wordPm.close();
-//				}
-//				
-//				//Now, we have to determine whether the user have already got the word which wanna to register
-////				
-//				VBWordMap userWordMap = null;
-//				Key wordMapKey = VBWordMap.createKey(user, words[i]);
-//				if(userWordMapKey.contains(wordMapKey)){
-//					
-//					pm = PMF.get().getPersistenceManager();
-//					Query findWordMapQuery = pm.newQuery(VBWordMap.class);
-//				    query.setFilter("key == wordMapKey");
-//				    query.declareParameters("String wordMapKey");
-//					List<VBWordMap> foundWordMap = (List<VBWordMap>)findWordMapQuery.execute(wordMapKey);
-//					if(foundWordMap.size() > 0 ){
-//						userWordMap = foundWordMap.get(0);
-//						userWordMap.increaseInsertCount();
-//					}
-//					else{
-//						System.out.println("error!!!!!!!!!");
-//					}
-//				}else{
-//					userWordMapKey.add(wordMapKey);
-//					userWordMap = new VBWordMap();
-//					userWordMap.setKey(wordMapKey);
-//					userWordMap.setUserKey(vbuser.getKey());
-//					userWordMap.setWordKey(word.getKey());
-//					userWordMap.init();
-//					userWordMap.setWordName(word.getWordName());
-//					
-//					System.out.println("added! vbuser: "+vbuser.getUser().getEmail());
-//					//vbuser.getWordMapKey().add(wordMapKey);
-//					
-//					PersistenceManager wordMapPm = PMF.get().getPersistenceManager();
-//					try {
-//						//유저 맵에 추가
-//						wordMapPm.makePersistent(userWordMap);
-//					} finally {
-//						wordMapPm.close();
-//					}
-//				}
-//			}
-//			
-//			PersistenceManager userPm = JDOHelper.getPersistenceManager(vbuser);
-//			if(userPm == null)
-//				userPm = PMF.get().getPersistenceManager();
-//			try {
-//				//사용자 보유 단어 추가 
-//				userPm.makePersistent(vbuser);
-//			} finally {
-//				userPm.close();
-//			}
-//			//pm.close();
-//		}
-//		
-//		//userWordMap.setWords(userWordList);
-//		
-//		ModelAndView result = new ModelAndView("ajaxResult/addWordsResult");
-//		result.addObject("wordList", wordList);
-//		result.addObject("wordMeaning", meaningVector);
-//		result.addObject("wordListAlreadyExisted", wordListAlreadyExisted);
-//		result.addObject("wordListTypo", wordListTypo);
-//		return result;
-//	}
 	
 	@RequestMapping("/wordList.do")
 	public ModelAndView wordList(HttpServletRequest req, HttpServletResponse resp) throws Exception{
@@ -359,24 +203,6 @@ public class wordController extends MultiActionController {
 		
 		ModelAndView result = new ModelAndView("ajaxResult/wordListResult");
 		result.addObject("wordList", wordList);
-		result.addObject("vBWordSearchVO", vBWordSearchVO);
-		return result;
-	}
-	
-	@RequestMapping("/wordListForm.do")
-	public ModelAndView wordListForm(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-		VBWordSearchVO vBWordSearchVO = new VBWordSearchVO();
-		bind(req, vBWordSearchVO);
-		ModelAndView result = new ModelAndView("task/showWords");
-		result.addObject("vBWordSearchVO", vBWordSearchVO);
-		return result;
-	}
-	
-	@RequestMapping("/myWordListForm.do")
-	public ModelAndView myWordListForm(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-		VBWordSearchVO vBWordSearchVO = new VBWordSearchVO();
-		bind(req, vBWordSearchVO);
-		ModelAndView result = new ModelAndView("task/showMyWords");
 		result.addObject("vBWordSearchVO", vBWordSearchVO);
 		return result;
 	}

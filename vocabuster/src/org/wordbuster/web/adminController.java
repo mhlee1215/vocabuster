@@ -23,15 +23,6 @@ import org.wordbuster.util.MeaningGatherer;
 @Controller
 public class adminController extends MultiActionController {
 	
-	@RequestMapping("/adminForm.do")
-	public ModelAndView adminForm(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-		VBWordSearchVO vBWordSearchVO = new VBWordSearchVO();
-		bind(req, vBWordSearchVO);
-		ModelAndView result = new ModelAndView("task/adminPage");
-		result.addObject("vBWordSearchVO", vBWordSearchVO);
-		return result;
-	}
-	
 	@RequestMapping("/adminRecrowling.do")
 	public ModelAndView adminRecrowling(HttpServletRequest req, HttpServletResponse resp) throws Exception{
 		VBWordSearchVO vBWordSearchVO = new VBWordSearchVO();
@@ -59,14 +50,11 @@ public class adminController extends MultiActionController {
 			Query wordInfoQuery = pm.newQuery(VBWordInfo.class);
 			wordInfoQuery.deletePersistentAll();
 			for(int i = 0 ; i < wordList.size() ; i++){
-				//List<VBWordInfo> wordInfoList = mg.getMeaning(wordList.get(i).getWordName());
-				//wordList.get(i).setWordInfoList(wordInfoList);
-				//PersistenceManager wordInfoPm = PMF.get().getPersistenceManager();
-				//wordInfoPm.makePersistentAll(wordInfoList);
-				//wordInfoPm.close();
 				String wordStr = wordList.get(i).getWordName();
 				System.out.println("rcrowling: "+wordStr);
-				VBWord word = mg.analysisWord(wordStr);
+				
+				//Set isNew flag to false
+				VBWord word = mg.analysisWord(wordStr, false);
 				//PersistenceManager deletePm = JDOHelper.getPersistenceManager(vbuser);
 				if(word == null){
 					pm.deletePersistent(wordList.get(i));

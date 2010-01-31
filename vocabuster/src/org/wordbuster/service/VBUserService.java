@@ -32,13 +32,8 @@ public class VBUserService {
 			UserService userService = UserServiceFactory.getUserService();
 		    User user = userService.getCurrentUser();
 		    
-		    Query query = pm.newQuery(VBUser.class);
-		    query.setFilter("key == userKey");
-		    query.declareParameters("String userKey");
-		    
 			Key userKey = KeyFactory.createKey(VBUser.class.getSimpleName(), user.getEmail());
-			List<VBUser> foundUser = (List<VBUser>)query.execute(userKey);
-			if(foundUser.size() > 0) vbuser = foundUser.get(0); 
+			vbuser =  pm.getObjectById(VBUser.class, userKey); 
 			
 			if(vbuser != null)
 				setVBUser(vbuser, req);

@@ -1,6 +1,6 @@
 package org.wordbuster.domain;
 
-public class VBWordSearchVO {
+public class VBWordSearchVO extends VBNavigationVO{
 	/**
 	 * 조회 타입 (i.e. 의미, 단어명
 	 */

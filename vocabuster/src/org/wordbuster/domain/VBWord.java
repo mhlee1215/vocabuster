@@ -3,6 +3,7 @@ package org.wordbuster.domain;
 import java.util.List;
 import java.util.Set;
 
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Text;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -79,6 +80,14 @@ public class VBWord {
 	@Persistent
 	private String meaningLanauge;
 	
+	public VBWord(){
+		init();
+	}
+	
+	public VBWord(String wordStr){
+		this();
+		this.key = KeyFactory.createKey(VBWord.class.getSimpleName(), wordStr);
+	}
 	
 	public String getSoundSymbol() {
 		return soundSymbol;
@@ -89,7 +98,7 @@ public class VBWord {
 	}
 
 	public void init(){
-		if(insertedCount == null) insertedCount = 0;
+		if(insertedCount == null) insertedCount = 1;
 		if(solvedCount == null) solvedCount = 0;
 	}
 	
@@ -196,6 +205,11 @@ public class VBWord {
 		return "VBWord [insertedCount=" + insertedCount + ", wordName="
 				+ wordName + "]";
 	}
-    
+	
+	public static Key createKey(String wordStr){
+		Key wordKey = KeyFactory.createKey(VBWord.class.getSimpleName(), wordStr);
+		return wordKey;
+	}
+	
     
 }

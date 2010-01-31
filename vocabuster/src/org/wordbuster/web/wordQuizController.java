@@ -49,23 +49,28 @@ public class wordQuizController extends MultiActionController {
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/getWordQuestion.do")
 	public ModelAndView getWordQuestion(HttpServletRequest req, HttpServletResponse resp) throws Exception{
+		UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+        
 		VBWordQuizVO vBWordQuizVO = new VBWordQuizVO();
 		vBWordQuizVO.initVO();
 		bind(req, vBWordQuizVO);
 		System.out.println("VO: "+vBWordQuizVO);
 		VBUser vbuser = VBUserService.getVBUser(req);
-		//List<VBWord> wordList = null;
 		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(VBWordMap.class);
-		query.setOrdering("insertCount desc");
+		query.setOrdering("score asc, insertCount desc");
 		String filterStr = "userKey == searchUserKey";
 		String parameterStr = "String searchUserKey";
 		query.setFilter(filterStr);
 		query.declareParameters(parameterStr);
-		
+		//delay count 가 5인 경우, 10이면 충분함?
+		query.setRange(0, 10);
+
 		List<VBWordMap> wordMapList = null;//vbuser.getWordMapList();
 		try {
 			HashMap<String, Object> params = new HashMap<String, Object>();
@@ -82,48 +87,37 @@ public class wordQuizController extends MultiActionController {
 		Random nRandom = new Random();
 		answerNumber = nRandom.nextInt(selectionSize);
 		boolean isFindTarget = false;
+		//적절한 단어를 찾을때까지 계속
 		while(!isFindTarget){
 			for(int i = 0 ; i < wordMapList.size(); i++){
 				wordMapList.get(i).init();
 				System.out.println(wordMapList.get(i));
-				if(wordMapList.get(i).isPossibleToSelect()){
-					targetWord = VBWordService.getVBWord(wordMapList.get(i).getWordKey());
-					wordMapList.get(i).setDelay();
-					
-					//단어 맵 동기화
-					PersistenceManager wordMapPm = JDOHelper.getPersistenceManager(wordMapList.get(i));
-					if(wordMapPm == null)
-						wordMapPm = PMF.get().getPersistenceManager();
-					try {
-						wordMapPm.makePersistent(wordMapList.get(i));
-					} finally {
-						wordMapPm.close();
-					}
+				
+				Key wordMapKey = VBWordMap.createKey(user, wordMapList.get(i).getWordName());
+				VBWordMap candidateWordMap = pm.getObjectById(VBWordMap.class, wordMapKey);
+				
+				if(candidateWordMap.isPossibleToSelect()){
+					targetWord = VBWordService.getVBWord(candidateWordMap.getWordKey());
+					candidateWordMap.setDelay();
 					isFindTarget = true;
 					break;
 				}else{
-					wordMapList.get(i).decreaseDelay();
+					candidateWordMap.decreaseDelay();
 				}
 			}
 		}
 		
-		PersistenceManager wordMapPm = JDOHelper.getPersistenceManager(wordMapList);
-		if(wordMapPm == null)
-			wordMapPm = PMF.get().getPersistenceManager();
 		try {
-			//유저 맵에 추가
-			wordMapPm.makePersistentAll(wordMapList);
+			
 		} finally {
-			wordMapPm.close();
+			pm.close();
 		}
 		
 		System.out.println("targetWord: "+targetWord);
 		
-		//Integer maxCount = VBWordService.getVBWordCount();
-		
 		List<String> selectionList = VBWordService.makeSelection(targetWord, selectionSize, answerNumber);
-		for(int i = 0 ; i < selectionList.size() ;i++)
-			System.out.println(selectionList.get(i));
+		//for(int i = 0 ; i < selectionList.size() ;i++)
+		//	System.out.println(selectionList.get(i));
 		
 		ModelAndView result = new ModelAndView("ajaxResult/wordQuiz");
 		result.addObject("targetWord", targetWord);
@@ -141,26 +135,13 @@ public class wordQuizController extends MultiActionController {
 		VBWordQuizVO vBWordQuizVO = new VBWordQuizVO();
 		bind(req, vBWordQuizVO);
 		System.out.println("VO: "+vBWordQuizVO);
+		
 		Key wordMapKey = VBWordMap.createKey(user, vBWordQuizVO.getQuizWordName());
 		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query query = pm.newQuery(VBWordMap.class);
-		query.setFilter("key == wordMapKey");
-		query.declareParameters("String wordMapKey");
 		
-		VBWordMap targetWordMap = null;
-		List<VBWordMap> wordMapList = null;
-		try {
-			wordMapList = (List<VBWordMap>)query.execute(wordMapKey);
-		} finally {
-			query.closeAll();
-		}
-		if(wordMapList.size() > 0){
-			targetWordMap = wordMapList.get(0);
-		}else{
-			System.out.println("Couldn't find word to check..[1]");
-		}
-		if(targetWordMap != null){
+		VBWordMap targetWordMap = pm.getObjectById(VBWordMap.class, wordMapKey);
+		try{
 			if("Y".equals(vBWordQuizVO.getIsCorrect())){
 				targetWordMap.correct();
 				System.out.println(vBWordQuizVO.getQuizWordName()+" is correct..");
@@ -169,22 +150,9 @@ public class wordQuizController extends MultiActionController {
 				targetWordMap.wrong();
 				System.out.println(vBWordQuizVO.getQuizWordName()+" is wrong..");
 			}
-			
-			PersistenceManager wordMapPm = JDOHelper.getPersistenceManager(targetWordMap);
-			try {
-				//유저 맵에 추가
-				wordMapPm.makePersistent(targetWordMap);
-			} finally {
-				wordMapPm.close();
-			}
-			
-		}else{
-			System.out.println("Couldn't find word to check..[2]");
+		} finally {
+			pm.close();
 		}
-		
-		
 		return null;
 	}
-	
-	
 }

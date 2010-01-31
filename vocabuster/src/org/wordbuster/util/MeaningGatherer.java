@@ -97,22 +97,21 @@ public class MeaningGatherer {
 		return result;
 	}
 	
-	public VBWord analysisWord(String wordStr) throws IOException{
-		VBWord word = new VBWord();
-		Key wordKey = KeyFactory.createKey(VBWord.class.getSimpleName(), wordStr);
-		word.setKey(wordKey);
-		return analysisWord(word, wordStr);
-	}
-	
 	public String makeGoogleUrl(String wordStr){
 		String wordStrReplaced = wordStr.replace(" ", "+");
 		String url = "http://www.google.co.kr/dictionary?langpair=en|ko&q="+wordStrReplaced+"&hl=ko&aq=f";
 		return url;
 	}
 	
-	public VBWord analysisWord(VBWord word, String wordStr) throws IOException{
+	public VBWord analysisWord(String wordStr) throws IOException{
+		return analysisWord(wordStr, true);
+	}
+	
+	public VBWord analysisWord(String wordStr, boolean isNew) throws IOException{
+		VBWord word = new VBWord();
 		//wordStr = wordStr.replace("+", " ");
 		//String wordStrReplaced = wordStr.replace(" ", "+");
+		Key key = null;
 		String url = makeGoogleUrl(wordStr);
 		System.out.println("call Url : "+url);
 		String resultHtml = crowler.getHtml(url);
@@ -146,13 +145,14 @@ public class MeaningGatherer {
 			}
 		}
 		
-		if(word != null){
-			word.setWordName(wordStr);
-			word.setWordInfoList(wordInfoList);
-			word.setSoundHtml(soundTag);
-			word.setSoundSymbol(soundSymbol);
-			word.setInsertedCount(0);
-		}
+		
+		key = VBWord.createKey(wordStr);
+		System.out.println("added key: "+key);
+		word.setKey(key);
+		word.setWordName(wordStr);
+		word.setWordInfoList(wordInfoList);
+		word.setSoundHtml(soundTag);
+		word.setSoundSymbol(soundSymbol);
 		return word;
 	}
 	
@@ -205,25 +205,26 @@ public class MeaningGatherer {
 					//System.out.println("::BEFORE3: "+shortMeaning);
 					shortMeaning = shortMeaning.replaceAll("\\[[^\\]^\\[]*\\]", "");
 					//System.out.println("::BEFORE4: "+shortMeaning);
+					shortMeaning = shortMeaning.replaceAll("\\([^\\)^\\(]*\\)", "");
 					
 					//System.out.println("::splitStr: "+shortMeaning);
 					String[] meaningPart = shortMeaning.split(",");
-					
 					shortMeaning = meaningPart[0];
 					//Countable or Uncountable 걸러냄 i.e. U,N 뜻.. 
 					if(shortMeaning.length() == 1) shortMeaning+=","+meaningPart[1];
+
 					
 					//괄호로 둘러쌓인 부분 미리 저장(맨 앞부분에 나온것만)
-					String parenPart = "";
-					if(shortMeaning.indexOf(")")>-1 && shortMeaning.indexOf("(")>-1)
-						parenPart = shortMeaning.substring(shortMeaning.indexOf("("), shortMeaning.indexOf(")")+1);
-					
-					//괄호 부분 제거후,
-					shortMeaning = shortMeaning.replaceAll("\\(.*\\)", "");
-					//세미콜론으로 split 후 첫번째 것만 사용
-					shortMeaning = shortMeaning.split(";")[0];
-					//미리저장한 괄호 앞부분을 붙임
-					shortMeaning = parenPart + shortMeaning;
+//					String parenPart = "";
+//					if(shortMeaning.indexOf(")")>-1 && shortMeaning.indexOf("(")>-1)
+//						parenPart = shortMeaning.substring(shortMeaning.indexOf("("), shortMeaning.indexOf(")")+1);
+//					
+//					//괄호 부분 제거후,
+//					shortMeaning = shortMeaning.replaceAll("\\([^\\)^\\(]*\\)", "");
+//					//세미콜론으로 split 후 첫번째 것만 사용
+//					shortMeaning = shortMeaning.split(";")[0];
+//					//미리저장한 괄호 앞부분을 붙임
+//					shortMeaning = parenPart + shortMeaning;
 					
 					//System.out.println("max :"+maxMeaningNum+", "+i+", "+myNodes[i].getText().toString().trim());
 					VBWordInfo wi = new VBWordInfo();

@@ -78,9 +78,9 @@ public class VBWordService {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query wordQuery = pm.newQuery(VBWord.class);
 		wordQuery.setResultClass(VBWord.class);
-		wordQuery.setFilter("key != targetWordKey");
-		wordQuery.declareParameters("String targetWordKey");
-		//wordQuery.setRange(index, index+2);
+		//wordQuery.setFilter("key != targetWordKey");
+		//wordQuery.declareParameters("String targetWordKey");
+		wordQuery.setRange(index, index+1);
 		VBWord result = null;
 		String resultMeaning = "";
 		List<VBWord> wordList = null;
@@ -88,11 +88,14 @@ public class VBWordService {
 			//result = (VBWord) wordQuery.execute(targetWord.getKey());
 			wordList = (List<VBWord>)wordQuery.execute(targetWord.getKey());
 			System.out.println("list size : "+wordList.size());
-			result = wordList.get(index);
+			result = wordList.get(0);
 			System.out.println("selected choice: "+result.getWordName());
-			resultMeaning = getRandomMeaning(result);
+			if(result.getWordName().equals(targetWord.getWordName()))
+				return null;
+			else
+				resultMeaning = getRandomMeaning(result);
 		} finally{
-			
+			pm.close();
 		}
 		System.out.println("getVBWord: "+result);
 		return resultMeaning;
@@ -100,7 +103,7 @@ public class VBWordService {
 	
 	public static List<String> makeSelection(VBWord targetWord, int selectionSize, int answerIndex){
 		int maxSize = VBWordService.getVBWordCount();
-		Integer[] selectionQueue = makeRandQueue(selectionSize-1, maxSize-1);
+		Integer[] selectionQueue = makeRandQueue(selectionSize, maxSize-1);
 		Vector<String> wordList = new Vector<String>();
 		int queueIndex = 0;
 		for(int i = 0 ; i < selectionSize ; i++)
@@ -112,8 +115,13 @@ public class VBWordService {
 			}else{
 				System.out.println(selectionQueue[queueIndex]);
 				String candidate = getVBWordRandomMeaningByIndexExceptTarget(selectionQueue[queueIndex], targetWord);
-				wordList.add(candidate);
-				queueIndex++;	
+				queueIndex++;
+				if(candidate == null){
+					i--;
+				}else{
+					wordList.add(candidate);
+				}
+					
 			}
 		}
 		
