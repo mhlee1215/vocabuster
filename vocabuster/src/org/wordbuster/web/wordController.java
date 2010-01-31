@@ -1,5 +1,6 @@
 package org.wordbuster.web;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import org.wordbuster.domain.VBWordQuizVO;
 import org.wordbuster.domain.VBWordSearchVO;
 import org.wordbuster.service.VBUserService;
 import org.wordbuster.service.VBWordService;
+import org.wordbuster.util.DownloadUtil;
 import org.wordbuster.util.MeaningGatherer;
 
 import com.google.appengine.api.datastore.Key;
@@ -255,6 +257,17 @@ public class wordController extends MultiActionController {
 	}
 	
 	
+	@RequestMapping("/exportAsExcel.do")
+	public ModelAndView exportAsExcel(HttpServletRequest request, HttpServletResponse rsponse) throws Exception{
+        String original_filename = "test";//(String)request.getSession().getAttribute("downloadName");
+        String reportContent = "test....";//(String)request.getSession().getAttribute("documentContent");
+        
+        byte[] data = reportContent.getBytes();
+        ByteArrayInputStream bis = new ByteArrayInputStream(data);
+        original_filename+=".html";
+        DownloadUtil.download(request, rsponse, bis, original_filename, 0, null);
+        return null;
+    }
 	
 	public static void main(String[] argv) throws IOException{
 		MeaningGatherer mg = new MeaningGatherer();
