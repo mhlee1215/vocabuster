@@ -1,10 +1,24 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%@ page contentType="text/html;charset=utf-8"%>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Buster your vocabulary!</title>
+</head>
+<%@ include file="/header.jsp" %>
+<body class="vb-body">
+<div class="ui-widget ui-widget-content vb-page-body-div">
+<h1 id="" class="ui-widget-header vb-page-header">Add word(s)</h1>
 <div id="addWordPanel">
-<h2>단어 추가</h2>
+
+<br>
  <form name="wordForm" action="/addWords.do" method="post">
    <div>
+   카테고리: 
    <select id="wordCategory" name="wordCategory">
+   		<option value="none">없음</option>
+   		<option value="toefl">토플</option>
+   		<option value="toeic">토익</option>
    		<option value="etc">기타</option>
    </select>
    </div>	
@@ -14,8 +28,8 @@
 </div>
 <div id="addWordsStatus">
 </div> 
-<table><tr><td align="left"></td></tr></table>
-<script language="text/javascript" >
+</div>
+<script type="text/javascript" >
 var words;
 var maxProgress;
 var curProgress;
@@ -36,10 +50,21 @@ function submitData(){
 	htmlContent+='전체 입력수.. '+words.length+'개...<a href="#">멈춤</a>&nbsp;<a href="#">계속</a>';
 	htmlContent+='<br><br>';
 	htmlContent+='<div id="progressbar" style="height:5px;"></div><br>';
-	htmlContent+='<table border="0">';
+	htmlContent+='<table class="ui-widget ui-widget-content">';
+	htmlContent+='<thead>';
+	htmlContent+='<tr class="ui-widget-header ">';
+	htmlContent+='<th>단어명</th>';
+	htmlContent+='<th>상태</th>';
+	htmlContent+='<th>상태명</th>';
+	htmlContent+='<th>단어DB</th>';
+	htmlContent+='<th>유저DB</th>';
+	htmlContent+='<th>의미(1개만)</th>';
+	htmlContent+='</tr>';
+	htmlContent+='</thead>';
+	htmlContent+='<tbody>';
 	for(var i = 0 ; i < words.length ; i++){
 		htmlContent+='<tr>';
-		htmlContent+='<td id="name_'+i+'" width="100" align="left">';
+		htmlContent+='<td id="name_'+i+'" align="left">';
 		htmlContent+=words[i];
 		htmlContent+='</td>';
 		htmlContent+='<td id="status_'+i+'" width="50" align="center">';
@@ -48,18 +73,18 @@ function submitData(){
 		htmlContent+='<td id="detail_'+i+'" width="50" align="center">';
 		htmlContent+='..';
 		htmlContent+='</td>';
-		htmlContent+='<td id="wordResult_'+i+'" width="100" align="center">';
+		htmlContent+='<td id="wordResult_'+i+'" width="90" align="center">';
 		htmlContent+='..';
 		htmlContent+='</td>';
-		htmlContent+='<td id="wordMapResult_'+i+'" width="100" align="center">';
+		htmlContent+='<td id="wordMapResult_'+i+'" width="90" align="center">';
 		htmlContent+='..';
 		htmlContent+='</td>';
-		htmlContent+='<td id="wordSampleMeaning_'+i+'" width="100" align="center">';
+		htmlContent+='<td id="wordSampleMeaning_'+i+'" align="center">';
 		htmlContent+='..';
 		htmlContent+='</td>';
 		htmlContent+='</tr>';
-		
 	}
+	htmlContent+='</tbody>';
 	htmlContent+='</table>';
 
 	$('#addWordPanel').hide('slow');
@@ -138,3 +163,8 @@ function truncateArray(array){
 	return truncatedArray;
 }
 </script>
+<jsp:include page="/footer.jsp">
+     <jsp:param name="" value=""/>
+</jsp:include>
+</body>
+</html>

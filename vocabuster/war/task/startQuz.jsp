@@ -1,6 +1,18 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<div id="startWordQuizPanel">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%@ page contentType="text/html;charset=utf-8"%>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Buster your vocabulary!</title>
+</head>
+<%@ include file="/header.jsp" %>
+<body class="vb-body">
+<div class="ui-widget ui-widget-content vb-page-body-div">
+<h1 id="" class="ui-widget-header vb-page-header">Word quiz</h1>
+<div id="quizValid">
+Validation...<img src="/images/vb-word-loader.gif" />
+</div>
+<div id="startWordQuizPanel" style="display:none">
 시작해볼까? ㄷㄷㄷ<br></br>
 보기 수: 
 <select id="selectionCount">
@@ -23,10 +35,10 @@
 <table>
 	<tr>
 		<td>
-			<div id="isCorrectMark" style="width:50px;border:1px solid"></div>
+			<div id="isCorrectMark" style="width:50px"></div>
 		</td>
 		<td>
-			<div id="answerDetail" style="border:1px solid">123</div>
+			<div id="answerDetail" style="">123</div>
 		</td>
 	</tr>
 </table>
@@ -36,6 +48,16 @@
 </div>
 <div id="rightWordQuizPanel" style="display:none">
 </div>
+</div>
+<script type="text/javascript">
+$(function(){
+	$.get("/getWordQuestion.do", '', valid);
+});
+function valid(){
+	$('#quizValid').hide('slow');
+	$('#startWordQuizPanel').show('slow');
+}
+</script>
 <script type="text/javascript" >
 var selectionCount = 4;
 var currentQuiz = -1;
@@ -114,10 +136,10 @@ function showAnswer(wordName, isAnswer){
 	answerCount = answerCountInit;
 	answerTimeoutID = setInterval(progressAnswer, eval(1000));	
 	if(isAnswer){
-		$('#isCorrectMark').html('<h1>O</h1>');
+		$('#isCorrectMark').html('<h1 style="font-color:green;font-size:40;">O</h1>');
 	}
 	else{
-		$('#isCorrectMark').html('<h1>X</h1>');
+		$('#isCorrectMark').html('<h1 style="font-size:40;">X</h1>');
 	}
 	$('#answerDetail').html(wordName);
 	$('#leftWordQuizPanel').hide('slow');
@@ -169,8 +191,8 @@ function progressIntro(){
 }
 
 </script>
-
-
-
-
-
+<jsp:include page="/footer.jsp">
+     <jsp:param name="" value=""/>
+</jsp:include>
+</body>
+</html>

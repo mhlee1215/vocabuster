@@ -57,18 +57,32 @@ $(function(){
 });
 </script>
 <!-- 프로그래스 바 태그 -->
-<div id="quizProgressbar${vBWordQuizVO.questionCount%maxQuizPanel}" style="height:5px;"></div>
+<div id="quizProgressbar${vBWordQuizVO.questionCount%maxQuizPanel}" style="height:15px;"></div>
 <div id="quizWordAnswer${vBWordQuizVO.questionCount%maxQuizPanel}" style="display:none">
-<h1 style="font-size:40;">${targetWord.wordName}${targetWord.soundSymbol}</h1>
-<ul>
-<c:forEach items="${targetWord.wordInfoList}" var="meaning" varStatus="status">
-	<li>${meaning.shortMeaning}</li>
-</c:forEach>
-</ul>
+<table>
+<tr>
+	<td align="left">
+		<h1 style="color:#2F3442;font-size:50; margin-bottom:-15px;">${targetWord.wordName}</h1>
+	</td>
+	<td align="left">
+		<h2 style="color:#6F799B;margin-left:15px; margin-bottom:-3px;">${targetWord.soundSymbol}</h2>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<ul>
+		<c:forEach items="${targetWord.wordInfoList}" var="meaning" varStatus="status">
+			<li>${meaning.shortMeaning}</li>
+		</c:forEach>
+		</ul>
+	</td>
+</tr>
+</table>
+
 </div>
 <script type="text/javascript">
 //프로그래스바 증가..
-var maxTic${vBWordQuizVO.questionCount%maxQuizPanel} = 50;
+var maxTic${vBWordQuizVO.questionCount%maxQuizPanel} = 50*2;
 var curTic${vBWordQuizVO.questionCount%maxQuizPanel} = 0;
 function progress${vBWordQuizVO.questionCount%maxQuizPanel}(){
 	curTic${vBWordQuizVO.questionCount%maxQuizPanel}++;
@@ -84,7 +98,7 @@ function progress${vBWordQuizVO.questionCount%maxQuizPanel}(){
 }
 var timeoutID${vBWordQuizVO.questionCount%maxQuizPanel};// = setInterval(progress, eval(50));
 function quizProgressStart${vBWordQuizVO.questionCount%maxQuizPanel}(){
-	timeoutID${vBWordQuizVO.questionCount%maxQuizPanel} = setInterval(progress${vBWordQuizVO.questionCount%maxQuizPanel}, eval(100));
+	timeoutID${vBWordQuizVO.questionCount%maxQuizPanel} = setInterval(progress${vBWordQuizVO.questionCount%maxQuizPanel}, eval(50));
 }
 
 function submitAnswer${vBWordQuizVO.questionCount%maxQuizPanel}(isCorrect){

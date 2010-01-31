@@ -1,7 +1,14 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %> 
-<div id="myWordListPanel">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%@ page contentType="text/html;charset=utf-8"%>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Buster your vocabulary!</title>
+</head>
+<%@ include file="/header.jsp" %>
+<body class="vb-body"> 
+<div id="myWordListPanel" class="ui-widget ui-widget-content vb-page-body-div">
+<h1 id="" class="ui-widget-header vb-page-header">My word</h1>
 <form:form cssStyle="margin:0px;padding:0px;" commandName="vBWordSearchVO">
 <form:select id="myWordListSearchType" path="searchType">
 <form:option value="name">단어명</form:option>
@@ -10,6 +17,7 @@
 <form:select id="myWordListOrderType" path="searchOrder">
 <form:option value="wordName asc">알파벳순</form:option>
 <form:option value="insertCount desc">입력횟수순</form:option>
+<form:option value="score asc">점수순</form:option>
 <form:option value="wrongCount desc">오답순</form:option>
 <form:option value="answerCount desc">정답순</form:option>
 <form:option value="answerRate desc">정답률순</form:option>
@@ -24,7 +32,7 @@
 <a href="#" onclick="searchWords();">search</a>
 </form:form>
 </div> 
-<script language="text/javascript" >
+<script type="text/javascript" >
 
 function searchWords(){
 	var data = {
@@ -37,3 +45,8 @@ function searchWords(){
 } 
 
 </script>
+<jsp:include page="/footer.jsp">
+     <jsp:param name="" value=""/>
+</jsp:include>
+</body>
+</html>
