@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,12 @@ import org.wordbuster.util.MeaningGatherer;
 
 @Controller
 public class wordController extends MultiActionController {
+	
+	@Autowired
+	private VBWordService wordService;
+	
+	@Autowired
+	private VBUserService userService;
 	
 	/**
 	 * 하나의 단어를 추가하는 부분

@@ -54,17 +54,17 @@ public class VBWordService {
 	public String getVBWordRandomMeaningByIndexExceptTarget(int index, VBWord targetWord){
 		System.out.println("index : "+index);
 		//PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query wordQuery = pm.newQuery(VBWord.class);
-		wordQuery.setResultClass(VBWord.class);
+		//Query wordQuery = pm.newQuery(VBWord.class);
+		//wordQuery.setResultClass(VBWord.class);
 		//wordQuery.setFilter("key != targetWordKey");
 		//wordQuery.declareParameters("String targetWordKey");
-		wordQuery.setRange(index, index+1);
+		//wordQuery.setRange(index, index+1);
 		VBWord result = null;
 		String resultMeaning = "";
 		List<VBWord> wordList = null;
 		try{
 			//result = (VBWord) wordQuery.execute(targetWord.getKey());
-			wordList = (List<VBWord>)wordQuery.execute(targetWord.getKey());
+			wordList = null;//(List<VBWord>)wordQuery.execute(targetWord.getKey());
 			System.out.println("list size : "+wordList.size());
 			result = wordList.get(0);
 			System.out.println("selected choice: "+result.getWordName());

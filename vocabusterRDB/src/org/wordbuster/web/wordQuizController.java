@@ -28,8 +28,8 @@ public class wordQuizController extends MultiActionController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/getWordQuestion.do")
 	public ModelAndView getWordQuestion(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-		UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
+		//UserService userService = UserServiceFactory.getUserService();
+        //User user = userService.getCurrentUser();
         
 		VBWordQuizVO vBWordQuizVO = new VBWordQuizVO();
 		vBWordQuizVO.initVO();
@@ -37,7 +37,7 @@ public class wordQuizController extends MultiActionController {
 		System.out.println("VO: "+vBWordQuizVO);
 		VBUser vbuser = VBUserService.getVBUser(req);
 		
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		//PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(VBWordMap.class);
 		query.setOrdering("score asc, insertCount desc");
 		String filterStr = "userKey == searchUserKey";

@@ -27,7 +27,7 @@ public class adminController extends MultiActionController {
 		//String keyword = ServletRequestUtils.getStringParameter(req, "keyword", "");
 		List<VBWord> wordList = null;
 		
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		//PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(VBWord.class);
 		query.setOrdering("insertedCount desc");
 		if(!vBWordSearchVO.getSearchKeyword().equals("")){
@@ -117,15 +117,16 @@ public class adminController extends MultiActionController {
 	public ModelAndView adminDeleteWordMapAll(HttpServletRequest req, HttpServletResponse resp) throws Exception{
 		List<VBWordMap> wordMapList = null;
 		
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query query = pm.newQuery(VBWordMap.class);
+		//PersistenceManager pm = PMF.get().getPersistenceManager();
+		//Query query = pm.newQuery(VBWordMap.class);
 		
-		try {
+		
+		/*try {
 			wordMapList = (List<VBWordMap>)query.execute();
 		} finally {
 			query.closeAll();
 		}
-		pm.deletePersistentAll(wordMapList);
+		pm.deletePersistentAll(wordMapList);*/
 		
 		ModelAndView result = new ModelAndView("ajaxResult/adminWordMapValidationResult");
 		return result;
