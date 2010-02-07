@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-import org.wordbuster.PMF;
 import org.wordbuster.domain.VBUser;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordCategory;
@@ -35,13 +31,6 @@ import org.wordbuster.service.VBUserService;
 import org.wordbuster.service.VBWordService;
 import org.wordbuster.util.DownloadUtil;
 import org.wordbuster.util.MeaningGatherer;
-
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-
 
 @Controller
 public class wordController extends MultiActionController {
@@ -62,8 +51,8 @@ public class wordController extends MultiActionController {
 		String wordStr = req.getParameter("word");
 		System.out.println("wordStr: "+wordStr);
 		//사용자 정보 가져옴 
-		UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
+		//UserService userService = UserServiceFactory.getUserService();
+        //User user = userService.getCurrentUser();
 		VBUser vbuser = VBUserService.getVBUser(req);
 
 		//단어 추가 결과 
@@ -77,8 +66,8 @@ public class wordController extends MultiActionController {
 		//의미 수집기 생성
 		MeaningGatherer mg = new MeaningGatherer();
 		
-		PersistenceManager wordPm = PMF.get().getPersistenceManager();
-		PersistenceManager wordMapPm = PMF.get().getPersistenceManager();
+		//PersistenceManager wordPm = PMF.get().getPersistenceManager();
+		//PersistenceManager wordMapPm = PMF.get().getPersistenceManager();
 		
 		try{
 			//Search from total word pool

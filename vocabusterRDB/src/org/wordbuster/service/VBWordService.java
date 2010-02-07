@@ -4,21 +4,28 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 import javax.servlet.http.HttpServletRequest;
 
-import org.wordbuster.PMF;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.wordbuster.dao.VBUserDAO;
+import org.wordbuster.dao.VBWordDAO;
 import org.wordbuster.domain.VBUser;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
 import org.wordbuster.domain.VBWordMap;
 
-import com.google.appengine.api.datastore.Key;
 
+@Service
 public class VBWordService {
+	
+	@Autowired
+	private VBWordDAO wordDAO;
+	
+	@Autowired
+	private VBUserDAO userDAO;
+	
 	public static List<VBWordMap> syncWordMapWithWord(List<VBWordMap> wordMapList){
-		PersistenceManager pm = PMF.get().getPersistenceManager();
 		for(int i = 0 ; i < wordMapList.size() ; i++){
 			VBWord word = pm.getObjectById(VBWord.class, wordMapList.get(i).getWordKey());
 			//VBWord detached = pm.detachCopy(word);

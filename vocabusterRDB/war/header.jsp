@@ -2,16 +2,8 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="java.util.List" %>
-<%@ page import="javax.jdo.PersistenceManager" %>
-<%@ page import="com.google.appengine.api.users.User" %>
-<%@ page import="com.google.appengine.api.users.UserService" %>
-<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ page import="org.wordbuster.domain.VBUser"%>
-<%@ page import="org.wordbuster.PMF" %>
-<%@ page import="com.google.appengine.api.datastore.Key"%>
-<%@ page import="com.google.appengine.api.datastore.KeyFactory"%>
 <%@ page import="org.wordbuster.service.VBUserService"%>
-<%@ page import="javax.jdo.Query"%>
 <%@ page import="org.wordbuster.domain.VBWord"%>
 <%@ page import="org.wordbuster.service.VBWordService"%><html>
 <link type="text/css" href="/jquery/css/redmond-theme/jquery-ui-1.8rc1.custom.css" rel="stylesheet" />	
@@ -40,10 +32,8 @@
 </style>	
   
   <% 
-	  PersistenceManager pm = PMF.get().getPersistenceManager();
-	  UserService userService = UserServiceFactory.getUserService();
-	  User user = userService.getCurrentUser();
-	  VBUser vBUser = null;
+	  VBUser user = null;
+  	  VBUser vBUser = null;
 	  boolean isFindVBUser = false;
 	  
 	  if (user != null) {
@@ -87,8 +77,8 @@
   			<% 
   			if (user != null && isFindVBUser) {
   			%>
-  			안녕, <%=user.getNickname()%>! (로그아웃 하려면 ->
-			<a href="<%=userService.createLogoutURL(request.getRequestURI())%>">sign out</a>.)
+  			안녕, ! (로그아웃 하려면 ->
+			<a href="">sign out</a>.)
 			<br>
 			총 단어 갯수 <%=VBWordService.getVBWordCount()%>&nbsp;&nbsp;
 			내 단어 갯수 <%=VBWordService.getVBUserWordCount(request)%><br>
@@ -113,7 +103,7 @@
  				if(user == null){
  					%>
  					<p>Hello!
- 					<a href="<%=userService.createLoginURL(request.getRequestURI())%>">Sign in</a>
+ 					<a href="">Sign in</a>
  					로긴 자비좀 ㄷㄷㄷㄷ</p>
  					<%
  							}else if(!isFindVBUser){

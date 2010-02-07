@@ -3,54 +3,18 @@ package org.wordbuster.domain;
 import java.util.List;
 import java.util.Set;
 
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.Text;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-
-import com.google.appengine.api.datastore.Key;
-
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "true")
 public class VBWord {
-	@PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Key key;
-	
-	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	public String wordName;
-	
-	/**
-	 * 사용 wordmap key 리스트
-	 */
-	@Persistent//(mappedBy = "word")
-	private Set<Key> wordMapKey;//VBWordMap wordMap;
-	
-	/**
-	 * 뜻 리스트
-	 */
-	@Persistent(mappedBy = "word")
-	private List<VBWordInfo> wordInfoList;
-	
-	/**
-	 * 카테고리 리스트
-	 */
-	@Persistent(mappedBy = "word")
-	private List<VBCategory> CategoryList;
 	
 	/**
 	 * 관련 이미지
 	 */
-	@Persistent
 	private String imageUrl;
 	
 	/**
 	 * 발음 태그 HTML
 	 */
-	@Persistent
-	private Text soundHtml;
+	private String soundHtml;
 	
 	/**
 	 * 발음기호
@@ -60,33 +24,24 @@ public class VBWord {
 	/**
 	 * 입력수
 	 */
-	@Persistent
 	private Integer insertedCount;
 	
 	/**
 	 * 문제로 사용 수
 	 */
-	@Persistent
 	private Integer solvedCount;
 
 	/**
 	 * 단어 언어
 	 */
-	@Persistent
 	private String wordLanguage;
 	/**
 	 * 뜻 언어
 	 */
-	@Persistent
 	private String meaningLanauge;
 	
 	public VBWord(){
 		init();
-	}
-	
-	public VBWord(String wordStr){
-		this();
-		this.key = KeyFactory.createKey(VBWord.class.getSimpleName(), wordStr);
 	}
 	
 	public String getSoundSymbol() {
@@ -126,20 +81,12 @@ public class VBWord {
 		this.meaningLanauge = meaningLanauge;
 	}
 
-	public Text getSoundHtml() {
+	public String getSoundHtml() {
 		return soundHtml;
 	}
 
-	public void setSoundHtml(Text soundHtml) {
+	public void setSoundHtml(String soundHtml) {
 		this.soundHtml = soundHtml;
-	}
-
-	public Set<Key> getWordMapKey() {
-		return wordMapKey;
-	}
-
-	public void setWordMapKey(Set<Key> wordMapKey) {
-		this.wordMapKey = wordMapKey;
 	}
 
 	public String getImageUrl() {
@@ -158,14 +105,6 @@ public class VBWord {
 		this.insertedCount = insertedCount;
 	}
 
-	public Key getKey() {
-		return key;
-	}
-	
-	public void setKey(Key key) {
-		this.key = key;
-	}
-	
 	public String getWordName() {
 		return wordName;
 	}
@@ -174,22 +113,6 @@ public class VBWord {
 		this.wordName = wordName;
 	}
 
-	public List<VBWordInfo> getWordInfoList() {
-		return wordInfoList;
-	}
-
-	public void setWordInfoList(List<VBWordInfo> wordInfoList) {
-		this.wordInfoList = wordInfoList;
-	}
-
-    public List<VBCategory> getCategoryList() {
-        return CategoryList;
-    }
-
-    public void setCategoryList(List<VBCategory> categoryList) {
-        CategoryList = categoryList;
-    }
-    
     public void increaseInsertedCount(){
     	if(insertedCount == null) insertedCount = 1;
     	else insertedCount++;
@@ -205,11 +128,5 @@ public class VBWord {
 		return "VBWord [insertedCount=" + insertedCount + ", wordName="
 				+ wordName + "]";
 	}
-	
-	public static Key createKey(String wordStr){
-		Key wordKey = KeyFactory.createKey(VBWord.class.getSimpleName(), wordStr);
-		return wordKey;
-	}
-	
     
 }

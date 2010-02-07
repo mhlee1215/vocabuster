@@ -3,18 +3,6 @@ package org.wordbuster.domain;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.NotPersistent;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.users.User;
-
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class VBWordMap implements Serializable{
 	
 	
@@ -25,67 +13,40 @@ public class VBWordMap implements Serializable{
 	private final int MAX_DELAY_COUNT = 5;
 	private final int ANSWER_WEIGHT = 1;
 	private final int WRONG_WEIGHT = 5;
-	@PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Key Primarykey;
 	
-    @Persistent
-    private Key key;
-	
-	@Persistent
+	private String userid;
 	private String wordName;
-
-	@Persistent//(mappedBy = "wordMap")
-	private Key userKey;
-	
-	@Persistent//(mappedBy = "wordMap")
-	private Key wordKey;
-
-	@Persistent
 	private Integer score;
-	
-	@Persistent
 	private Integer insertCount;
 	
 	/**
 	 * 문제를 맞춘 직후에 올라가고, 그 뒤선택 될때마다 감소되며, 0이 되었을때 다시 선택 될 수 있다.
 	 * 같은 문제가 반복되는것을 방지하기 위함
 	 */
-	@Persistent
 	private Integer delayCount;
-	
-	@NotPersistent
-	private VBWord word;
-	
-	
 	/**
 	 * 맞춘 횟수
 	 */
-	@Persistent
 	private Integer answerCount;
 	
 	/**
 	 * 틀린 횟수
 	 */
-	@Persistent
 	private Integer wrongCount;
 	
 	/**
 	 * 총 횟수 
 	 */
-	@Persistent
 	private Integer totalCount;
 	
 	/**
 	 * 정답률
 	 */
-	@Persistent
 	private Float answerRate;
 	
 	/**
 	 * 오답률
 	 */
-	@Persistent
 	private Float wrongRate;
 	
 	public void init(){
@@ -136,36 +97,6 @@ public class VBWordMap implements Serializable{
 		return false;
 	}
 	
-	public static Key createKey(User user, String word){
-		return KeyFactory.createKey(VBWordMap.class.getSimpleName(), word+user.getEmail());
-	}
-	
-	public Key getKey() {
-		return key;
-	}
-
-	public void setKey(Key key) {
-		this.key = key;
-	}
-
-	public Key getWordKey() {
-		return wordKey;
-	}
-	public void setWordKey(Key wordKey) {
-		this.wordKey = wordKey;
-	}
-	public Key getUserKey() {
-		return userKey;
-	}
-	public void setUserKey(Key userKey) {
-		this.userKey = userKey;
-	}
-	public Key getPrimarykey() {
-		return Primarykey;
-	}
-	public void setPrimarykey(Key primarykey) {
-		Primarykey = primarykey;
-	}
 	public Integer getAnswerCount() {
 		return answerCount;
 	}
@@ -207,12 +138,6 @@ public class VBWordMap implements Serializable{
 	}
 	public void setWordName(String wordName) {
 		this.wordName = wordName;
-	}
-	public VBWord getWord() {
-		return word;
-	}
-	public void setWord(VBWord word) {
-		this.word = word;
 	}
 	public Integer getDelayCount() {
 		return delayCount;

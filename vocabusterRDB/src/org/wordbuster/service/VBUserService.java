@@ -4,20 +4,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.wordbuster.PMF;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.wordbuster.dao.VBUserDAO;
 import org.wordbuster.domain.VBUser;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import javax.jdo.Query;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 
+@Service
 public class VBUserService {
+	
+	@Autowired
+	private VBUserDAO userDAO;
+	
 	static Logger logger = Logger.getLogger(VBUserService.class);
 	/**
 	 * Get vbuser from session
@@ -28,12 +28,8 @@ public class VBUserService {
 		VBUser vbuser = (VBUser) req.getSession().getAttribute("vbuser");
 		
 		if(vbuser == null){
-			PersistenceManager pm = PMF.get().getPersistenceManager();
-			UserService userService = UserServiceFactory.getUserService();
-		    User user = userService.getCurrentUser();
 		    
-			Key userKey = KeyFactory.createKey(VBUser.class.getSimpleName(), user.getEmail());
-			vbuser =  pm.getObjectById(VBUser.class, userKey); 
+			vbuser =  null;//pm.getObjectById(VBUser.class, userKey); 
 			
 			if(vbuser != null)
 				setVBUser(vbuser, req);
@@ -59,23 +55,16 @@ public class VBUserService {
 	 * @return
 	 */
 	public static VBUser addUser(HttpServletRequest req){
-		UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
-        Key userKey = KeyFactory.createKey(VBUser.class.getSimpleName(), user.getEmail());
         Calendar c = Calendar.getInstance();
         Date firstUseDate = c.getTime();
         
+        String userid = "";
+        
         VBUser vBUser = new VBUser();
-        vBUser.setKey(userKey);
-        vBUser.setUser(user);
+        vBUser.setUserid(userid);
         vBUser.setFirstUseDate(firstUseDate);
         
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        try {
-            pm.makePersistent(vBUser);
-        } finally {
-            pm.close();
-        }
+        //pm.makePersistent(vBUser);
         return null;
 	}
 	

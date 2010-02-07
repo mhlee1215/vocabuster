@@ -2,9 +2,6 @@ package org.wordbuster.web;
 
 import java.util.List;
 
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-import org.wordbuster.PMF;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
 import org.wordbuster.domain.VBWordMap;

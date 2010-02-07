@@ -17,11 +17,6 @@ import org.htmlcleaner.SimpleXmlSerializer;
 import org.htmlcleaner.TagNode;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
-import org.wordbuster.servlet.SignGuestbookServlet;
-
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.Text;
 
 /**
  * Designed for Google dictionary
@@ -67,14 +62,14 @@ public class MeaningGatherer {
 		return result;
 	}
 	
-	public Text getSoundTag(TagNode node) throws IOException{
+	public String getSoundTag(TagNode node) throws IOException{
 		HtmlCleaner cleaner = new HtmlCleaner();
 		CleanerProperties props = cleaner.getProperties(); // cleaner의 속성을 정의하기 위한.. 변수
 		SimpleXmlSerializer se = new SimpleXmlSerializer(props);
 		StringBuffer sb = new StringBuffer();
 
 		Writer writer = new StringWriter();
-		Text result = null;//new Text("");
+		String result = null;//new Text("");
 		
 		TagNode[] myNodes = node.getElementsByAttValue("class", "prn-btn", true, true);
 		for (int i = 0; i < myNodes.length; i++) {
@@ -91,7 +86,7 @@ public class MeaningGatherer {
 		if(resultPart.length > 1){
 			String resultStr = writer.toString().split("\n")[1];
 			resultStr = resultStr.replace("\"/dictionary", "\"http://www.google.co.kr/dictionary");
-			result = new Text(resultStr);
+			result = resultStr;
 			//System.out.println("soundTag: "+result.toString());
 		}
 		return result;
@@ -111,7 +106,6 @@ public class MeaningGatherer {
 		VBWord word = new VBWord();
 		//wordStr = wordStr.replace("+", " ");
 		//String wordStrReplaced = wordStr.replace(" ", "+");
-		Key key = null;
 		String url = makeGoogleUrl(wordStr);
 		System.out.println("call Url : "+url);
 		String resultHtml = crowler.getHtml(url);
@@ -120,7 +114,7 @@ public class MeaningGatherer {
 		TagNode node = cleaner.clean(resultHtml);
 		
 		List<VBWordInfo> wordInfoList = getMeaning(node);
-		Text soundTag = getSoundTag(node);
+		String soundTag = getSoundTag(node);
 		String soundSymbol = getSoundSymbol(node);
 		
 		//단어를 못찾은 경우, 추천 단어를 한번 더 고려함
@@ -146,11 +140,7 @@ public class MeaningGatherer {
 		}
 		
 		
-		key = VBWord.createKey(wordStr);
-		System.out.println("added key: "+key);
-		word.setKey(key);
 		word.setWordName(wordStr);
-		word.setWordInfoList(wordInfoList);
 		word.setSoundHtml(soundTag);
 		word.setSoundSymbol(soundSymbol);
 		return word;
