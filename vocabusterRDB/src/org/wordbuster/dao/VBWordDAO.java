@@ -23,6 +23,10 @@ public class VBWordDAO extends SqlMapClientDaoSupport {
 		return null;
 	}
 	
+	public List<VBWord> searchWord(String keyword){
+		return null;
+	}
+	
 	public boolean insertWord(VBWord vBWord){
 		return false;
 	}

@@ -11,7 +11,11 @@ public class VBWordMapService {
 	@Autowired
 	private VBWordMapDAO wordMapDAO;
 	
-	public List<VBWordMap> retrieveWordMapList(){
+	public List<VBWordMap> retrieveWordMapListAll(){
 		return wordMapDAO.retrieveUserWordMap("");
+	}
+	
+	public boolean deleteWordMapAll(){
+		return wordMapDAO.deleteWordMap("", "");
 	}
 }

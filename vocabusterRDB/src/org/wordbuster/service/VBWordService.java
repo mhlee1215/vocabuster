@@ -125,4 +125,16 @@ public class VBWordService {
 		
 		return result;
 	}
+	
+	public boolean deleteWord(String wordName){
+		return wordDAO.deleteWord(wordName);
+	}
+	
+	public List<VBWord> retrieveWordAll(){
+		return wordDAO.searchWord("");
+	}
+	
+	public boolean deleteWordAll(){
+		return wordDAO.deleteWord("");
+	}
 }

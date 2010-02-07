@@ -264,9 +264,4 @@ public class wordController extends MultiActionController {
         DownloadUtil.download(request, rsponse, bis, original_filename, 0, null);
         return null;
     }
-	
-	public static void main(String[] argv) throws IOException{
-		MeaningGatherer mg = new MeaningGatherer();
-		VBWord word = mg.analysisWord("testify");
-	}
 }
