@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="GeneSql">
+
+	<resultMap id="Platform" class="ac.ssu.ml.domain.Platform">
+		<result column="ID" property="id" />
+		<result column="NAME" property="name" />
+		<result column="TITLE" property="title" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="LINK" property="link" />
+	</resultMap>
+  
+	<resultMap id="Gse" class="ac.ssu.ml.domain.Gse">
+		<result column="ID" property="id" />
+		<result column="TITLE" property="title" />
+		<result column="SUMMARY" property="summary" />
+		<result column="PUBID" property="pubid" />
+		<result column="LINK" property="link" />
+ 	</resultMap>
+
+ 	<resultMap id="Gpl" class="ac.ssu.ml.domain.Gpl">
+		<result column="ID" property="id" />
+		<result column="TITLE" property="title" />
+		<result column="ORGANISM" property="organism" />
+		<result column="SUMMARY" property="summary" />
+ 	</resultMap>
+ 	  
+ 	<resultMap id="Gpl2gse" class="ac.ssu.ml.domain.Gpl2gse">
+		<result column="GPLID" property="gplid" />
+		<result column="GSEID" property="gseid" />
+ 	</resultMap>
+ 	
+ 
+	<select id="readGse" parameterClass="String" resultClass="ac.ssu.ml.domain.Gse">
+		SELECT id, title, pubid, link 
+    	FROM gse
+    	$where$ 
+	</select>
+	
+	<select id="readGseByPk" parameterClass="String" resultClass="ac.ssu.ml.domain.Gse">
+		SELECT id, title, summary, pubid, link 
+    	FROM gse
+    	WHERE id = #id# 
+	</select>
+	
+	<select id="readGpl" parameterClass="String" resultMap="Gse">
+		SELECT id, title, organism, summary 
+    	FROM gpl
+    	$where$ 
+	</select>
+
+	<select id="readGpl2gse" resultMap="Gpl2gse">
+		SELECT * FROM gpl2gse WHERE gplid=#gplid#
+	</select>
+	
+	<select id="readPlatform" resultMap="Platform">
+		SELECT ID, NAME, TITLE, DESCRIPTION, LINK 
+    	FROM platform
+	</select>
+	
+	<select id="readGplByPk" resultMap="Gpl">
+		SELECT id, title, organism, summary 
+    	FROM gpl
+    	WHERE id = #id#
+	</select>
+	
+	<select id="readOrganismList" resultClass="ac.ssu.ml.domain.Gpl" >
+		SELECT distinct organism 
+    	FROM gpl
+	</select>
+	
+	<select id="readGplListByOrganism" parameterClass="String" resultMap="Gpl">
+		SELECT id, title, organism, summary 
+    	FROM gpl
+    	WHERE organism = #organism#
+	</select>
+	
+</sqlMap>
+
+

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wordbuster.dao.VBUserDAO;
 import org.wordbuster.dao.VBWordDAO;
+import org.wordbuster.dao.VBWordInfoDAO;
 import org.wordbuster.domain.VBUser;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
@@ -25,26 +26,17 @@ public class VBWordService {
 	@Autowired
 	private VBUserDAO userDAO;
 	
-	public static List<VBWordMap> syncWordMapWithWord(List<VBWordMap> wordMapList){
-		for(int i = 0 ; i < wordMapList.size() ; i++){
-			VBWord word = null; //pm.getObjectById(VBWord.class, wordMapList.get(i).getWordKey());
-			//VBWord detached = pm.detachCopy(word);
-			
-			//wordMapList.get(i).setWord(word);
-			//List<VBWordInfo> wordInfoList = (List<VBWordInfo>) pm.detachCopyAll(detached.getWordInfoList());
-			//detached.setWordInfoList(wordInfoList);
-			//wordMapList.get(i).setWord(detached);
-		}
-		return wordMapList;
-	}
+	@Autowired
+	private VBWordInfoDAO wordInfoDAO;
 	
-	public static VBWord getVBWord(String wordName){
-		VBWord word = null;//pm.getObjectById(VBWord.class, wordKey);
+	
+	public VBWord getVBWord(String wordName){
+		VBWord word = wordDAO.retrieveWord(wordName);//pm.getObjectById(VBWord.class, wordKey);
 		return word;
 	}
 	
-	public static Integer getVBWordCount(){
-		return 0;
+	public Integer getVBWordCount(){
+		return wordDAO.getVBWordCount();
 	}
 	
 	public static Integer getVBUserWordCount(HttpServletRequest req){
@@ -52,15 +44,16 @@ public class VBWordService {
 		return 0;
 	}
 	
-	public static String getRandomMeaning(VBWord word){
+	public String getRandomMeaning(VBWord word){
+		List<VBWordInfo> wordInfo = wordInfoDAO.retrieveWordInfo(word.getWordName());
 		Random oRandom = new Random();
-		int meaningIndex = oRandom.nextInt(word.getWordInfoList().size());
-		return word.getWordInfoList().get(meaningIndex).getShortMeaning();
+		int meaningIndex = oRandom.nextInt(wordInfo.size());
+		return wordInfo.get(meaningIndex).getShortMeaning();
 	}
 	
-	public static String getVBWordRandomMeaningByIndexExceptTarget(int index, VBWord targetWord){
+	public String getVBWordRandomMeaningByIndexExceptTarget(int index, VBWord targetWord){
 		System.out.println("index : "+index);
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		//PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query wordQuery = pm.newQuery(VBWord.class);
 		wordQuery.setResultClass(VBWord.class);
 		//wordQuery.setFilter("key != targetWordKey");
@@ -80,14 +73,14 @@ public class VBWordService {
 			else
 				resultMeaning = getRandomMeaning(result);
 		} finally{
-			pm.close();
+			//pm.close();
 		}
 		System.out.println("getVBWord: "+result);
 		return resultMeaning;
 	}
 	
-	public static List<String> makeSelection(VBWord targetWord, int selectionSize, int answerIndex){
-		int maxSize = VBWordService.getVBWordCount();
+	public List<String> makeSelection(VBWord targetWord, int selectionSize, int answerIndex){
+		int maxSize = wordDAO.getVBWordCount();
 		Integer[] selectionQueue = makeRandQueue(selectionSize, maxSize-1);
 		Vector<String> wordList = new Vector<String>();
 		int queueIndex = 0;
@@ -132,27 +125,4 @@ public class VBWordService {
 		
 		return result;
 	}
-	
-	public static void main(String[] argv){
-		Integer test = VBWordService.getVBWordCount();
-		System.out.println(test);
-		
-	}
-	
-	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
