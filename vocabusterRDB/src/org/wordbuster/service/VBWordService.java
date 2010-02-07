@@ -27,10 +27,10 @@ public class VBWordService {
 	
 	public static List<VBWordMap> syncWordMapWithWord(List<VBWordMap> wordMapList){
 		for(int i = 0 ; i < wordMapList.size() ; i++){
-			VBWord word = pm.getObjectById(VBWord.class, wordMapList.get(i).getWordKey());
+			VBWord word = null; //pm.getObjectById(VBWord.class, wordMapList.get(i).getWordKey());
 			//VBWord detached = pm.detachCopy(word);
 			
-			wordMapList.get(i).setWord(word);
+			//wordMapList.get(i).setWord(word);
 			//List<VBWordInfo> wordInfoList = (List<VBWordInfo>) pm.detachCopyAll(detached.getWordInfoList());
 			//detached.setWordInfoList(wordInfoList);
 			//wordMapList.get(i).setWord(detached);
@@ -38,40 +38,18 @@ public class VBWordService {
 		return wordMapList;
 	}
 	
-	public static VBWord getVBWord(Key wordKey){
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		VBWord word = pm.getObjectById(VBWord.class, wordKey);
+	public static VBWord getVBWord(String wordName){
+		VBWord word = null;//pm.getObjectById(VBWord.class, wordKey);
 		return word;
 	}
 	
 	public static Integer getVBWordCount(){
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query wordQuery = pm.newQuery(VBWord.class);
-		wordQuery.setResult("count(this)");
-		Integer wordQueryResult = null;
-		try {
-			wordQueryResult = (Integer) wordQuery.execute();
-		} finally {
-			wordQuery.closeAll();
-		}
-		return wordQueryResult;
+		return 0;
 	}
 	
 	public static Integer getVBUserWordCount(HttpServletRequest req){
 		VBUser vbuser = VBUserService.getVBUser(req);
-		
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query wordQuery = pm.newQuery(VBWordMap.class);
-		wordQuery.setResult("count(this)");
-		wordQuery.setFilter("userKey == searchUserKey");
-		wordQuery.declareParameters("String searchUserKey");
-		Integer wordQueryResult = null;
-		try {
-			wordQueryResult = (Integer) wordQuery.execute(vbuser.getKey());
-		} finally {
-			wordQuery.closeAll();
-		}
-		return wordQueryResult;
+		return 0;
 	}
 	
 	public static String getRandomMeaning(VBWord word){

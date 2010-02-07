@@ -5,49 +5,42 @@ import java.util.List;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.wordbuster.domain.VBWord;
+import org.wordbuster.domain.VBWordInfo;
 import org.wordbuster.domain.VBWordMap;
 
 @Repository
 public class VBWordDAO extends SqlMapClientDaoSupport {
-	VBWord retrieveWord(String wordName){
+	
+	public int getVBWordCount(){
+		return 0;
+	}
+	
+	public int getVBUserWordCount(){
+		return 0;
+	}
+	
+	public VBWord retrieveWord(String wordName){
 		return null;
 	}
 	
-	boolean insertWord(VBWord vBWord){
+	public boolean insertWord(VBWord vBWord){
 		return false;
 	}
 	
-	boolean updateWord(VBWord vBWord){
+	public boolean updateWord(VBWord vBWord){
 		return false;
 	}
 	
-	boolean deleteWord(String wordName){
+	public boolean deleteWord(String wordName){
 		return false;
 	}
 	
-	List<VBWordMap> retrieveUserWordMap(String userid){
-		return null;
-	}
 	
-	VBWordMap retrieveWordMap(String userid, String wordName){
-		return null;
-	}
 	
-	boolean insertWordMap(VBWordMap wordMap){
-		return false;
-	}
+
 	
-	boolean updateWordMap(VBWordMap wordMap){
-		return false;
-	}
+	 
 	
-	boolean deleteWordMap(String userid, String wordName){
-		return false;
-	}
-	
-	boolean deleteUserWordMap(String userid){
-		return false;
-	}
 	
 	
 	
