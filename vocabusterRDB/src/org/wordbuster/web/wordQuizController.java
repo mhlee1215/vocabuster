@@ -37,27 +37,15 @@ public class wordQuizController extends MultiActionController {
 		vBWordQuizVO.initVO();
 		bind(req, vBWordQuizVO);
 		System.out.println("VO: "+vBWordQuizVO);
-		VBUser vbuser = VBUserService.getVBUser(req);
-		
-		//PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query query = pm.newQuery(VBWordMap.class);
-		query.setOrdering("score asc, insertCount desc");
-		String filterStr = "userKey == searchUserKey";
-		String parameterStr = "String searchUserKey";
-		query.setFilter(filterStr);
-		query.declareParameters(parameterStr);
-		//delay count 가 5인 경우, 10이면 충분함?
-		query.setRange(0, 10);
+		String userid = (String) req.getSession().getAttribute("userid");
 
-		List<VBWordMap> wordMapList = null;//vbuser.getWordMapList();
-		try {
-			HashMap<String, Object> params = new HashMap<String, Object>();
-			System.out.println("searchUserKey: "+vbuser.getKey());
-			params.put("searchUserKey", vbuser.getKey());
-			wordMapList = (List<VBWordMap>)query.executeWithMap(params);
-		} finally {
-			query.closeAll();
-		}
+		vBWordQuizVO.setUserid(userid);
+		//delay count 가 5인 경우, 10이면 충분함?
+		vBWordQuizVO.setFromIndex("0");
+		vBWordQuizVO.setToIndex("10");
+		
+		
+		List<VBWordMap> wordMapList = wordService.retrieveQuestion(vBWordQuizVO);
 
 		Integer selectionSize = vBWordQuizVO.getSelectionCount();
 		VBWord targetWord = null;
@@ -70,30 +58,28 @@ public class wordQuizController extends MultiActionController {
 			for(int i = 0 ; i < wordMapList.size(); i++){
 				wordMapList.get(i).init();
 				System.out.println(wordMapList.get(i));
-				
-				Key wordMapKey = VBWordMap.createKey(user, wordMapList.get(i).getWordName());
-				VBWordMap candidateWordMap = pm.getObjectById(VBWordMap.class, wordMapKey);
+				String candidateWordName = wordMapList.get(i).getWordName();
+				//Key wordMapKey = VBWordMap.createKey(user, wordMapList.get(i).getWordName());
+				VBWordMap candidateWordMap = wordService.retrieveWordMap(userid, candidateWordName);//pm.getObjectById(VBWordMap.class, wordMapKey);
 				
 				if(candidateWordMap.isPossibleToSelect()){
-					targetWord = VBWordService.getVBWord(candidateWordMap.getWordKey());
+					targetWord = wordService.retrieveWord(candidateWordName);//VBWordService.getVBWord(candidateWordMap.getWordKey());
 					candidateWordMap.setDelay();
 					isFindTarget = true;
 					break;
 				}else{
 					candidateWordMap.decreaseDelay();
 				}
+				
+				wordService.updateWordMap(candidateWordMap);
+				
+				
 			}
-		}
-		
-		try {
-			
-		} finally {
-			pm.close();
 		}
 		
 		System.out.println("targetWord: "+targetWord);
 		
-		List<String> selectionList = VBWordService.makeSelection(targetWord, selectionSize, answerNumber);
+		List<String> selectionList = wordService.makeSelection(targetWord, selectionSize, answerNumber);
 		//for(int i = 0 ; i < selectionList.size() ;i++)
 		//	System.out.println(selectionList.get(i));
 		
@@ -108,17 +94,18 @@ public class wordQuizController extends MultiActionController {
 	
 	@RequestMapping("/submitAnswer.do")
 	public ModelAndView submitAnswer(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-		UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
+		//UserService userService = UserServiceFactory.getUserService();
+        //User user = userService.getCurrentUser();
 		VBWordQuizVO vBWordQuizVO = new VBWordQuizVO();
 		bind(req, vBWordQuizVO);
 		System.out.println("VO: "+vBWordQuizVO);
+		String userid = (String) req.getSession().getAttribute("userid");
 		
-		Key wordMapKey = VBWordMap.createKey(user, vBWordQuizVO.getQuizWordName());
+		//Key wordMapKey = VBWordMap.createKey(user, vBWordQuizVO.getQuizWordName());
 		
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		//PersistenceManager pm = PMF.get().getPersistenceManager();
 		
-		VBWordMap targetWordMap = pm.getObjectById(VBWordMap.class, wordMapKey);
+		VBWordMap targetWordMap = wordService.retrieveWordMap(userid, vBWordQuizVO.getQuizWordName());//pm.getObjectById(VBWordMap.class, wordMapKey);
 		try{
 			if("Y".equals(vBWordQuizVO.getIsCorrect())){
 				targetWordMap.correct();
@@ -128,8 +115,11 @@ public class wordQuizController extends MultiActionController {
 				targetWordMap.wrong();
 				System.out.println(vBWordQuizVO.getQuizWordName()+" is wrong..");
 			}
-		} finally {
-			pm.close();
+			
+			wordService.updateWordMap(targetWordMap);
+			
+		}catch(Exception e){
+			
 		}
 		return null;
 	}

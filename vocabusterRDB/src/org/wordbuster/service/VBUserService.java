@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.wordbuster.dao.VBUserDAO;
 import org.wordbuster.domain.VBUser;
 
@@ -23,21 +25,14 @@ public class VBUserService {
 	 * Get vbuser from session
 	 * @param req
 	 * @return
+	 * @throws ServletRequestBindingException 
 	 */
-	public static VBUser getVBUser(HttpServletRequest req){
-		VBUser vbuser = (VBUser) req.getSession().getAttribute("vbuser");
-		
-		if(vbuser == null){
-		    
-			vbuser =  null;//pm.getObjectById(VBUser.class, userKey); 
-			
-			if(vbuser != null)
-				setVBUser(vbuser, req);
-		}
-		if(vbuser == null){
-			logger.debug("NEW USER is COMMING!");
-		}
-		return vbuser;
+	public VBUser getVBUser(HttpServletRequest req) throws ServletRequestBindingException{
+		return (VBUser) req.getSession().getAttribute("vbuser");
+	}
+	
+	public VBUser getVBUser(String email, String password) throws ServletRequestBindingException{
+		return userDAO.retrieveUserByPassword(email, password);
 	}
 	
 	/**
@@ -45,7 +40,7 @@ public class VBUserService {
 	 * @param user
 	 * @param req
 	 */
-	public static void setVBUser(VBUser user, HttpServletRequest req){
+	public void setVBUser(VBUser user, HttpServletRequest req){
 		req.getSession().setAttribute("vbusesr", user);
 	}
 	
@@ -53,19 +48,19 @@ public class VBUserService {
 	 * VB 사용자 추가
 	 * @param req
 	 * @return
+	 * @throws ServletRequestBindingException 
 	 */
-	public static VBUser addUser(HttpServletRequest req){
-        Calendar c = Calendar.getInstance();
-        Date firstUseDate = c.getTime();
-        
-        String userid = "";
+	public VBUser addUser(HttpServletRequest req) throws ServletRequestBindingException{
+		
+        String email = ServletRequestUtils.getRequiredStringParameter(req, "email");
+        String password = ServletRequestUtils.getRequiredStringParameter(req, "password");
         
         VBUser vBUser = new VBUser();
-        vBUser.setUserid(userid);
-        vBUser.setFirstUseDate(firstUseDate);
+        vBUser.setEmail(email);
+        vBUser.setPassword(password);
         
-        //pm.makePersistent(vBUser);
-        return null;
+        userDAO.insertUser(vBUser);
+        return vBUser;
 	}
 	
 }

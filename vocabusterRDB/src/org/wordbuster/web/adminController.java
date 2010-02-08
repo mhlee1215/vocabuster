@@ -15,7 +15,6 @@ import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
 import org.wordbuster.domain.VBWordMap;
 import org.wordbuster.domain.VBWordSearchVO;
-import org.wordbuster.service.VBWordMapService;
 import org.wordbuster.service.VBWordService;
 import org.wordbuster.util.MeaningGatherer;
 
@@ -24,9 +23,6 @@ import org.wordbuster.util.MeaningGatherer;
 public class adminController extends MultiActionController {
 	@Autowired
 	private VBWordService wordService;
-	@Autowired
-	private VBWordMapService wordMapService;
-	
 	
 	@RequestMapping("/adminRecrowling.do")
 	public ModelAndView adminRecrowling(HttpServletRequest req, HttpServletResponse resp) throws Exception{
@@ -36,24 +32,15 @@ public class adminController extends MultiActionController {
 		//String keyword = ServletRequestUtils.getStringParameter(req, "keyword", "");
 		List<VBWord> wordList = null;
 		HashMap<String, String> map;
-		//PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query query = pm.newQuery(VBWord.class);
-		query.setOrdering("insertedCount desc");
-		if(!vBWordSearchVO.getSearchKeyword().equals("")){
-			query.setFilter("wordName == searchWordName");
-			query.declareParameters("String searchWordName");
-		}
-		try {
-			wordList = (List<VBWord>)query.execute(vBWordSearchVO.getSearchKeyword());
-		} finally {
-			query.closeAll();
-		}
+		
+		wordList = wordService.retrieveWord(vBWordSearchVO);//(List<VBWord>)query.execute(vBWordSearchVO.getSearchKeyword());
 		
 		
 		MeaningGatherer mg = new MeaningGatherer();
 		try{
-			Query wordInfoQuery = pm.newQuery(VBWordInfo.class);
-			wordInfoQuery.deletePersistentAll();
+			//Query wordInfoQuery = pm.newQuery(VBWordInfo.class);
+			//wordInfoQuery.deletePersistentAll();
+			wordService.deleteWordInfoAll();
 			for(int i = 0 ; i < wordList.size() ; i++){
 				String wordStr = wordList.get(i).getWordName();
 				System.out.println("rcrowling: "+wordStr);
@@ -62,20 +49,21 @@ public class adminController extends MultiActionController {
 				VBWord word = mg.analysisWord(wordStr, false);
 				//PersistenceManager deletePm = JDOHelper.getPersistenceManager(vbuser);
 				if(word == null){
-					pm.deletePersistent(wordList.get(i));
+					
+					//pm.deletePersistent(wordList.get(i));
 					//wordList.remove(i);
 					//i--;
 				}
 				else{
-					if(word.getWordInfoList() != null && word.getWordInfoList().size() > 0)
-						pm.makePersistent(word);
+					if(word.getWordInfoList() != null && word.getWordInfoList().size() > 0){
+					//	pm.makePersistent(word);
+					}
 				}
 				//wordList.set(i, mg.analysisWord(wordStr));
 				//deletePm.close();
 			}
-			//pm.makePersistentAll(wordList);
-		} finally{
-			//pm.close();
+		}catch(Exception e){
+			
 		}
 		
 		ModelAndView result = new ModelAndView("ajaxResult/adminRecrowlingResult");
@@ -91,7 +79,7 @@ public class adminController extends MultiActionController {
 		//String keyword = ServletRequestUtils.getStringParameter(req, "keyword", "");
 		List<VBWordMap> wordMapList = null;
 		
-		wordMapList = wordMapService.retrieveWordMapListAll();//(List<VBWordMap>)query.execute();
+		wordMapList = wordService.retrieveWordMapListAll();//(List<VBWordMap>)query.execute();
 		
 		
 		//PersistenceManager wordPm = PMF.get().getPersistenceManager();
@@ -113,7 +101,7 @@ public class adminController extends MultiActionController {
 	
 	@RequestMapping("/adminDeleteWordMapAll.do")
 	public ModelAndView adminDeleteWordMapAll(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-		boolean queryResult = wordMapService.deleteWordMapAll();
+		boolean queryResult = wordService.deleteWordMapAll();
 		ModelAndView result = new ModelAndView("ajaxResult/adminWordMapValidationResult");
 		return result;
 	}

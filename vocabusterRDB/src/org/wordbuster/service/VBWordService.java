@@ -1,5 +1,6 @@
 package org.wordbuster.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
@@ -11,10 +12,13 @@ import org.springframework.stereotype.Service;
 import org.wordbuster.dao.VBUserDAO;
 import org.wordbuster.dao.VBWordDAO;
 import org.wordbuster.dao.VBWordInfoDAO;
+import org.wordbuster.dao.VBWordMapDAO;
 import org.wordbuster.domain.VBUser;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
 import org.wordbuster.domain.VBWordMap;
+import org.wordbuster.domain.VBWordQuizVO;
+import org.wordbuster.domain.VBWordSearchVO;
 
 
 @Service
@@ -29,6 +33,9 @@ public class VBWordService {
 	@Autowired
 	private VBWordInfoDAO wordInfoDAO;
 	
+	@Autowired
+	private VBWordMapDAO wordMapDAO;
+	
 	
 	public VBWord getVBWord(String wordName){
 		VBWord word = wordDAO.retrieveWord(wordName);//pm.getObjectById(VBWord.class, wordKey);
@@ -39,9 +46,8 @@ public class VBWordService {
 		return wordDAO.getVBWordCount();
 	}
 	
-	public static Integer getVBUserWordCount(HttpServletRequest req){
-		VBUser vbuser = VBUserService.getVBUser(req);
-		return 0;
+	public Integer getVBUserWordCount(String email){
+		return wordMapDAO.getVBUserWordCount(email);
 	}
 	
 	public String getRandomMeaning(VBWord word){
@@ -138,7 +144,56 @@ public class VBWordService {
 		return wordDAO.deleteWord("");
 	}
 	
-	public VBWord retrieveWord(String wordStr){
-	    return null;
+	public boolean deleteWordInfoAll(){
+		return wordInfoDAO.deleteWordInfoList("");
 	}
+	
+	public VBWord retrieveWord(String wordName){
+	    return wordDAO.retrieveWord(wordName);
+	}
+	
+	public boolean insertWord(VBWord word){
+		return wordDAO.insertWord(word);
+	}
+	
+	public boolean insertWordInfoList(String wordName, List<VBWordInfo> wordInfoList){
+		return false;//wordInfoDAO.insertWordInfoList(wordName, wordInfoList);
+	}
+	
+	public List<VBWordMap> retrieveWordMapListAll(){
+		return wordMapDAO.retrieveUserWordMap("");
+	}
+	
+	public boolean deleteWordMapAll(){
+		return wordMapDAO.deleteWordMap("", "");
+	}
+	
+	public VBWordMap retrieveWordMap(String userid, String wordName){
+		return null;
+	}
+	
+	public boolean insertWordMap(VBWordMap wordMap){
+		return true;
+	}
+	
+	public List<VBWord> retrieveWord(VBWordSearchVO searchVO){
+		return null;
+	}
+	
+	public List<VBWordMap> syncWordMapWithWord(List<VBWordMap> wordList){
+		return null;
+	}
+	
+	public List<VBWordMap> retrieveMyWord(String userid, VBWordSearchVO searchVO){
+		return null;
+	}
+	
+	public List<VBWordMap> retrieveQuestion(VBWordQuizVO quizVO){
+		return null;
+	}
+	
+	public boolean updateWordMap(VBWordMap wordMap){
+		return false;
+	}
+	
 }

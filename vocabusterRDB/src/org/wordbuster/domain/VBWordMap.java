@@ -1,7 +1,6 @@
 package org.wordbuster.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class VBWordMap implements Serializable{
 	
@@ -12,7 +11,7 @@ public class VBWordMap implements Serializable{
 	private static final long serialVersionUID = -8800596332153397994L;
 	private final int MAX_DELAY_COUNT = 5;
 	private final int ANSWER_WEIGHT = 1;
-	private final int WRONG_WEIGHT = 5;
+	//private final int WRONG_WEIGHT = 5;
 	
 	private String userid;
 	private String wordName;
@@ -97,6 +96,12 @@ public class VBWordMap implements Serializable{
 		return false;
 	}
 	
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
 	public Integer getAnswerCount() {
 		return answerCount;
 	}
@@ -154,12 +159,12 @@ public class VBWordMap implements Serializable{
 
 	@Override
 	public String toString() {
-		return "VBWordMap [answerCount=" + answerCount + ", answerRate="
-				+ answerRate + ", delayCount=" + delayCount + ", insertCount="
-				+ insertCount + ", score=" + score + ", totalCount="
-				+ totalCount + ", wordName=" + wordName + ", wrongCount="
-				+ wrongCount + ", wrongRate=" + wrongRate + "]";
+		return "VBWordMap [ANSWER_WEIGHT=" + ANSWER_WEIGHT
+				+ ", MAX_DELAY_COUNT=" + MAX_DELAY_COUNT + ", answerCount="
+				+ answerCount + ", answerRate=" + answerRate + ", delayCount="
+				+ delayCount + ", insertCount=" + insertCount + ", score="
+				+ score + ", totalCount=" + totalCount + ", userid=" + userid
+				+ ", wordName=" + wordName + ", wrongCount=" + wrongCount
+				+ ", wrongRate=" + wrongRate + "]";
 	}
-	
-	
 }

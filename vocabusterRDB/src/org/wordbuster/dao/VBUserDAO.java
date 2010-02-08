@@ -4,6 +4,11 @@ import org.wordbuster.domain.VBUser;
 
 
 public class VBUserDAO {
+	
+	public VBUser retrieveUserByPassword(String userid, String password){
+		return null;
+	}
+	
 	public VBUser retrieveUser(String userid){
 		return null;
 	}

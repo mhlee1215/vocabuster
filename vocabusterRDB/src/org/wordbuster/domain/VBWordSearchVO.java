@@ -14,15 +14,20 @@ public class VBWordSearchVO extends VBNavigationVO{
 	 */
 	private String searchKeyword;
 	/**
-	 * 정렬순 
+	 * 정렬 스트링
 	 */
-	private String searchOrder;
+	private String searchOrderString;
 	/**
 	 * 조회 결과 타입 (i.e. 테이블, 리스트..) 
 	 */
 	private String searchResultType;
-	
-	
+
+	public String getSearchOrderString() {
+		return searchOrderString;
+	}
+	public void setSearchOrderString(String searchOrderString) {
+		this.searchOrderString = searchOrderString;
+	}
 	public String getSearchResultType() {
 		return searchResultType;
 	}
@@ -47,17 +52,12 @@ public class VBWordSearchVO extends VBNavigationVO{
 	public void setSearchKeyword(String searchKeyword) {
 		this.searchKeyword = searchKeyword;
 	}
-	public String getSearchOrder() {
-		return searchOrder;
-	}
-	public void setSearchOrder(String searchOrder) {
-		this.searchOrder = searchOrder;
-	}
+	
 	@Override
 	public String toString() {
 		return "VBWordSearchVO [searchCategory=" + searchCategory
-				+ ", searchKeyword=" + searchKeyword + ", searchOrder="
-				+ searchOrder + ", searchResultType=" + searchResultType
+				+ ", searchKeyword=" + searchKeyword + ", searchOrderString="
+				+ searchOrderString + ", searchResultType=" + searchResultType
 				+ ", searchType=" + searchType + "]";
 	}
 	

@@ -7,23 +7,21 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	
 
-	<servlet>
-		<servlet-name>TestApp</servlet-name>
-		<servlet-class>org.wordbuster.servlet.TestAppServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>SignGuestbookServlet</servlet-name>
-		<servlet-class>org.wordbuster.servlet.SignGuestbookServlet</servlet-class>
-	</servlet>
-		
-	<servlet-mapping>
-		<servlet-name>TestApp</servlet-name>
-		<url-pattern>/testapp</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>SignGuestbookServlet</servlet-name>
-		<url-pattern>/sign</url-pattern>
-	</servlet-mapping>
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/conf/log4j.properties</param-value>
+	</context-param>
+	
+	<context-param>
+  		<param-name>contextConfigLocation</param-name>
+  		<param-value>/WEB-INF/conf/*Context.xml</param-value>
+	</context-param>
+    <listener>
+    	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

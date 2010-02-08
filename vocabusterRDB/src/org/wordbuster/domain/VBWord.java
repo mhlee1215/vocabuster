@@ -39,7 +39,21 @@ public class VBWord {
 	 * 뜻 언어
 	 */
 	private String meaningLanauge;
+
+	/**
+	 * 단어 뜻
+	 */
+	private List<VBWordInfo> wordInfoList;
 	
+	
+	public List<VBWordInfo> getWordInfoList() {
+		return wordInfoList;
+	}
+
+	public void setWordInfoList(List<VBWordInfo> wordInfoList) {
+		this.wordInfoList = wordInfoList;
+	}
+
 	public VBWord(){
 		init();
 	}

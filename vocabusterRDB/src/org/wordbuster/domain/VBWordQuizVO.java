@@ -1,6 +1,7 @@
 package org.wordbuster.domain;
 
 public class VBWordQuizVO {
+	private String userid;
 	//문제 불러올때 사용
 	private Integer selectionCount;		//보기 수
 	private Integer questionCount;		//퀴즈 번호
@@ -10,6 +11,39 @@ public class VBWordQuizVO {
 	private String quizWordName;		//퀴즈 단어
 	private String isCorrect;			//퀴즈 정답여부
 	
+	private String fromIndex;			//검색 시작 인덱스
+	private String toIndex;				//검색 종료 인덱스
+	
+	/**
+	 * 정렬 스트링
+	 */
+	private String searchOrderString;
+	
+	
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+	public String getSearchOrderString() {
+		return searchOrderString;
+	}
+	public void setSearchOrderString(String searchOrderString) {
+		this.searchOrderString = searchOrderString;
+	}
+	public String getFromIndex() {
+		return fromIndex;
+	}
+	public void setFromIndex(String fromIndex) {
+		this.fromIndex = fromIndex;
+	}
+	public String getToIndex() {
+		return toIndex;
+	}
+	public void setToIndex(String toIndex) {
+		this.toIndex = toIndex;
+	}
 	public Integer getQuestionCount() {
 		return questionCount;
 	}

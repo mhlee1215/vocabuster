@@ -37,7 +37,7 @@
 	  boolean isFindVBUser = false;
 	  
 	  if (user != null) {
-	  	vBUser = VBUserService.getVBUser(request);
+	  	vBUser = null;//VBUserService.getVBUser(request);
 	  	if(vBUser != null) isFindVBUser = true;
 	  }
   %>
@@ -80,8 +80,8 @@
   			안녕, ! (로그아웃 하려면 ->
 			<a href="">sign out</a>.)
 			<br>
-			총 단어 갯수 <%=VBWordService.getVBWordCount()%>&nbsp;&nbsp;
-			내 단어 갯수 <%=VBWordService.getVBUserWordCount(request)%><br>
+			총 단어 갯수 &nbsp;&nbsp;
+			내 단어 갯수 <br>
 			<br>
 			<!-- 네비게이터 시작 -->
 			<div id="radio1">
