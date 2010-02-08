@@ -1,69 +1,87 @@
 package org.wordbuster.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
-public class VBUser implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5901428787783894579L;
+public class VBUser{
 
-	private String userid;
-    
+	private String email;
+	private String isdelete;
+	private String password;
+	private String status;
+	private int seq;
+	
+	
     /**
-     * 최초 사용일
+     * 등록일
      */
-    private Date firstUseDate;
+    private String admindate;
     
     /**
      * 마지막 사용일
      */
-    private Date latestUseDate;
+    private String latestUseDate;
     
 	public VBUser(){
     	
     }
-    
-    public VBUser(String nickName){
-    	
-    }
-    
-    public VBUser(String userid, Date firstUseDate, Date latestUseDate){
-    	this.userid = userid;
-    	this.firstUseDate = firstUseDate;
-    	this.latestUseDate = latestUseDate;
+
+    public String getEmail() {
+        return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getIsdelete() {
+        return isdelete;
+    }
+
+    public void setIsdelete(String isdelete) {
+        this.isdelete = isdelete;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getSeq() {
+        return seq;
+    }
+
+    public void setSeq(int seq) {
+        this.seq = seq;
+    }
+
+    public String getAdmindate() {
+        return admindate;
+    }
+
+    public void setAdmindate(String admindate) {
+        this.admindate = admindate;
+    }
+
+    public String getLatestUseDate() {
+        return latestUseDate;
+    }
+
+    public void setLatestUseDate(String latestUseDate) {
+        this.latestUseDate = latestUseDate;
+    }
     
+	
 
-
-	public String getUserid() {
-		return userid;
-	}
-
-	public void setUserid(String userid) {
-		this.userid = userid;
-	}
-
-	public Date getFirstUseDate() {
-		return firstUseDate;
-	}
-
-	public void setFirstUseDate(Date firstUseDate) {
-		this.firstUseDate = firstUseDate;
-	}
-
-	public Date getLatestUseDate() {
-		return latestUseDate;
-	}
-
-	public void setLatestUseDate(Date latestUseDate) {
-		this.latestUseDate = latestUseDate;
-	}
-    
     
 
 }

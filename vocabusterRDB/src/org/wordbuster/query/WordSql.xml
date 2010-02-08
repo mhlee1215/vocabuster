@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="WordSql">
+	<select id="findWord" parameterClass="org.wordbuster.domain.VBWord" resultClass="org.wordbuster.domain.VBWord">
+		SELECT wordname, imageurl, soundhtml, soundsymbol, insertcount, wordlanguage, meaninglanguage, admindate 
+    	FROM vbword 
+    	WHERE wordname = '$wordName$'
+	</select>
+	<select id="searchWord" parameterClass="org.wordbuster.domain.VBSearchVO" resultClass="java.util.HashMap">
+		SELECT wordname, imageurl, soundhtml, soundsymbol, insertcount, wordlanguage, meaninglanguage, admindate 
+    	FROM vbword
+    	WHERE 1=1 
+	</select>
+	
+	<update id="updateWord" parameterClass="org.wordbuster.domain.VBWord" >
+		UPDATE vbword 
+    	SET 
+    		wordname='$wordName$'
+    		<isNotEmpty property="imageUrl">
+    		, imageurl='$imageUrl$'
+    		</isNotEmpty>
+    		<isNotEmpty property="soundHtml">
+    		, soundhtml='$soundHtml$'
+    		</isNotEmpty>
+    		<isNotEmpty property="soundSymbol">
+    		, soundsymbol='$soundSymbol$'
+    		</isNotEmpty>
+    		<isNotEmpty property="insertedCount">
+    		, insertcount=$insertedCount$
+    		</isNotEmpty>
+    		<isNotEmpty property="wordLanguage">
+    		, wordlanguage='$wordLanguage$'
+    		</isNotEmpty>
+    		<isNotEmpty property="meaningLanauge">
+    		, meaninglanguage='$meaningLanauge$'
+    		</isNotEmpty>
+    	WHERE 
+    	     wordname='$wordName$'
+    	
+	</update>
+	
+	<update id="increaseWordInsertCount" parameterClass="org.wordbuster.domain.VBWord" >
+		UPDATE 
+			vbword 
+    	SET
+    		insertcount =  insertcount+1
+    	WHERE 
+    		wordname='$wordName$'
+	</update>
+	
+	<insert id="insertWord" parameterClass="org.wordbuster.domain.VBWord" >
+		INSERT INTO 
+			vbword(
+				wordname, 
+				imageurl, 
+				soundhtml, 
+				soundsymbol, 
+				insertcount, 
+				wordlanguage, 
+				meaninglanguage, 
+				admindate
+			) 
+    	VALUES(
+    			'$wordName$', 
+    			'$imageUrl$', 
+    			'$soundHtml$', 
+    			'$soundSymbol$', 
+    			1, 
+    			'$wordLanguage$', 
+    			'$meaningLanauge$', 
+    			DATE_FORMAT(NOW(), "%Y%m%d%H%i%s")
+    	)
+	</insert>
+	
+	<delete id="deleteWord" parameterClass="org.wordbuster.domain.VBWord" >
+		DELETE 
+			FROM vbword 
+		WHERE wordname = '$wordName$' 
+	</delete>
+</sqlMap>
+
+

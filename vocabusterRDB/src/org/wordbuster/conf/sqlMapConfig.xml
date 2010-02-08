@@ -29,8 +29,9 @@
         </dataSource>
     </transactionManager>
   
-  <sqlMap resource="query/UserSql.xml"/>
-  <sqlMap resource="query/TaskSql.xml"/>
-  <sqlMap resource="query/GeneSql.xml"/>
+  <sqlMap resource="org/wordbuster/query/UserSql.xml"/>
+  <sqlMap resource="org/wordbuster/query/WordSql.xml"/>
+  <sqlMap resource="org/wordbuster/query/WordMapSql.xml"/>
+  <sqlMap resource="org/wordbuster/query/WordInfoSql.xml"/>
   
 </sqlMapConfig>

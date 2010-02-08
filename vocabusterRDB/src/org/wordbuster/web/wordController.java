@@ -81,7 +81,7 @@ public class wordController extends MultiActionController {
 			//Determine whether inserted word is already registered or not
 			VBWord word = null;
 			try{
-				word = wordPm.getObjectById(VBWord.class, VBWord.createKey(wordStr));
+				word = wordService.retrieveWord(wordStr);// wordPm.getObjectById(VBWord.class, VBWord.createKey(wordStr));
 			}catch(Exception e){
 				System.out.println("Couldn't find int word pool.");
 			}

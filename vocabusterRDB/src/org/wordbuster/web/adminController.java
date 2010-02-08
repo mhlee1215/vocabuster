@@ -1,5 +1,6 @@
 package org.wordbuster.web;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,7 @@ public class adminController extends MultiActionController {
 		System.out.println("VO: "+vBWordSearchVO);
 		//String keyword = ServletRequestUtils.getStringParameter(req, "keyword", "");
 		List<VBWord> wordList = null;
-		
+		HashMap<String, String> map;
 		//PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query query = pm.newQuery(VBWord.class);
 		query.setOrdering("insertedCount desc");

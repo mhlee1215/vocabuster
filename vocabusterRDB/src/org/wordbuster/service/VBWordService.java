@@ -137,4 +137,8 @@ public class VBWordService {
 	public boolean deleteWordAll(){
 		return wordDAO.deleteWord("");
 	}
+	
+	public VBWord retrieveWord(String wordStr){
+	    return null;
+	}
 }

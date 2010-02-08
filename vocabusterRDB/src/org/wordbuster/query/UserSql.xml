@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="UserSql">
+	<select id="findUser" parameterClass="org.wordbuster.domain.VBUser" resultClass="ac.ssu.ml.domain.Gse">
+		SELECT email, password, admindate, status, isdelete, seq, latestusedate 
+    	FROM vbuser
+    	WHERE email = '$email$'
+	</select>
+	
+	<insert id="insertUser" parameterClass="org.wordbuster.domain.VBUser" >
+		INSERT INTO 
+			vbuser(
+				email, 
+				password, 
+				admindate, 
+				status, 
+				isdelete, 
+				seq,
+				latestusedate
+			) 
+   		VALUES(
+   			'$email$', 
+   			'$password$', 
+   			DATE_FORMAT(NOW(), "%Y%m%d%H%i%s"), 
+   			'NA', 
+   			'N', 
+   			0,
+   			DATE_FORMAT(NOW(), "%Y%m%d%H%i%s")
+   		)
+	</insert>
+	
+	<update id="updateUser" parameterClass="org.wordbuster.domain.VBUser" >
+		UPDATE vbuser 
+	    SET 
+	    	email='$email$'
+	    	<isNotEmpty property="password">
+	    	, password='$password$'
+	    	</isNotEmpty>
+	    	<isNotEmpty property="status">
+	    	, status='$status$'
+	    	</isNotEmpty>
+	    	<isNotEmpty property="isdelete">
+	    	, isdelete='$isdelete$'
+	    	</isNotEmpty>
+	    	, latestusedate=DATE_FORMAT(NOW(), "%Y%m%d%H%i%s")
+    	WHERE 
+    		email = '$email$'
+	</update>
+	
+	<delete id="deleteUser" parameterClass="org.wordbuster.domain.VBUser" >
+		DELETE FROM vbuser 
+		WHERE email = '$email$'
+	</delete>
+</sqlMap>
+
+
