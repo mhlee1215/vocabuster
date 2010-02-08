@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.wordbuster.domain.User;
 import org.wordbuster.domain.VBWordInfo;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -19,16 +20,21 @@ public class VBWordInfoDAO extends SqlMapClientDaoSupport{
 	 }
 	
 	public List<VBWordInfo> retrieveWordInfo(String wordName){
-		return null;
+		VBWordInfo wordInfo = new VBWordInfo();
+		wordInfo.setWordname(wordName);
+		List<VBWordInfo> array = getSqlMapClientTemplate().queryForList("WordInfoSql.retrieveWordInfo", wordInfo);
+		return array;
 	}
 	
 	public boolean insertWordInfoList(VBWordInfo wordInfo){
+		getSqlMapClientTemplate().insert("WordInfoSql.insertWordInfo", wordInfo);
 		return true;
 	}
 	
 	public boolean deleteWordInfoList(String wordName){
+		VBWordInfo wordInfo = new VBWordInfo();
+		wordInfo.setWordname(wordName);
+		getSqlMapClientTemplate().delete("WordInfoSql.deleteWordInfo", wordInfo);
 		return true;
 	}
-	
-	
 }

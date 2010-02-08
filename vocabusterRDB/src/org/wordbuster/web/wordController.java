@@ -85,6 +85,7 @@ public class wordController extends MultiActionController {
 			try{
 				word = wordService.retrieveWord(wordStr);// wordPm.getObjectById(VBWord.class, VBWord.createKey(wordStr));
 			}catch(Exception e){
+				e.printStackTrace();
 				System.out.println("Couldn't find int word pool.");
 			}
 			//If the word is already registered
@@ -106,7 +107,7 @@ public class wordController extends MultiActionController {
 					isSuccess = "0";
 				}else{
 					isSuccess = "1";
-					sampleMeaning = word.getWordInfoList().get(0).getShortMeaning();
+					sampleMeaning = word.getWordInfoList().get(0).getShortmeaning();
 				}
 				
 				
@@ -152,6 +153,7 @@ public class wordController extends MultiActionController {
 				isSuccess = "0";
 			}
 		}catch(Exception e){
+			e.printStackTrace();
 			addWordMapResult = "error";
 			isSuccess = "0";
 		}finally{

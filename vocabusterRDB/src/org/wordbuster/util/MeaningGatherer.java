@@ -113,7 +113,7 @@ public class MeaningGatherer {
 		HtmlCleaner cleaner = new HtmlCleaner();
 		TagNode node = cleaner.clean(resultHtml);
 		
-		List<VBWordInfo> wordInfoList = getMeaning(node);
+		List<VBWordInfo> wordInfoList = getMeaning(wordStr, node);
 		String soundTag = getSoundTag(node);
 		String soundSymbol = getSoundSymbol(node);
 		
@@ -130,7 +130,7 @@ public class MeaningGatherer {
 				System.out.println("call second Url : "+url);
 				String secondResultHtml = crowler.getHtml(url);
 				TagNode secondNode = cleaner.clean(secondResultHtml);
-				wordInfoList = getMeaning(secondNode);
+				wordInfoList = getMeaning(wordStr, secondNode);
 				soundTag = getSoundTag(secondNode);
 				soundSymbol = getSoundSymbol(secondNode);
 			}else{
@@ -139,7 +139,7 @@ public class MeaningGatherer {
 			}
 		}
 		
-		
+		word.setWordInfoList(wordInfoList);
 		word.setWordName(wordStr);
 		word.setSoundHtml(soundTag);
 		word.setSoundSymbol(soundSymbol);
@@ -163,7 +163,7 @@ public class MeaningGatherer {
 		}
 		return result;
 	}
-	public List<VBWordInfo> getMeaning(TagNode node) throws IOException{
+	public List<VBWordInfo> getMeaning(String wordName, TagNode node) throws IOException{
 		TagNode[] ulNodes = node.getElementsByName("ul", true);
 		if(ulNodes == null || ulNodes.length == 0){
 			return null;
@@ -218,9 +218,12 @@ public class MeaningGatherer {
 					
 					//System.out.println("max :"+maxMeaningNum+", "+i+", "+myNodes[i].getText().toString().trim());
 					VBWordInfo wi = new VBWordInfo();
-					//wi.setCategory("N/A");
-					wi.setMeaning(meaning);
-					wi.setShortMeaning(shortMeaning);
+					wi.setWordname(wordName);
+					wi.setSeq(Integer.toString(i));
+					wi.setFullmeaning(meaning);
+					wi.setShortmeaning(shortMeaning);
+					//TODO: need more work.
+					wi.setCategoryid("");
 					resultVector.add(wi);
 				}
 			}

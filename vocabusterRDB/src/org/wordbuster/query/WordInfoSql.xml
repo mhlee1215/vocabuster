@@ -10,24 +10,19 @@
     	WHERE 
 	</select>
 	
-	<select id="retrieveWordInfo" parameterClass="org.wordbuster.domain.VBWord" resultClass="org.wordbuster.domain.VBWordInfo">
+	<select id="retrieveWordInfo" parameterClass="org.wordbuster.domain.VBWordInfo" resultClass="org.wordbuster.domain.VBWordInfo">
 		SELECT wordname, seq, fullmeaning, shortmeaning, categoryid 
     	FROM vbwordinfo
+    	WHERE wordname = '$wordname$'
 	</select>
-	
-	<update id="updateWordInfo" parameterClass="org.wordbuster.domain.VBWordInfo" >
-		UPDATE vbwordinfo 
-    	SET wordname='', seq='', fullmeaning='', shortmeaning='', categoryid=0
-    	WHERE 
-	</update>
 	
 	<insert id="insertWordInfo" parameterClass="org.wordbuster.domain.VBWordInfo" >
 		INSERT INTO vbwordinfo(wordname, seq, fullmeaning, shortmeaning, categoryid) 
-    	VALUES('', '', '', '', 0)
+    	VALUES('$wordname$', '$seq$', '$fullmeaning$', '$shortmeaning$', '$categoryid$' )
 	</insert>
 	
 	<delete id="deleteWordInfo" parameterClass="org.wordbuster.domain.VBWordInfo" >
-		DELETE FROM vbwordinfo WHERE 
+		DELETE FROM vbwordinfo WHERE wordname = '$wordname$'
 	</delete>
 	
 	

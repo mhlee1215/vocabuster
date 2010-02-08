@@ -37,6 +37,7 @@ public class VBWordDAO extends SqlMapClientDaoSupport {
 	}
 	
 	public boolean insertWord(VBWord vBWord){
+		getSqlMapClientTemplate().insert("WordSql.insertWord", vBWord);
 		return false;
 	}
 	

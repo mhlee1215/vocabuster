@@ -54,7 +54,7 @@ public class VBWordService {
 		List<VBWordInfo> wordInfo = wordInfoDAO.retrieveWordInfo(word.getWordName());
 		Random oRandom = new Random();
 		int meaningIndex = oRandom.nextInt(wordInfo.size());
-		return wordInfo.get(meaningIndex).getShortMeaning();
+		return wordInfo.get(meaningIndex).getShortmeaning();
 	}
 	
 	public String getVBWordRandomMeaningByIndexExceptTarget(int index, VBWord targetWord){
@@ -157,7 +157,9 @@ public class VBWordService {
 	}
 	
 	public boolean insertWordInfoList(String wordName, List<VBWordInfo> wordInfoList){
-		return false;//wordInfoDAO.insertWordInfoList(wordName, wordInfoList);
+		for(int i = 0 ; i < wordInfoList.size() ; i++)
+			wordInfoDAO.insertWordInfoList(wordInfoList.get(i));
+		return true;
 	}
 	
 	public List<VBWordMap> retrieveWordMapListAll(){
