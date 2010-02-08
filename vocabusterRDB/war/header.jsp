@@ -31,16 +31,10 @@
 	.vb-body { margin-top:0px; margin-left:5px; }
 </style>	
   
-  <% 
-	  VBUser user = null;
-  	  VBUser vBUser = null;
-	  boolean isFindVBUser = false;
-	  
-	  if (user != null) {
-	  	vBUser = null;//VBUserService.getVBUser(request);
-	  	if(vBUser != null) isFindVBUser = true;
-	  }
-  %>
+<% 
+	
+	String userid = (String)session.getAttribute("userid");
+%>
   <script type="text/javascript"> 
 		$(function(){
 			jQuery.fx.off = true;
@@ -75,10 +69,10 @@
   		<td><a href="#"><img style="width:250px;height:100px;" src="/images/title1.jpg"></img></a></td>
   		<td>
   			<% 
-  			if (user != null && isFindVBUser) {
+  			if (userid != null) {
   			%>
   			안녕, ! (로그아웃 하려면 ->
-			<a href="">sign out</a>.)
+			<a href="/logout.do">sign out</a>.)
 			<br>
 			총 단어 갯수 &nbsp;&nbsp;
 			내 단어 갯수 <br>
@@ -100,14 +94,11 @@
 			
   			<%
   			}else {
- 				if(user == null){
+ 				if(userid == null){
  					%>
  					<p>Hello!
  					<a href="">Sign in</a>
  					로긴 자비좀 ㄷㄷㄷㄷ</p>
- 					<%
- 							}else if(!isFindVBUser){
- 					%>
  						<a href="/addUser.do">가입 자비좀 ㄷㄷ</a>
  					<% 
  				}
