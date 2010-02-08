@@ -4,7 +4,7 @@
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="UserSql">
 
-	<resultMap id="User" class="ac.ssu.ml.domain.User">
+	<resultMap id="User" class="org.wordbuster.domain.User">
 		<result column="ID" property="id" />
 		<result column="PASSWORD" property="password" />
 		<result column="ISACTIVATED" property="isactivated" />
@@ -26,13 +26,13 @@
        </isNotEmpty>
 	</select>
 
-	<insert id="createUser" parameterClass="ac.ssu.ml.domain.User">
+	<insert id="createUser" parameterClass="org.wordbuster.domain.User">
 		 INSERT INTO
 		 USER_INFO (ID, PASSWORD, ISACTIVATED, ISDELETED, REGISTEREDTIME)
 		 VALUES (#id#, #password#, 'N', 'N', DATE_FORMAT(now(), "%Y%m%d%H%i%s"))
 	</insert>
 	
-	<update id="updateUser" parameterClass="ac.ssu.ml.domain.User">
+	<update id="updateUser" parameterClass="org.wordbuster.domain.User">
 		 UPDATE USER_INFO SET
 		 ID = #id#
 		 <isNotEmpty property="isactivated">
@@ -46,7 +46,7 @@
 		 WHERE ID = #id# 
 	</update>
 	
-	<delete id="deleteUser" parameterClass="ac.ssu.ml.domain.User">
+	<delete id="deleteUser" parameterClass="org.wordbuster.domain.User">
 		 DELETE FROM USER_INFO
 		 WHERE ID = #id#
 	</delete>
@@ -55,26 +55,14 @@
 		SELECT IFNULL(MAX(internalid)+1, '10000') FROM USER_IDMAP
 	</select>
 	
-	<insert id="createUserIdMap" parameterClass="ac.ssu.ml.domain.UserIdMap">
+	<insert id="createUserIdMap" parameterClass="org.wordbuster.domain.UserIdMap">
 		INSERT INTO USER_IDMAP(externalId, internalid, admindate) 
 		VALUES(#externalId#, #internalId#, DATE_FORMAT(NOW(), "%Y%m%d%H%i%s"))
 	</insert>
 	
-	<select id="getUserIdMap" parameterClass="ac.ssu.ml.domain.UserIdMap" resultClass="ac.ssu.ml.domain.UserIdMap">
+	<select id="getUserIdMap" parameterClass="org.wordbuster.domain.UserIdMap" resultClass="org.wordbuster.domain.UserIdMap">
 		SELECT internalId, externalId FROM USER_IDMAP WHERE externalId = #externalId#
 	</select>
-	
-	<select id="getWebDesc" parameterClass="ac.ssu.ml.domain.WebDesc" resultClass="ac.ssu.ml.domain.WebDesc">
-		SELECT DESCRIPTION FROM WEB_DESC WHERE CATEGORY = #category#
-	</select>
-	
-	<update id="updateWebDesc" parameterClass="ac.ssu.ml.domain.WebDesc">
-		 UPDATE WEB_DESC SET
-		 DESCRIPTION = #description#
-		 WHERE CATEGORY = #category# 
-	</update>
-	
-	
 	
 </sqlMap>
 

@@ -13,7 +13,7 @@ import org.wordbuster.domain.VBWordSearchVO;
 @Controller
 public class naviController extends MultiActionController{
 
-	@RequestMapping("/index.do")
+	//@RequestMapping("/index.do")
 	public ModelAndView index(HttpServletRequest req, HttpServletResponse resp) throws Exception{
 		VBNavigationVO vBNavigationVO = new VBNavigationVO();
 		bind(req,vBNavigationVO);

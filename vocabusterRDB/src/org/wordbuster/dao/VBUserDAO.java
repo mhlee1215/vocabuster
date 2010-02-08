@@ -1,9 +1,20 @@
 package org.wordbuster.dao;
 
+import javax.annotation.Resource;
+
+import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
+import org.springframework.stereotype.Repository;
 import org.wordbuster.domain.VBUser;
 
+import com.ibatis.sqlmap.client.SqlMapClient;
 
-public class VBUserDAO {
+@Repository
+public class VBUserDAO extends SqlMapClientDaoSupport{
+	
+	@Resource(name="sqlMapClient")
+	 protected void initDAO(SqlMapClient sqlMapClient) {        
+		 this.setSqlMapClient(sqlMapClient);
+	 }
 	
 	public VBUser retrieveUserByPassword(String userid, String password){
 		return null;

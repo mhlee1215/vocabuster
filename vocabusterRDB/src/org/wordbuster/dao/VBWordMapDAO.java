@@ -2,9 +2,21 @@ package org.wordbuster.dao;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
+import org.springframework.stereotype.Repository;
 import org.wordbuster.domain.VBWordMap;
 
-public class VBWordMapDAO {
+import com.ibatis.sqlmap.client.SqlMapClient;
+
+@Repository
+public class VBWordMapDAO extends SqlMapClientDaoSupport{
+	
+	@Resource(name="sqlMapClient")
+	 protected void initDAO(SqlMapClient sqlMapClient) {        
+		 this.setSqlMapClient(sqlMapClient);
+	 }
 	
 	public Integer getVBUserWordCount(String email){
 		return 0;

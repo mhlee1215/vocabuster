@@ -4,7 +4,7 @@
     "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
 
 <sqlMapConfig>
-  <properties resource="conf/database.properties"/>
+  <properties resource="org/wordbuster/conf/database.properties"/>
   <settings
             cacheModelsEnabled="true"
             enhancementEnabled="true"
