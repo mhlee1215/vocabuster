@@ -10,7 +10,7 @@
 <div class="ui-widget ui-widget-content vb-page-body-div" >
 <h1 id="" class="ui-widget-header vb-page-header">Home</h1>
 
-<% if (user != null && isFindVBUser) { %>
+<% if (userid != null) { %>
 home...
 
 단어 빨랑 외워서 끝내자규... ㄷㄷㄷ

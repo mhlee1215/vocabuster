@@ -14,7 +14,7 @@
 <form:option value="name">단어명</form:option>
 <form:option value="meaning">의미</form:option>
 </form:select>
-<form:select id="myWordListOrderType" path="searchOrder">
+<form:select id="myWordListOrderType" path="searchOrderString">
 <form:option value="wordName asc">알파벳순</form:option>
 <form:option value="insertCount desc">입력횟수순</form:option>
 <form:option value="score asc">점수순</form:option>
