@@ -46,8 +46,10 @@ public class VBWordService {
 		return wordDAO.getVBWordCount();
 	}
 	
-	public Integer getVBUserWordCount(String email){
-		return wordMapDAO.getVBUserWordCount(email);
+	public Integer getVBUserWordCount(String userid){
+		VBWordMap wordMap = new VBWordMap();
+		wordMap.setUserid(userid);
+		return wordMapDAO.getVBUserWordCount(wordMap);
 	}
 	
 	public String getRandomMeaning(VBWord word){
@@ -132,70 +134,100 @@ public class VBWordService {
 		return result;
 	}
 	
-	public boolean deleteWord(String wordName){
-		return wordDAO.deleteWord(wordName);
-	}
 	
-	public List<VBWord> retrieveWordAll(){
-		return wordDAO.searchWord("");
-	}
-	
-	public boolean deleteWordAll(){
-		return wordDAO.deleteWord("");
-	}
-	
-	public boolean deleteWordInfoAll(){
-		return wordInfoDAO.deleteWordInfoList("");
-	}
-	
-	public VBWord retrieveWord(String wordName){
-	    return wordDAO.retrieveWord(wordName);
-	}
-	
-	public boolean insertWord(VBWord word){
-		return wordDAO.insertWord(word);
-	}
-	
-	public boolean insertWordInfoList(String wordName, List<VBWordInfo> wordInfoList){
-		for(int i = 0 ; i < wordInfoList.size() ; i++)
-			wordInfoDAO.insertWordInfoList(wordInfoList.get(i));
-		return true;
-	}
-	
-	public List<VBWordMap> retrieveWordMapListAll(){
-		return wordMapDAO.retrieveUserWordMap("");
-	}
-	
-	public boolean deleteWordMapAll(){
-		return wordMapDAO.deleteWordMap("", "");
-	}
-	
-	public VBWordMap retrieveWordMap(String userid, String wordName){
-		return null;
-	}
-	
-	public boolean insertWordMap(VBWordMap wordMap){
-		return true;
-	}
-	
-	public List<VBWord> retrieveWord(VBWordSearchVO searchVO){
-		return null;
-	}
-	
-	public List<VBWordMap> syncWordMapWithWord(List<VBWordMap> wordList){
-		return null;
-	}
-	
+	//COMPLEX
 	public List<VBWordMap> retrieveMyWord(String userid, VBWordSearchVO searchVO){
 		return null;
 	}
-	
 	public List<VBWordMap> retrieveQuestion(VBWordQuizVO quizVO){
 		return null;
 	}
 	
+	//VBWORD
+	
+	////INSERT
+	public boolean insertWord(VBWord word){
+		return wordDAO.insertWord(word);
+	}
+	
+	
+	////SEARCH
+	public List<VBWord> retrieveWord(VBWordSearchVO searchVO){
+		return null;
+	}
+	public List<VBWord> retrieveWordAll(){
+		return wordDAO.searchWord("");
+	}
+	public VBWord retrieveWord(String wordName){
+	    return wordDAO.retrieveWord(wordName);
+	}
+	
+	////UPDATE
+	public boolean updateWord(VBWord word){
+		return wordDAO.updateWord(word);
+	}
+	////DELETE
+	public boolean deleteWord(String wordName){
+		return wordDAO.deleteWord(wordName);
+	}
+	public boolean deleteWordAll(){
+		return wordDAO.deleteWord("");
+	}
+	public void syncWordMapWithWord(List<VBWordMap> wordMapList){
+	}
+	
+	
+	
+	
+	//VBWORDINFO
+	////INSERT
+	public boolean insertWordInfoList(String wordName, List<VBWordInfo> wordInfoList){
+		for(int i = 0 ; i < wordInfoList.size() ; i++){
+			VBWordInfo wordInfo = wordInfoList.get(i);
+			wordInfo.setSeq(Integer.toString(i));
+			wordInfoDAO.insertWordInfoList(wordInfo);
+		}
+		return true;
+	}
+	////SEARCH
+	public List<VBWordInfo> retriveWordInfo(String wordName){
+		return wordInfoDAO.retrieveWordInfo(wordName);
+	}
+	////UPDATE
+	////DELETE
+	public boolean deleteWordInfoAll(){
+		return wordInfoDAO.deleteWordInfoList("");
+	}
+	
+	//VBWORDMAP
+	////INSERT
+	public boolean insertWordMap(VBWordMap wordMap){
+		wordMapDAO.insertWordMap(wordMap);
+		return true;
+	}
+	////SEARCH
+	public VBWordMap retrieveWordMap(String userid, String wordName){
+		return wordMapDAO.retrieveWordMap(userid, wordName);
+	}
+	public List<VBWordMap> retrieveWordMapListAll(){
+		return wordMapDAO.retrieveUserWordMap("");
+	}
+	////UPDATE
 	public boolean updateWordMap(VBWordMap wordMap){
 		return false;
 	}
+	////DELETE
+	public boolean deleteWordMapAll(){
+		return wordMapDAO.deleteWordMap("", "");
+	}
 	
+	
+	//ETC
+	public void updateWordStatus(HttpServletRequest request){
+		String userid = (String)request.getSession().getAttribute("userid");
+		int wordCountAll = getVBWordCount();
+		int userWordCount = getVBUserWordCount(userid);
+		request.getSession().setAttribute("wordcount", wordCountAll);
+		request.getSession().setAttribute("userwordcount", userWordCount);
+	}
 }

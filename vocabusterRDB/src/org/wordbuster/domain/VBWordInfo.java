@@ -44,6 +44,14 @@ public class VBWordInfo {
 	public void setCategoryid(String categoryid) {
 		this.categoryid = categoryid;
 	}
+	
+	@Override
+	public String toString() {
+		return "VBWordInfo [categoryid=" + categoryid + ", fullmeaning="
+				+ fullmeaning + ", seq=" + seq + ", shortmeaning="
+				+ shortmeaning + ", wordname=" + wordname + "]";
+	}
     
+	
     
 }

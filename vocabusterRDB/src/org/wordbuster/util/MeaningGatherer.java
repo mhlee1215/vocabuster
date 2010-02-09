@@ -219,7 +219,6 @@ public class MeaningGatherer {
 					//System.out.println("max :"+maxMeaningNum+", "+i+", "+myNodes[i].getText().toString().trim());
 					VBWordInfo wi = new VBWordInfo();
 					wi.setWordname(wordName);
-					wi.setSeq(Integer.toString(i));
 					wi.setFullmeaning(meaning);
 					wi.setShortmeaning(shortMeaning);
 					//TODO: need more work.

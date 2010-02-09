@@ -3,11 +3,64 @@
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="WordMapSql">
-	<select id="readGse" parameterClass="String" resultClass="org.wordbuster.domain.VBWordMap">
-		SELECT id, title, pubid, link 
-    	FROM gse
+
+	<select id="retrieveWordMapCount" parameterClass="org.wordbuster.domain.VBWordMap" resultClass="Integer">
+		SELECT count(*)  
+    	FROM vbwordmap
+    	WHERE 1=1
+    	<isNotEmpty property="userid" >
+    	and userid = '$userid$'
+    	</isNotEmpty>
+	</select>
+	
+	<select id="retrieveUserWordMapList" parameterClass="String" resultClass="org.wordbuster.domain.VBWordMap">
+		SELECT userid, wordname, score, delaycount, wrongcount, correctcount 
+    	FROM vbwordmap
     	$where$ 
 	</select>
+	
+	<select id="retrieveWordMap" parameterClass="org.wordbuster.domain.VBWordMap" resultClass="org.wordbuster.domain.VBWordMap">
+		SELECT userid, wordname, score, delaycount, wrongcount, correctcount 
+    	FROM vbwordmap
+    	WHERE 
+    	userid = $userid$
+    	and wordname = '$wordName$' 
+	</select>
+	
+	<insert id="insertWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
+		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, correctcount) 
+    	VALUES($userid$, '$wordName$', 0, 0, 0, 0)
+	</insert>
+	
+	<update id="updateWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
+		UPDATE vbwordmap 
+    	SET 
+    		userid = $userid$, 
+    		<isNotEmpty property="score">
+    		score = $score$, 
+    		</isNotEmpty>
+    		<isNotEmpty property="delaycount">
+    		delaycount = $delaycount$,
+    		</isNotEmpty> 
+    		<isNotEmpty property="wrongcount">
+    		wrongcount = $wrongcount$,
+    		</isNotEmpty> 
+    		<isNotEmpty property="correctcount">
+    		correctcount = $correctcount$
+    		</isNotEmpty>
+    	WHERE 
+    		userid = $userid$
+    		and wordname = '$wordName$' 
+	</update>
+	
+	<delete id="deleteWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
+		DELETE FROM vbwordmap
+    	WHERE 
+    		userid = $userid$
+    		<isNotEmpty property="wordName">
+    		and wordname = '$wordName$'
+    		</isNotEmpty>  
+	</delete>
 </sqlMap>
 
 

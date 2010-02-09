@@ -3,7 +3,13 @@
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="WordSql">
-	<select id="findWord" parameterClass="org.wordbuster.domain.VBWord" resultClass="org.wordbuster.domain.VBWord">
+
+	<select id="retrieveWordCountAll" parameterClass="org.wordbuster.domain.VBWord" resultClass="Integer">
+		SELECT count(*)  
+    	FROM vbword
+	</select>
+	
+	<select id="findWord" parameterClass="String" resultClass="org.wordbuster.domain.VBWord">
 		SELECT wordname, imageurl, soundhtml, soundsymbol, insertcount, wordlanguage, meaninglanguage, admindate 
     	FROM vbword 
     	WHERE wordname = '$wordName$'

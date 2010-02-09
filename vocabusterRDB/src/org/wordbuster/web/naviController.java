@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
@@ -13,6 +14,7 @@ import org.wordbuster.domain.UserIdMap;
 import org.wordbuster.domain.VBNavigationVO;
 import org.wordbuster.domain.VBWordSearchVO;
 import org.wordbuster.service.UserService;
+import org.wordbuster.service.VBWordService;
 
 @Controller
 public class naviController extends MultiActionController{
@@ -20,8 +22,19 @@ public class naviController extends MultiActionController{
 	@Autowired
 	private final UserService userService = null;
 	
+	@Autowired
+	private final VBWordService wordService = null;
+	
+	
 	@RequestMapping("/index.do")
 	public ModelAndView index(HttpServletRequest request, HttpServletResponse resp) throws Exception{
+		String submittedUserId = ServletRequestUtils.getStringParameter(request, "submittedUserId", "");
+		String loginComplete = ServletRequestUtils.getStringParameter(request, "loginComplete", "false");
+		String loginFail = ServletRequestUtils.getStringParameter(request, "loginFail", "false");
+		String logoutComplete = ServletRequestUtils.getStringParameter(request, "logoutComplete", "false");
+		String registerComplete = ServletRequestUtils.getStringParameter(request, "registerComplete", "false");
+		String registerFail = ServletRequestUtils.getStringParameter(request, "registerFail", "false");
+		
 		VBNavigationVO vBNavigationVO = new VBNavigationVO();
 		bind(request,vBNavigationVO);
 		vBNavigationVO.setPageName("home");
@@ -52,9 +65,17 @@ public class naviController extends MultiActionController{
     		
     		
 	    }
+	    
+	    wordService.updateWordStatus(request);
 		
 		ModelAndView result = new ModelAndView("task/homeInfo");
 		result.addObject("vBWordSearchVO", vBNavigationVO);
+		result.addObject("loginComplete", loginComplete);
+		result.addObject("loginFail", loginFail);
+		result.addObject("logoutComplete", logoutComplete);
+		result.addObject("registerComplete", registerComplete);
+		result.addObject("registerFail", registerFail);
+		result.addObject("submittedUserId", submittedUserId);
 		return result;
 	}
 	

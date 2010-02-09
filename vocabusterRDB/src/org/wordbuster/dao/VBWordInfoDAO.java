@@ -19,10 +19,11 @@ public class VBWordInfoDAO extends SqlMapClientDaoSupport{
 		 this.setSqlMapClient(sqlMapClient);
 	 }
 	
+	@SuppressWarnings("unchecked")
 	public List<VBWordInfo> retrieveWordInfo(String wordName){
 		VBWordInfo wordInfo = new VBWordInfo();
 		wordInfo.setWordname(wordName);
-		List<VBWordInfo> array = getSqlMapClientTemplate().queryForList("WordInfoSql.retrieveWordInfo", wordInfo);
+		List<VBWordInfo> array = (List<VBWordInfo>)getSqlMapClientTemplate().queryForList("WordInfoSql.retrieveWordInfo", wordInfo);
 		return array;
 	}
 	

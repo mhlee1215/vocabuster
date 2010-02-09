@@ -21,15 +21,13 @@ public class VBWordDAO extends SqlMapClientDaoSupport {
 	 }
 	
 	public int getVBWordCount(){
-		return 0;
-	}
-	
-	public int getVBUserWordCount(){
-		return 0;
+		int result = (Integer)getSqlMapClientTemplate().queryForObject("WordSql.retrieveWordCountAll");
+		return result;
 	}
 	
 	public VBWord retrieveWord(String wordName){
-		return null;
+		VBWord result = (VBWord)getSqlMapClientTemplate().queryForObject("WordSql.findWord", wordName);
+		return result;
 	}
 	
 	public List<VBWord> searchWord(String keyword){
@@ -42,10 +40,14 @@ public class VBWordDAO extends SqlMapClientDaoSupport {
 	}
 	
 	public boolean updateWord(VBWord vBWord){
+		getSqlMapClientTemplate().update("WordSql.updateWord", vBWord);
 		return false;
 	}
 	
 	public boolean deleteWord(String wordName){
+		VBWord word = new VBWord();
+		word.setWordName(wordName);
+		getSqlMapClientTemplate().delete("WordSql.deleteWord", word);
 		return false;
 	}
 	

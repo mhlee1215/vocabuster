@@ -75,6 +75,8 @@ public class wordController extends MultiActionController {
 		//의미 수집기 생성
 		MeaningGatherer mg = new MeaningGatherer();
 		
+		String correctedStr = "";
+		
 		//PersistenceManager wordPm = PMF.get().getPersistenceManager();
 		//PersistenceManager wordMapPm = PMF.get().getPersistenceManager();
 		
@@ -82,6 +84,8 @@ public class wordController extends MultiActionController {
 			//Search from total word pool
 			//Determine whether inserted word is already registered or not
 			VBWord word = null;
+			List<VBWordInfo> wordInfoList = null;
+			boolean isAlreadyExisted = false;
 			try{
 				word = wordService.retrieveWord(wordStr);// wordPm.getObjectById(VBWord.class, VBWord.createKey(wordStr));
 			}catch(Exception e){
@@ -93,35 +97,68 @@ public class wordController extends MultiActionController {
 				//wordListAlreadyExisted.add(words[i]);
 				word.increaseInsertedCount();
 				addWordResult = "existed";
+				isAlreadyExisted = true;
+				wordInfoList = wordService.retriveWordInfo(wordStr);
 			}
 			//It is first time to register
 			else{
 				word = mg.analysisWord(wordStr);
+				wordInfoList = word.getWordInfoList();
 				
-				addWordResult = "new";
-				if(word == null)
-					addWordResult = "not found";
+				
+				//Word correction 이 일어난 경우(오타가 들어갔는 경우)
+				if(!word.getWordName().equals(wordStr)){
+					correctedStr = word.getWordName();
+					VBWord checkWord = null;
+					try{
+						checkWord = wordService.retrieveWord(word.getWordName());// wordPm.getObjectById(VBWord.class, VBWord.createKey(wordStr));
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println("Couldn't find int word pool.");
+					}
+					//If the word is already registered
+					if(checkWord != null){
+						//wordListAlreadyExisted.add(words[i]);
+						checkWord.increaseInsertedCount();
+						addWordResult = "existed";
+						isAlreadyExisted = true;
+						word = checkWord;
+						wordInfoList = wordService.retriveWordInfo(word.getWordName());
+					}else{
+						addWordResult = "new";
+						isAlreadyExisted = false;
+					}
+				}else{
+					addWordResult = "new";
+					isAlreadyExisted = false;
+					if(word == null)
+						addWordResult = "not found";
+				}
 			}
 			if(word != null){
-				if(word.getWordInfoList() == null || word.getWordInfoList().size() == 0){
+				if(wordInfoList == null || wordInfoList.size() == 0){
 					isSuccess = "0";
 				}else{
 					isSuccess = "1";
-					sampleMeaning = word.getWordInfoList().get(0).getShortmeaning();
+					sampleMeaning = wordInfoList.get(0).getShortmeaning();
 				}
 				
-				
-				//word 추가
-				wordService.insertWord(word);
-				//wordinfo 추가
-				wordService.insertWordInfoList(word.getWordName(), word.getWordInfoList());	
+				if(isAlreadyExisted){
+					//입력수 업데이트
+					wordService.updateWord(word);
+				}else{
+					//word 추가
+					wordService.insertWord(word);
+					//wordinfo 추가
+					wordService.insertWordInfoList(word.getWordName(), word.getWordInfoList());
+				}
 			}
 			
 			if(word != null){
 				//Now, we have to determine whether the user have already got the word which wanna to register
 				VBWordMap userWordMap = null;
 				try{
-					userWordMap = wordService.retrieveWordMap(userid, wordStr);//wordMapPm.getObjectById(VBWordMap.class, wordMapKey);
+					userWordMap = wordService.retrieveWordMap(userid, word.getWordName());//wordMapPm.getObjectById(VBWordMap.class, wordMapKey);
 				}catch(Exception e){
 					System.out.println("Couldn't find in word map pool.");
 				}
@@ -135,7 +172,6 @@ public class wordController extends MultiActionController {
 				else{
 					userWordMap = new VBWordMap();
 					userWordMap.setUserid(userid);
-					userWordMap.setWordName(wordStr);
 					userWordMap.init();
 					userWordMap.setWordName(word.getWordName());
 					addWordMapResult = "new";
@@ -166,6 +202,7 @@ public class wordController extends MultiActionController {
 		result.addObject("addWordMapResult", addWordMapResult);
 		result.addObject("isSuccess", isSuccess);
 		result.addObject("sampleMeaning", sampleMeaning);
+		result.addObject("correctedStr", correctedStr);
 		return result;
 	}
 	

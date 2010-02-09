@@ -32,21 +32,37 @@
 </style>	
   
 <% 
-	
+	String remoteHost = request.getRemoteHost();
 	String userid = (String)session.getAttribute("userid");
+	String isLogin = (String)session.getAttribute("islogin");
+	String externalId = remoteHost;
+	if("true".equals(isLogin)){
+	    externalId = (String)session.getAttribute("externalid");
+	}
 %>
   <script type="text/javascript"> 
 		$(function(){
 			jQuery.fx.off = true;
 			$("#radio1").buttonset();
 
+			$("#loginBtn").button({
+	            icons: {
+	                primary: 'ui-icon-locked'
+	            }
+	        });
+
+			$("#registerBtn").button({
+	            icons: {
+	                primary: 'ui-icon-star'
+	            }
+	        });
+
+			$("#logoutBtn").button({
+	            icons: {
+	                primary: 'ui-icon-unlocked'
+	            }
+	        });
 			
-			//$('#radio1').click(function() { alert('1'); document.location = '/index.do'; });
-			//$('#radio2').click(function() { alert('2'); document.location = '/addWords.do'; });
-			//$('#radio3').click(function() { alert('3'); document.location = '/startQuiz.do'; });
-			//$('#radio4').click(function() { document.location = '/myWordListForm.do'; });
-			//$('#radio5').click(function() { document.location = '/wordListForm.do'; });
-			//$('#radio6').click(function() { document.location = '/adminForm.do'; });
 		});
 
 		function move(index){
@@ -71,11 +87,17 @@
   			<% 
   			if (userid != null) {
   			%>
-  			안녕, ! (로그아웃 하려면 ->
-			<a href="/logout.do">sign out</a>.)
+ 				<%if(!"true".equals(isLogin)){ %>
+ 				<button onclick="showLogin();" id="loginBtn" >LOGIN</button>
+ 				<button onclick="showRegister();" id="registerBtn" >REGISTER</button>
+				<%}else{%>
+				<button onclick="document.location='/logout.do'" id="logoutBtn" >LOGOUT</button>
+				안녕! <%=externalId%>(<%=userid%>)
+				<%} %>
+  			
 			<br>
-			총 단어 갯수 &nbsp;&nbsp;
-			내 단어 갯수 <br>
+			총 단어 갯수 <%=session.getAttribute("wordcount") %> &nbsp;&nbsp;
+			내 단어 갯수 <%=session.getAttribute("userwordcount") %><br>
 			<br>
 			<!-- 네비게이터 시작 -->
 			<div id="radio1">
@@ -96,14 +118,15 @@
   			}else {
  				if(userid == null){
  					%>
- 					<p>Hello!
- 					<a href="">Sign in</a>
- 					로긴 자비좀 ㄷㄷㄷㄷ</p>
- 						<a href="${pageContext.request.contextPath}/addUser.do">가입 자비좀 ㄷㄷ</a>
- 					<% 
+ 					
+ 					<script type="text/javascript">
+ 					document.location = '${pageContext.request.contextPath}/index.do';
+ 					</script> 
+ 			<%
  				}
  			}
   			%>
   		</td>
   	</tr>
 </table>
+<jsp:include page="/loginUI.jsp"></jsp:include>

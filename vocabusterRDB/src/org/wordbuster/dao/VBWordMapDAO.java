@@ -18,8 +18,9 @@ public class VBWordMapDAO extends SqlMapClientDaoSupport{
 		 this.setSqlMapClient(sqlMapClient);
 	 }
 	
-	public Integer getVBUserWordCount(String email){
-		return 0;
+	public Integer getVBUserWordCount(VBWordMap wordMap){
+		int result = (Integer)getSqlMapClientTemplate().queryForObject("WordMapSql.retrieveWordMapCount", wordMap);
+		return result;
 	}
 	
 	public List<VBWordMap> retrieveUserWordMap(String userid){
@@ -27,22 +28,41 @@ public class VBWordMapDAO extends SqlMapClientDaoSupport{
 	}
 	
 	public VBWordMap retrieveWordMap(String userid, String wordName){
-		return null;
+		VBWordMap param = new VBWordMap();
+		param.setUserid(userid);
+		param.setWordName(wordName);
+		VBWordMap result = (VBWordMap)getSqlMapClientTemplate().queryForObject("WordMapSql.retrieveWordMap", param);
+		return result;
 	}
 	
 	public boolean insertWordMap(VBWordMap wordMap){
-		return false;
+		getSqlMapClientTemplate().insert("WordMapSql.insertWordMap", wordMap);
+		return true;
 	}
 	
 	public boolean updateWordMap(VBWordMap wordMap){
+		getSqlMapClientTemplate().update("WordMapSql.updateWordMap", wordMap);
 		return false;
 	}
 	
 	public boolean deleteWordMap(String userid, String wordName){
-		return false;
+		VBWordMap wordMap = new VBWordMap();
+		wordMap.setUserid(userid);
+		wordMap.setWordName(wordName);
+		getSqlMapClientTemplate().update("WordMapSql.updateWordMap", wordMap);
+		return true;
 	}
 	
+	
+	/**
+	 * 해당 유저의 모든 wordmap 정보를 지움 
+	 * @param userid
+	 * @return
+	 */
 	public boolean deleteUserWordMap(String userid){
-		return false;
+		VBWordMap wordMap = new VBWordMap();
+		wordMap.setUserid(userid);
+		getSqlMapClientTemplate().update("WordMapSql.updateWordMap", wordMap);
+		return true;
 	}
 }
