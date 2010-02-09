@@ -42,7 +42,7 @@ function searchWords(){
 		searchResultType : $("#wordListSearchResultType").val(),
 		searchOrder :  $("#wordListOrderType").val()
 	};
-	$('#wordListPanel').load('/wordList.do', data); 
+	$('#wordListPanel').load('${pageContext.request.contextPath}/wordList.do', data); 
 } 
 </script>
 <jsp:include page="/footer.jsp">

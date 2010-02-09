@@ -6,7 +6,7 @@
   <title>Buster your vocabulary!</title>
 </head>
 <script type="text/javascript">
-	document.location = '/index.do';
+	document.location = '${pageContext.request.contextPath}/index.do';
 </script>
 <jsp:include page="/footer.jsp">
      <jsp:param name="" value=""/>

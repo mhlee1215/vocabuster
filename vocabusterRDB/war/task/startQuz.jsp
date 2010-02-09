@@ -10,7 +10,7 @@
 <div class="ui-widget ui-widget-content vb-page-body-div">
 <h1 id="" class="ui-widget-header vb-page-header">Word quiz</h1>
 <div id="quizValid">
-Validation...<img src="/images/vb-word-loader.gif" />
+Validation...<img src="${pageContext.request.contextPath}/images/vb-word-loader.gif" />
 </div>
 <div id="startWordQuizPanel" style="display:none">
 시작해볼까? ㄷㄷㄷ<br></br>
@@ -51,7 +51,7 @@ Validation...<img src="/images/vb-word-loader.gif" />
 </div>
 <script type="text/javascript">
 $(function(){
-	$.get("/getWordQuestion.do", '', valid);
+	$.get("${pageContext.request.contextPath}/getWordQuestion.do", '', valid);
 });
 function valid(){
 	$('#quizValid').hide('slow');
@@ -81,7 +81,7 @@ function getQuiz(div, selectionCount, questionCount, callback){
 		selectionCount: selectionCount,
 		questionCount: questionCount
 	};
-	$('#'+div).load('/getWordQuestion.do', data, callback);	
+	$('#'+div).load('${pageContext.request.contextPath}/getWordQuestion.do', data, callback);	
 }
 
 function getNextQuiz(callback){

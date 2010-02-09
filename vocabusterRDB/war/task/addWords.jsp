@@ -12,7 +12,7 @@
 <div id="addWordPanel">
 
 <br>
- <form name="wordForm" action="/addWords.do" method="post">
+ <form name="wordForm" action="${pageContext.request.contextPath}/addWords.do" method="post">
    <div>
    카테고리: 
    <select id="wordCategory" name="wordCategory">
@@ -104,7 +104,7 @@ function addWord(index, word){
 	addWordMark(index);
 	$.ajax({
 		type: "POST",
-		url: "/addOneWord.do",
+		url: "${pageContext.request.contextPath}/addOneWord.do",
 		data: 'word='+word,
 		success: function(msg){
 			var Result = msg;
@@ -124,15 +124,15 @@ function addWord(index, word){
 	});
 }
 function addWordMark(index){
-	$("#status_"+index).html('<img src="/images/vb-word-loader.gif" />');
+	$("#status_"+index).html('<img src="${pageContext.request.contextPath}/images/vb-word-loader.gif" />');
 	$("#detail_"+index).html('저장중');
 }
 function addFinishMark(index, isSuccess, addWordResult, addWordMapResult, addWordSampleMeaning){
 	if(isSuccess){
-		$("#status_"+index).html('<img src="/images/vb-word-complete.png" />');
+		$("#status_"+index).html('<img src="${pageContext.request.contextPath}/images/vb-word-complete.png" />');
 		$("#detail_"+index).html('성공');
 	}else { 
-		$("#status_"+index).html('<img src="/images/vb-word-warn.png" />');
+		$("#status_"+index).html('<img src="${pageContext.request.contextPath}/images/vb-word-warn.png" />');
 		$("#detail_"+index).html('실패');
 	}
 	$("#wordResult_"+index).html(addWordResult);

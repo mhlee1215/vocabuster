@@ -6,11 +6,11 @@
 <%@ page import="org.wordbuster.service.VBUserService"%>
 <%@ page import="org.wordbuster.domain.VBWord"%>
 <%@ page import="org.wordbuster.service.VBWordService"%><html>
-<link type="text/css" href="/jquery/css/redmond-theme/jquery-ui-1.8rc1.custom.css" rel="stylesheet" />	
-<script type="text/javascript" src="/jquery/js/jquery-1.4.1.min.js"></script> 
-<script type="text/javascript" src="/jquery/js/jquery-ui-1.8rc1.custom.min.js"></script>
-<link type="text/css" href="/css/vb_main.css" rel="stylesheet" />
-<script type="text/javascript" src="/js/vb_main.js"></script>
+<link type="text/css" href="${pageContext.request.contextPath}/jquery/css/redmond-theme/jquery-ui-1.8rc1.custom.css" rel="stylesheet" />	
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/js/jquery-1.4.1.min.js"></script> 
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/js/jquery-ui-1.8rc1.custom.min.js"></script>
+<link type="text/css" href="${pageContext.request.contextPath}/css/vb_main.css" rel="stylesheet" />
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/vb_main.js"></script>
 <style type="text/css">
 	body{ font: 72.5% "Trebuchet MS", sans-serif; width:800px;}
 	.demoHeaders { margin-top: 2em; }
@@ -20,7 +20,7 @@
 	ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
 	ul#icons span.ui-icon {float: left; margin: 0 4px;}
 	.ui-button-text { font-size:12px;}
-	.ui-progressbar-value { background-image: url(/images/pbar-ani.gif); }
+	.ui-progressbar-value { background-image: url(${pageContext.request.contextPath}/images/pbar-ani.gif); }
 	table { font-size:12px; }
 	div#word-list table { margin: 1em 0; border-collapse: collapse; width: 100%; }
 	div#word-list table td, div#word-list table th { font-size:11px; border: 1px solid #eee; padding: .6em 10px; text-align: left; }
@@ -51,22 +51,22 @@
 
 		function move(index){
 			if(index == '1')
-				document.location = '/index.do';
+				document.location = '${pageContext.request.contextPath}/index.do';
 			else if(index == '2')
-				document.location = '/addWords.do';
+				document.location = '${pageContext.request.contextPath}/addWords.do';
 			else if(index == '3')
-				document.location = '/startQuiz.do';
+				document.location = '${pageContext.request.contextPath}/startQuiz.do';
 			else if(index == '4')
-				document.location = '/myWordListForm.do';
+				document.location = '${pageContext.request.contextPath}/myWordListForm.do';
 			else if(index == '5')
-				document.location = '/wordListForm.do';
+				document.location = '${pageContext.request.contextPath}/wordListForm.do';
 			else if(index == '6')
-				document.location = '/adminForm.do';
+				document.location = '${pageContext.request.contextPath}/adminForm.do';
 		}
 </script>
   <table>
   	<tr>
-  		<td><a href="#"><img style="width:250px;height:100px;" src="/images/title1.jpg"></img></a></td>
+  		<td><a href="#"><img style="width:250px;height:100px;" src="${pageContext.request.contextPath}/images/title1.jpg"></img></a></td>
   		<td>
   			<% 
   			if (userid != null) {
@@ -99,7 +99,7 @@
  					<p>Hello!
  					<a href="">Sign in</a>
  					로긴 자비좀 ㄷㄷㄷㄷ</p>
- 						<a href="/addUser.do">가입 자비좀 ㄷㄷ</a>
+ 						<a href="${pageContext.request.contextPath}/addUser.do">가입 자비좀 ㄷㄷ</a>
  					<% 
  				}
  			}
