@@ -48,6 +48,19 @@ public class VBWordMap implements Serializable{
 	 */
 	private Float wrongRate;
 	
+	/***
+	 * 해당되는 단어 
+	 */
+	private VBWord word;
+	
+	public VBWord getWord() {
+		return word;
+	}
+
+	public void setWord(VBWord word) {
+		this.word = word;
+	}
+
 	public void init(){
 		if(score == null) score = 0;
 		if(answerCount == null) answerCount = 0;

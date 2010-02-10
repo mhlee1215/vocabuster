@@ -14,10 +14,17 @@
     	FROM vbword 
     	WHERE wordname = '$wordName$'
 	</select>
-	<select id="searchWord" parameterClass="org.wordbuster.domain.VBSearchVO" resultClass="java.util.HashMap">
+	<select id="searchWord" parameterClass="org.wordbuster.domain.VBWordSearchVO" resultClass="org.wordbuster.domain.VBWord">
 		SELECT wordname, imageurl, soundhtml, soundsymbol, insertcount, wordlanguage, meaninglanguage, admindate 
     	FROM vbword
     	WHERE 1=1 
+    	<isNotEmpty property="searchKeyword">
+    	AND wordname LIKE '%$searchKeyword$%'
+    	</isNotEmpty>
+    	<isNotEmpty property="searchOrderString">
+    	ORDER BY $searchOrderString$
+    	</isNotEmpty>
+    	LIMIT $pageSize$ OFFSET $pageOffset$
 	</select>
 	
 	<update id="updateWord" parameterClass="org.wordbuster.domain.VBWord" >

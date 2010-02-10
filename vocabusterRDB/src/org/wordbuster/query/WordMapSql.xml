@@ -13,14 +13,21 @@
     	</isNotEmpty>
 	</select>
 	
-	<select id="retrieveUserWordMapList" parameterClass="String" resultClass="org.wordbuster.domain.VBWordMap">
-		SELECT userid, wordname, score, delaycount, wrongcount, correctcount 
+	<select id="retrieveUserWordMapList" parameterClass="org.wordbuster.domain.VBMyWordSearchVO" resultClass="org.wordbuster.domain.VBWordMap">
+		SELECT userid, wordname, score, delaycount, wrongcount, answercount, insertcount 
     	FROM vbwordmap
-    	$where$ 
+    	WHERE userid = '$searchUserid$'
+    	<isNotEmpty property="searchKeyword">
+    	AND wordname LIKE '%$searchKeyword$%'
+    	</isNotEmpty>
+    	<isNotEmpty property="searchOrderString">
+    	ORDER BY $searchOrderString$
+    	</isNotEmpty>
+    	LIMIT $pageSize$ OFFSET $pageOffset$
 	</select>
 	
 	<select id="retrieveWordMap" parameterClass="org.wordbuster.domain.VBWordMap" resultClass="org.wordbuster.domain.VBWordMap">
-		SELECT userid, wordname, score, delaycount, wrongcount, correctcount 
+		SELECT userid, wordname, score, delaycount, wrongcount, answercount, insertcount 
     	FROM vbwordmap
     	WHERE 
     	userid = $userid$
@@ -28,25 +35,28 @@
 	</select>
 	
 	<insert id="insertWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
-		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, correctcount) 
-    	VALUES($userid$, '$wordName$', 0, 0, 0, 0)
+		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, answercount, insertcount) 
+    	VALUES($userid$, '$wordName$', 0, 0, 0, 0, 1)
 	</insert>
 	
 	<update id="updateWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
 		UPDATE vbwordmap 
     	SET 
-    		userid = $userid$, 
+    		userid = $userid$ 
     		<isNotEmpty property="score">
-    		score = $score$, 
+    		,score = $score$ 
     		</isNotEmpty>
-    		<isNotEmpty property="delaycount">
-    		delaycount = $delaycount$,
+    		<isNotEmpty property="delayCount">
+    		,delaycount = $delayCount$
     		</isNotEmpty> 
-    		<isNotEmpty property="wrongcount">
-    		wrongcount = $wrongcount$,
+    		<isNotEmpty property="wrongCount">
+    		,wrongcount = $wrongCount$
     		</isNotEmpty> 
-    		<isNotEmpty property="correctcount">
-    		correctcount = $correctcount$
+    		<isNotEmpty property="answerCount">
+    		,answercount = $answerCount$
+    		</isNotEmpty>
+    		<isNotEmpty property="insertCount">
+    		,insertcount = $insertCount$
     		</isNotEmpty>
     	WHERE 
     		userid = $userid$

@@ -13,6 +13,7 @@ import org.wordbuster.dao.VBUserDAO;
 import org.wordbuster.dao.VBWordDAO;
 import org.wordbuster.dao.VBWordInfoDAO;
 import org.wordbuster.dao.VBWordMapDAO;
+import org.wordbuster.domain.VBMyWordSearchVO;
 import org.wordbuster.domain.VBUser;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
@@ -136,8 +137,8 @@ public class VBWordService {
 	
 	
 	//COMPLEX
-	public List<VBWordMap> retrieveMyWord(String userid, VBWordSearchVO searchVO){
-		return null;
+	public List<VBWordMap> retrieveMyWord(VBMyWordSearchVO searchVO){
+		return wordMapDAO.retrieveMyWordMap(searchVO);
 	}
 	public List<VBWordMap> retrieveQuestion(VBWordQuizVO quizVO){
 		return null;
@@ -153,10 +154,13 @@ public class VBWordService {
 	
 	////SEARCH
 	public List<VBWord> retrieveWord(VBWordSearchVO searchVO){
-		return null;
+		List<VBWord> wordList = wordDAO.searchWord(searchVO);
+		for(VBWord word : wordList)
+			syncWord(word);
+		return wordList;
 	}
 	public List<VBWord> retrieveWordAll(){
-		return wordDAO.searchWord("");
+		return wordDAO.searchWord(new VBWordSearchVO());
 	}
 	public VBWord retrieveWord(String wordName){
 	    return wordDAO.retrieveWord(wordName);
@@ -173,10 +177,22 @@ public class VBWordService {
 	public boolean deleteWordAll(){
 		return wordDAO.deleteWord("");
 	}
+	
 	public void syncWordMapWithWord(List<VBWordMap> wordMapList){
+		for(VBWordMap wordMap : wordMapList)
+			syncWordMap(wordMap);
 	}
 	
+	public void syncWordMap(VBWordMap wordMap){
+		VBWord word = wordDAO.retrieveWord(wordMap.getWordName());
+		syncWord(word);
+		wordMap.setWord(word);
+	}
 	
+	public void syncWord(VBWord word){
+		List<VBWordInfo> wordInfoList = wordInfoDAO.retrieveWordInfo(word.getWordName());
+		word.setWordInfoList(wordInfoList);
+	}
 	
 	
 	//VBWORDINFO
@@ -214,6 +230,7 @@ public class VBWordService {
 	}
 	////UPDATE
 	public boolean updateWordMap(VBWordMap wordMap){
+		wordMapDAO.updateWordMap(wordMap);
 		return false;
 	}
 	////DELETE

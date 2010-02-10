@@ -9,7 +9,7 @@
 <form:option value="name">단어명</form:option>
 <form:option value="meaning">의미</form:option>
 </form:select>
-<form:select id="wordListOrderType" path="searchOrder">
+<form:select id="wordListOrderType" path="searchOrderString">
 <form:option value="wordName asc">알파벳순</form:option>
 <form:option value="wrongOrder desc">입력횟수순</form:option>
 <form:option value="score asc">점수순</form:option>
@@ -31,17 +31,17 @@ ${ fn:length(wordList) }개 찾아쑴...
 <c:if test="${vBWordSearchVO.searchResultType == 'list'}">
 <ul>
 	<c:forEach items="${wordList}" var="word">
-	<li><h2>${word.wordName}<span>${word.soundHtml.value }</span>, ${word.insertedCount }</h2>
+	<li><h2>${word.wordName}<span>${word.soundHtml }</span>, ${word.insertedCount }</h2>
 		사전용
 		<ul>
 		<c:forEach items="${word.wordInfoList}" var="wordInfo">
-		<li>${wordInfo.meaning}</li>
+		<li>${wordInfo.fullmeaning}</li>
 		</c:forEach>
 		</ul>
 		테스트용
 		<ul>
 		<c:forEach items="${word.wordInfoList}" var="wordInfo">
-		<li>${wordInfo.shortMeaning}</li>
+		<li>${wordInfo.shortmeaning}</li>
 		</c:forEach>
 		</ul>
 		<hr></hr>
@@ -64,12 +64,12 @@ ${ fn:length(wordList) }개 찾아쑴...
 	<c:forEach items="${wordList}" var="word">
 		<tr>
 			<td>
-			<b>${word.wordName}</b>&nbsp;${word.soundSymbol}&nbsp;<span>${word.soundHtml.value }</span>
+			<b>${word.wordName}</b>&nbsp;${word.soundSymbol}&nbsp;<span>${word.soundHtml }</span>
 			</td>
 			<td>
 			<c:forEach items="${word.wordInfoList}" var="wordInfo" varStatus="status">
 			<c:if test="${status.count == 1}">
-			${wordInfo.shortMeaning}
+			${wordInfo.shortmeaning}
 			</c:if>
 			</c:forEach>
 			</td>

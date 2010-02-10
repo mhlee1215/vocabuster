@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.wordbuster.domain.VBMyWordSearchVO;
 import org.wordbuster.domain.VBWordMap;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -32,6 +33,11 @@ public class VBWordMapDAO extends SqlMapClientDaoSupport{
 		param.setUserid(userid);
 		param.setWordName(wordName);
 		VBWordMap result = (VBWordMap)getSqlMapClientTemplate().queryForObject("WordMapSql.retrieveWordMap", param);
+		return result;
+	}
+	
+	public List<VBWordMap> retrieveMyWordMap(VBMyWordSearchVO searchVO){
+		List<VBWordMap> result = (List<VBWordMap>)getSqlMapClientTemplate().queryForList("WordMapSql.retrieveUserWordMapList", searchVO);
 		return result;
 	}
 	

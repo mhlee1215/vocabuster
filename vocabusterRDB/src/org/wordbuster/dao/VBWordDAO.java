@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
 import org.wordbuster.domain.VBWordMap;
+import org.wordbuster.domain.VBWordSearchVO;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -30,8 +31,9 @@ public class VBWordDAO extends SqlMapClientDaoSupport {
 		return result;
 	}
 	
-	public List<VBWord> searchWord(String keyword){
-		return null;
+	public List<VBWord> searchWord(VBWordSearchVO searchVO){
+		List<VBWord> result = (List<VBWord>)getSqlMapClientTemplate().queryForList("WordSql.searchWord", searchVO);
+		return result;
 	}
 	
 	public boolean insertWord(VBWord vBWord){

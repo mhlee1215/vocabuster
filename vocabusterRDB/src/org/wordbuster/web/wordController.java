@@ -21,6 +21,7 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+import org.wordbuster.domain.VBMyWordSearchVO;
 import org.wordbuster.domain.VBUser;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordCategory;
@@ -167,6 +168,7 @@ public class wordController extends MultiActionController {
 					System.out.println("word "+userWordMap.getWordName()+"is already registered "+userWordMap.getInsertCount()+" time(s).");
 					userWordMap.increaseInsertCount();
 					addWordMapResult = "existed";
+					wordService.updateWordMap(userWordMap);
 				}
 				//유저의 단어로 처음 등록되는 경우 
 				else{
@@ -225,11 +227,12 @@ public class wordController extends MultiActionController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/myWordList.do")
 	public ModelAndView myWordList(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-		VBWordSearchVO vBWordSearchVO = new VBWordSearchVO();
+		VBMyWordSearchVO vBWordSearchVO = new VBMyWordSearchVO();
 		bind(req, vBWordSearchVO);
 		String userid = (String) req.getSession().getAttribute("userid");
+		vBWordSearchVO.setSearchUserid(userid);
 		
-		List<VBWordMap> wordMapList = wordService.retrieveMyWord(userid, vBWordSearchVO);
+		List<VBWordMap> wordMapList = wordService.retrieveMyWord(vBWordSearchVO);
 		wordService.syncWordMapWithWord(wordMapList);
 		
 		ModelAndView result = new ModelAndView("ajaxResult/myWordListResult");
