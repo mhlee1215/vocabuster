@@ -41,7 +41,7 @@ function searchWords(){
 		searchResultType : $("#myWordListSearchResultType").val(),
 		searchOrder : $("#myWordListOrderType").val() 
 	};
-	$('#myWordListPanel').load('/myWordList.do', data); 
+	$('#myWordListPanel').load('${pageContext.request.contextPath}/myWordList.do', data); 
 } 
 
 </script>
