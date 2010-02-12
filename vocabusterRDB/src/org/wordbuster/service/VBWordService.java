@@ -140,6 +140,11 @@ public class VBWordService {
 	public List<VBWordMap> retrieveMyWord(VBMyWordSearchVO searchVO){
 		return wordMapDAO.retrieveMyWordMap(searchVO);
 	}
+	
+	public Integer retrieveMyWordCount(VBMyWordSearchVO searchVO){
+		return wordMapDAO.retrieveMyWordMapCount(searchVO);
+	}
+	
 	public List<VBWordMap> retrieveQuestion(VBWordQuizVO quizVO){
 		return null;
 	}
@@ -155,10 +160,19 @@ public class VBWordService {
 	////SEARCH
 	public List<VBWord> retrieveWord(VBWordSearchVO searchVO){
 		List<VBWord> wordList = wordDAO.searchWord(searchVO);
-		for(VBWord word : wordList)
-			syncWord(word);
 		return wordList;
 	}
+	
+	public Integer retrieveWordCount(VBWordSearchVO searchVO){
+		Integer wordListCount = wordDAO.searchWordCount(searchVO);
+		return wordListCount;
+	}
+	
+	public List<VBWord> retrieveWordAll(VBWordSearchVO searchVO){
+		List<VBWord> wordList = wordDAO.retriveWordAll(searchVO);
+		return wordList;
+	}
+	
 	public List<VBWord> retrieveWordAll(){
 		return wordDAO.searchWord(new VBWordSearchVO());
 	}

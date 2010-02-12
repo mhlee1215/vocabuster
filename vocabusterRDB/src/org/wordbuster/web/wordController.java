@@ -104,38 +104,41 @@ public class wordController extends MultiActionController {
 			//It is first time to register
 			else{
 				word = mg.analysisWord(wordStr);
-				wordInfoList = word.getWordInfoList();
-				
-				
-				//Word correction 이 일어난 경우(오타가 들어갔는 경우)
-				if(!word.getWordName().equals(wordStr)){
-					correctedStr = word.getWordName();
-					VBWord checkWord = null;
-					try{
-						checkWord = wordService.retrieveWord(word.getWordName());// wordPm.getObjectById(VBWord.class, VBWord.createKey(wordStr));
-					}catch(Exception e){
-						e.printStackTrace();
-						System.out.println("Couldn't find int word pool.");
-					}
-					//If the word is already registered
-					if(checkWord != null){
-						//wordListAlreadyExisted.add(words[i]);
-						checkWord.increaseInsertedCount();
-						addWordResult = "existed";
-						isAlreadyExisted = true;
-						word = checkWord;
-						wordInfoList = wordService.retriveWordInfo(word.getWordName());
+				//
+				if(word != null){
+					wordInfoList = word.getWordInfoList();
+					
+					//Word correction 이 일어난 경우(오타가 들어갔는 경우)
+					if(!word.getWordName().equals(wordStr)){
+						wordStr = correctedStr = word.getWordName();
+						VBWord checkWord = null;
+						try{
+							checkWord = wordService.retrieveWord(wordStr);// wordPm.getObjectById(VBWord.class, VBWord.createKey(wordStr));
+						}catch(Exception e){
+							e.printStackTrace();
+							System.out.println("Couldn't find int word pool.");
+						}
+						//If the word is already registered
+						if(checkWord != null){
+							//wordListAlreadyExisted.add(words[i]);
+							checkWord.increaseInsertedCount();
+							addWordResult = "existed";
+							isAlreadyExisted = true;
+							word = checkWord;
+							wordInfoList = wordService.retriveWordInfo(word.getWordName());
+						}else{
+							addWordResult = "new";
+							isAlreadyExisted = false;
+						}
 					}else{
 						addWordResult = "new";
 						isAlreadyExisted = false;
+						if(word == null)
+							addWordResult = "not found";
 					}
-				}else{
-					addWordResult = "new";
-					isAlreadyExisted = false;
-					if(word == null)
-						addWordResult = "not found";
 				}
 			}
+			
 			if(word != null){
 				if(wordInfoList == null || wordInfoList.size() == 0){
 					isSuccess = "0";
@@ -151,44 +154,52 @@ public class wordController extends MultiActionController {
 					//word 추가
 					wordService.insertWord(word);
 					//wordinfo 추가
-					wordService.insertWordInfoList(word.getWordName(), word.getWordInfoList());
+					wordService.insertWordInfoList(wordStr, word.getWordInfoList());
 				}
 			}
 			
-			if(word != null){
-				//Now, we have to determine whether the user have already got the word which wanna to register
-				VBWordMap userWordMap = null;
-				try{
-					userWordMap = wordService.retrieveWordMap(userid, word.getWordName());//wordMapPm.getObjectById(VBWordMap.class, wordMapKey);
-				}catch(Exception e){
-					System.out.println("Couldn't find in word map pool.");
+			//Now, we have to determine whether the user have already got the word which wanna to register
+			VBWordMap userWordMap = null;
+			try{
+				userWordMap = wordService.retrieveWordMap(userid, wordStr);//wordMapPm.getObjectById(VBWordMap.class, wordMapKey);
+			}catch(Exception e){
+				System.out.println("Couldn't find in word map pool.");
+			}
+			//유저의 단어로 이미 등록되어 있는 경우
+			if(userWordMap != null){	
+				System.out.println("word "+userWordMap.getWordName()+"is already registered "+userWordMap.getInsertCount()+" time(s).");
+				userWordMap.increaseInsertCount();
+				if(word == null){
+					addWordMapResult = "fail existed";
+					isSuccess = "0";
 				}
-				//유저의 단어로 이미 등록되어 있는 경우
-				if(userWordMap != null){	
-					System.out.println("word "+userWordMap.getWordName()+"is already registered "+userWordMap.getInsertCount()+" time(s).");
-					userWordMap.increaseInsertCount();
+				else
 					addWordMapResult = "existed";
-					wordService.updateWordMap(userWordMap);
+				wordService.updateWordMap(userWordMap);
+			}
+			//유저의 단어로 처음 등록되는 경우 
+			else{
+				userWordMap = new VBWordMap();
+				userWordMap.setUserid(userid);
+				userWordMap.init();
+				userWordMap.setWordName(wordStr);
+				if(word == null){
+					userWordMap.setIsvalid("N");
+					addWordMapResult = "fail new";
+					isSuccess = "0";
 				}
-				//유저의 단어로 처음 등록되는 경우 
 				else{
-					userWordMap = new VBWordMap();
-					userWordMap.setUserid(userid);
-					userWordMap.init();
-					userWordMap.setWordName(word.getWordName());
+					userWordMap.setIsvalid("Y");
 					addWordMapResult = "new";
-					
-					try{
-						//유저 맵에 추가
-						wordService.insertWordMap(userWordMap);
-						System.out.println("insertedCount: "+userWordMap.getInsertCount());
-					}catch(Exception e){
-						e.printStackTrace();
-					}
 				}
-			}else{
-				addWordMapResult = "fail";
-				isSuccess = "0";
+				
+				try{
+					//유저 맵에 추가
+					wordService.insertWordMap(userWordMap);
+					System.out.println("insertedCount: "+userWordMap.getInsertCount());
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -212,15 +223,19 @@ public class wordController extends MultiActionController {
 	public ModelAndView wordList(HttpServletRequest req, HttpServletResponse resp) throws Exception{
 		VBWordSearchVO vBWordSearchVO = new VBWordSearchVO();
 		bind(req, vBWordSearchVO);
+		vBWordSearchVO.setPageName("wordlist");
 		System.out.println("VO: "+vBWordSearchVO);
 		List<VBWord> wordList = wordService.retrieveWord(vBWordSearchVO);//(List<VBWord>)query.execute(vBWordSearchVO.getSearchKeyword());
+		int wordListCount = wordService.retrieveWordCount(vBWordSearchVO);//(List<VBWord>)query.execute(vBWordSearchVO.getSearchKeyword());
 		System.out.println("wordSize: "+wordList.size());
 		for(int i = 0 ; i < wordList.size() ; i++)
 			System.out.println(wordList.get(i).getWordName());
 		
-		ModelAndView result = new ModelAndView("ajaxResult/wordListResult");
+		ModelAndView result = new ModelAndView("task/showWords");
 		result.addObject("wordList", wordList);
+		result.addObject("wordListCount", wordListCount);
 		result.addObject("vBWordSearchVO", vBWordSearchVO);
+		
 		return result;
 	}
 	
@@ -231,12 +246,14 @@ public class wordController extends MultiActionController {
 		bind(req, vBWordSearchVO);
 		String userid = (String) req.getSession().getAttribute("userid");
 		vBWordSearchVO.setSearchUserid(userid);
-		
+		vBWordSearchVO.setPageName("mywords");		
 		List<VBWordMap> wordMapList = wordService.retrieveMyWord(vBWordSearchVO);
-		wordService.syncWordMapWithWord(wordMapList);
+		int myWordListCount = wordService.retrieveMyWordCount(vBWordSearchVO);
+		//wordService.syncWordMapWithWord(wordMapList);
 		
-		ModelAndView result = new ModelAndView("ajaxResult/myWordListResult");
+		ModelAndView result = new ModelAndView("task/showMyWords");
 		result.addObject("wordMapList", wordMapList);
+		result.addObject("wordMapListCount", myWordListCount);
 		result.addObject("vBWordSearchVO", vBWordSearchVO);
 		return result;
 	}

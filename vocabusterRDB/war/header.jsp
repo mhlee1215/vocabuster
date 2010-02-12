@@ -1,14 +1,18 @@
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="java.util.List" %>
 <%@ page import="org.wordbuster.domain.VBUser"%>
 <%@ page import="org.wordbuster.service.VBUserService"%>
 <%@ page import="org.wordbuster.domain.VBWord"%>
 <%@ page import="org.wordbuster.service.VBWordService"%><html>
-<link type="text/css" href="${pageContext.request.contextPath}/jquery/css/redmond-theme/jquery-ui-1.8rc1.custom.css" rel="stylesheet" />	
+<link type="text/css" href="${pageContext.request.contextPath}/jquery/css/redmond-theme/jquery-ui-1.8rc1.custom.css" rel="stylesheet" />
+<link type="text/css" href="${pageContext.request.contextPath}/jquery/css/ui.jqgrid.css" rel="stylesheet" />	
 <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/js/jquery-1.4.1.min.js"></script> 
 <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/js/jquery-ui-1.8rc1.custom.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/js/grid.locale-en.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/js/jquery.jqGrid.min.js"></script>
 <link type="text/css" href="${pageContext.request.contextPath}/css/vb_main.css" rel="stylesheet" />
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/vb_main.js"></script>
 <style type="text/css">

@@ -116,6 +116,7 @@ public class MeaningGatherer {
 		List<VBWordInfo> wordInfoList = getMeaning(wordStr, node);
 		String soundTag = getSoundTag(node);
 		String soundSymbol = getSoundSymbol(node);
+		String meaningbundle = "";
 		
 		//단어를 못찾은 경우, 추천 단어를 한번 더 고려함
 		if(wordInfoList == null || wordInfoList.size() == 0){
@@ -139,10 +140,18 @@ public class MeaningGatherer {
 			}
 		}
 		
+		for(int i = 0 ; i < wordInfoList.size() ; i++){
+			if(i == 0 ){
+				meaningbundle = wordInfoList.get(i).getShortmeaning();
+			}else{
+				meaningbundle += "<br>"+wordInfoList.get(i).getShortmeaning();
+			}
+		}
 		word.setWordInfoList(wordInfoList);
 		word.setWordName(wordStr);
 		word.setSoundHtml(soundTag);
 		word.setSoundSymbol(soundSymbol);
+		word.setMeaningbundle(meaningbundle);
 		return word;
 	}
 	
@@ -197,11 +206,14 @@ public class MeaningGatherer {
 					//System.out.println("::BEFORE4: "+shortMeaning);
 					shortMeaning = shortMeaning.replaceAll("\\([^\\)^\\(]*\\)", "");
 					
-					//System.out.println("::splitStr: "+shortMeaning);
+					System.out.println("::splitStr: "+shortMeaning);
 					String[] meaningPart = shortMeaning.split(",");
 					shortMeaning = meaningPart[0];
 					//Countable or Uncountable 걸러냄 i.e. U,N 뜻.. 
-					if(shortMeaning.length() == 1) shortMeaning+=","+meaningPart[1];
+					if(shortMeaning.length() == 1){ 
+						if(meaningPart.length > 1)
+							shortMeaning+=","+meaningPart[1];
+					}
 
 					
 					//괄호로 둘러쌓인 부분 미리 저장(맨 앞부분에 나온것만)
@@ -218,9 +230,9 @@ public class MeaningGatherer {
 					
 					//System.out.println("max :"+maxMeaningNum+", "+i+", "+myNodes[i].getText().toString().trim());
 					VBWordInfo wi = new VBWordInfo();
-					wi.setWordname(wordName);
-					wi.setFullmeaning(meaning);
-					wi.setShortmeaning(shortMeaning);
+					wi.setWordname(convertDBString(wordName));
+					wi.setFullmeaning(convertDBString(meaning));
+					wi.setShortmeaning(convertDBString(shortMeaning));
 					//TODO: need more work.
 					wi.setCategoryid("");
 					resultVector.add(wi);
@@ -228,6 +240,12 @@ public class MeaningGatherer {
 			}
 		}
 		return resultVector;
+	}
+	
+	public String convertDBString(String input){
+		input = input.replace("\'", "\''");
+		input = input.replace("\"", "\\\"");
+		return input;
 	}
 	
 	public static void main(String[] argv) throws IOException{

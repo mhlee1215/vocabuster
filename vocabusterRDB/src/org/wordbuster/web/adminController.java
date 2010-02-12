@@ -33,7 +33,7 @@ public class adminController extends MultiActionController {
 		List<VBWord> wordList = null;
 		HashMap<String, String> map;
 		
-		wordList = wordService.retrieveWord(vBWordSearchVO);//(List<VBWord>)query.execute(vBWordSearchVO.getSearchKeyword());
+		wordList = wordService.retrieveWordAll(vBWordSearchVO);//(List<VBWord>)query.execute(vBWordSearchVO.getSearchKeyword());
 		
 		
 		MeaningGatherer mg = new MeaningGatherer();
@@ -49,13 +49,14 @@ public class adminController extends MultiActionController {
 				VBWord word = mg.analysisWord(wordStr, false);
 				//PersistenceManager deletePm = JDOHelper.getPersistenceManager(vbuser);
 				if(word == null){
-					
+					wordService.deleteWord(wordStr);
 					//pm.deletePersistent(wordList.get(i));
 					//wordList.remove(i);
 					//i--;
 				}
 				else{
 					if(word.getWordInfoList() != null && word.getWordInfoList().size() > 0){
+						wordService.updateWord(word);
 					//	pm.makePersistent(word);
 					}
 				}
@@ -109,6 +110,7 @@ public class adminController extends MultiActionController {
 	@RequestMapping("/adminDeleteWordAll.do")
 	public ModelAndView adminDeleteWordAll(HttpServletRequest req, HttpServletResponse resp) throws Exception{
 		boolean queryResult = wordService.deleteWordAll();
+		boolean queryResult1 = wordService.deleteWordInfoAll();
 		ModelAndView result = new ModelAndView("ajaxResult/adminWordMapValidationResult");
 		return result;
 	}

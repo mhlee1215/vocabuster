@@ -22,7 +22,12 @@
 	</insert>
 	
 	<delete id="deleteWordInfo" parameterClass="org.wordbuster.domain.VBWordInfo" >
-		DELETE FROM vbwordinfo WHERE wordname = '$wordname$'
+		DELETE FROM vbwordinfo 
+		WHERE 
+			1=1
+			<isNotEmpty property="wordname">
+			AND wordname = '$wordname$'
+			</isNotEmpty>
 	</delete>
 	
 	

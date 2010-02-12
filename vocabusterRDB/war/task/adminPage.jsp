@@ -30,24 +30,24 @@ function Recrowling(){
 	var data = { 
 		searchKeyword : $("#wordListSearchKeyword").val(),
 	};
-	$('#adminPanel').load('/adminRecrowling.do', data); 
+	$('#adminPanel').load('${pageContext.request.contextPath}/adminRecrowling.do', data); 
 } 
 
 function wordMapValidation(){
 	var data = {
 	};
-	$('#adminWordMapValidationPanel').load('/adminWordMapValidation.do', data);
+	$('#adminWordMapValidationPanel').load('${pageContext.request.contextPath}/adminWordMapValidation.do', data);
 }
 
 function deleteWordMapAll(){
-	$.post('/adminDeleteWordMapAll.do', '', deleteWordMapAllFinish);
+	$.post('${pageContext.request.contextPath}/adminDeleteWordMapAll.do', '', deleteWordMapAllFinish);
 }
 function deleteWordMapAllFinish(){
 	$('#adminDeleteWordMapPanel').html('finish');
 }
 
 function deleteWordAll(){
-	$.post('/adminDeleteWordAll.do', '', deleteWordAllFinish);
+	$.post('${pageContext.request.contextPath}/adminDeleteWordAll.do', '', deleteWordAllFinish);
 }
 
 function deleteWordAllFinish(){

@@ -41,6 +41,11 @@ public class VBWordMapDAO extends SqlMapClientDaoSupport{
 		return result;
 	}
 	
+	public Integer retrieveMyWordMapCount(VBMyWordSearchVO searchVO){
+		int result = (Integer)getSqlMapClientTemplate().queryForObject("WordMapSql.retrieveUserWordMapListCount", searchVO);
+		return result;
+	}
+	
 	public boolean insertWordMap(VBWordMap wordMap){
 		getSqlMapClientTemplate().insert("WordMapSql.insertWordMap", wordMap);
 		return true;
@@ -55,20 +60,8 @@ public class VBWordMapDAO extends SqlMapClientDaoSupport{
 		VBWordMap wordMap = new VBWordMap();
 		wordMap.setUserid(userid);
 		wordMap.setWordName(wordName);
-		getSqlMapClientTemplate().update("WordMapSql.updateWordMap", wordMap);
+		getSqlMapClientTemplate().delete("WordMapSql.deleteWordMap", wordMap);
 		return true;
 	}
 	
-	
-	/**
-	 * 해당 유저의 모든 wordmap 정보를 지움 
-	 * @param userid
-	 * @return
-	 */
-	public boolean deleteUserWordMap(String userid){
-		VBWordMap wordMap = new VBWordMap();
-		wordMap.setUserid(userid);
-		getSqlMapClientTemplate().update("WordMapSql.updateWordMap", wordMap);
-		return true;
-	}
 }

@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import org.wordbuster.domain.User;
 import org.wordbuster.domain.UserIdMap;
+import org.wordbuster.domain.VBMyWordSearchVO;
 import org.wordbuster.domain.VBNavigationVO;
 import org.wordbuster.domain.VBWordSearchVO;
 import org.wordbuster.service.UserService;
@@ -111,7 +112,7 @@ public class naviController extends MultiActionController{
 	
 	@RequestMapping("/myWordListForm.do")
 	public ModelAndView myWordListForm(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-		VBWordSearchVO vBWordSearchVO = new VBWordSearchVO();
+		VBMyWordSearchVO vBWordSearchVO = new VBMyWordSearchVO();
 		bind(req, vBWordSearchVO);
 		vBWordSearchVO.setPageName("mywords");
 		ModelAndView result = new ModelAndView("task/showMyWords");

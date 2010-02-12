@@ -53,6 +53,33 @@ public class VBWordMap implements Serializable{
 	 */
 	private VBWord word;
 	
+	/**
+	 * 단어뜻 모음
+	 */
+	private String meaningbundle;
+	
+	/**
+	 * 검증여부 
+	 */
+	private String isvalid;
+	
+	
+	public String getIsvalid() {
+		return isvalid;
+	}
+
+	public void setIsvalid(String isvalid) {
+		this.isvalid = isvalid;
+	}
+
+	public String getMeaningbundle() {
+		return meaningbundle;
+	}
+
+	public void setMeaningbundle(String meaningbundle) {
+		this.meaningbundle = meaningbundle;
+	}
+
 	public VBWord getWord() {
 		return word;
 	}

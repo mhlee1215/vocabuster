@@ -14,11 +14,14 @@
 	</select>
 	
 	<select id="retrieveUserWordMapList" parameterClass="org.wordbuster.domain.VBMyWordSearchVO" resultClass="org.wordbuster.domain.VBWordMap">
-		SELECT userid, wordname, score, delaycount, wrongcount, answercount, insertcount 
-    	FROM vbwordmap
-    	WHERE userid = '$searchUserid$'
+		SELECT a.userid, a.wordname, a.score, a.delaycount, a.wrongcount, a.answercount, a.insertcount, b.meaningbundle 
+    	FROM vbwordmap a left outer join vbword b on a.wordname = b.wordname
+    	WHERE a.userid = '$searchUserid$'
     	<isNotEmpty property="searchKeyword">
-    	AND wordname LIKE '%$searchKeyword$%'
+    	AND a.wordname LIKE '%$searchKeyword$%'
+    	</isNotEmpty>
+    	<isNotEmpty property="searchIsvalid">
+    	AND a.isvalid = '$searchIsvalid$'
     	</isNotEmpty>
     	<isNotEmpty property="searchOrderString">
     	ORDER BY $searchOrderString$
@@ -26,17 +29,29 @@
     	LIMIT $pageSize$ OFFSET $pageOffset$
 	</select>
 	
+	<select id="retrieveUserWordMapListCount" parameterClass="org.wordbuster.domain.VBMyWordSearchVO" resultClass="Integer">
+		SELECT count(*) 
+    	FROM vbwordmap a left outer join vbword b on a.wordname = b.wordname
+    	WHERE a.userid = '$searchUserid$'
+    	<isNotEmpty property="searchKeyword">
+    	AND a.wordname LIKE '%$searchKeyword$%'
+    	</isNotEmpty>
+    	<isNotEmpty property="searchIsvalid">
+    	AND a.isvalid = '$searchIsvalid$'
+    	</isNotEmpty>
+	</select>
+	
 	<select id="retrieveWordMap" parameterClass="org.wordbuster.domain.VBWordMap" resultClass="org.wordbuster.domain.VBWordMap">
-		SELECT userid, wordname, score, delaycount, wrongcount, answercount, insertcount 
-    	FROM vbwordmap
+		SELECT a.userid, a.wordname, a.score, a.delaycount, a.wrongcount, a.answercount, a.insertcount, b.meaningbundle
+    	FROM vbwordmap a inner join vbword b on a.wordname = b.wordname
     	WHERE 
-    	userid = $userid$
-    	and wordname = '$wordName$' 
+    	a.userid = $userid$
+    	AND a.wordname = '$wordName$' 
 	</select>
 	
 	<insert id="insertWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
-		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, answercount, insertcount) 
-    	VALUES($userid$, '$wordName$', 0, 0, 0, 0, 1)
+		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid) 
+    	VALUES($userid$, '$wordName$', 0, 0, 0, 0, 1, '$isvalid$')
 	</insert>
 	
 	<update id="updateWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
@@ -66,9 +81,12 @@
 	<delete id="deleteWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
 		DELETE FROM vbwordmap
     	WHERE 
-    		userid = $userid$
+    		1=1
+    		<isNotEmpty property="userid">
+    		AND userid = $userid$
+    		</isNotEmpty>
     		<isNotEmpty property="wordName">
-    		and wordname = '$wordName$'
+    		AND wordname = '$wordName$'
     		</isNotEmpty>  
 	</delete>
 </sqlMap>

@@ -31,8 +31,20 @@ public class VBWordDAO extends SqlMapClientDaoSupport {
 		return result;
 	}
 	
+	public List<VBWord> retriveWordAll(VBWordSearchVO searchVO){
+		searchVO.setPageIndex(-1);
+		searchVO.setPageOffset(-1);
+		List<VBWord> result = (List<VBWord>)getSqlMapClientTemplate().queryForList("WordSql.searchWord", searchVO);
+		return result;
+	}	
+	
 	public List<VBWord> searchWord(VBWordSearchVO searchVO){
 		List<VBWord> result = (List<VBWord>)getSqlMapClientTemplate().queryForList("WordSql.searchWord", searchVO);
+		return result;
+	}
+	
+	public Integer searchWordCount(VBWordSearchVO searchVO){
+		int result = (Integer)getSqlMapClientTemplate().queryForObject("WordSql.searchWordCount", searchVO);
 		return result;
 	}
 	

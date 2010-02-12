@@ -21,7 +21,7 @@ public class VBWordSearchVO extends VBNavigationVO{
 	 * 조회 결과 타입 (i.e. 테이블, 리스트..) 
 	 */
 	private String searchResultType;
-
+	
 	public String getSearchOrderString() {
 		return searchOrderString;
 	}

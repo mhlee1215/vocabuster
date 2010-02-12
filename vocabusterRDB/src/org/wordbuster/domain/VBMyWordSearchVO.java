@@ -23,6 +23,18 @@ public class VBMyWordSearchVO extends VBNavigationVO{
 	 */
 	private String searchResultType;
 	
+	/**
+	 * 뜻을 찾았는지 여부
+	 */
+	private String searchIsvalid;
+
+	
+	public String getSearchIsvalid() {
+		return searchIsvalid;
+	}
+	public void setSearchIsvalid(String searchIsvalid) {
+		this.searchIsvalid = searchIsvalid;
+	}
 	
 	public String getSearchUserid() {
 		return searchUserid;

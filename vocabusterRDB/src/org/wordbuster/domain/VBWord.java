@@ -39,6 +39,11 @@ public class VBWord {
 	 * 뜻 언어
 	 */
 	private String meaningLanauge;
+	
+	/**
+	 * 단어뜻 모음
+	 */
+	private String meaningbundle;
 
 	/**
 	 * 단어 뜻
@@ -46,6 +51,14 @@ public class VBWord {
 	private List<VBWordInfo> wordInfoList;
 	
 	
+	public String getMeaningbundle() {
+		return meaningbundle;
+	}
+
+	public void setMeaningbundle(String meaningbundle) {
+		this.meaningbundle = meaningbundle;
+	}
+
 	public List<VBWordInfo> getWordInfoList() {
 		return wordInfoList;
 	}

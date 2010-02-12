@@ -22,19 +22,22 @@
    		<option value="etc">기타</option>
    </select>
    </div>	
-   <div><textarea id="wordContent" name="content" rows="3" cols="60">test</textarea></div>
+   <div><textarea id="wordContent" name="content" rows="3" cols="60"></textarea></div>
    <a href="#" onclick="submitData();">add</a>
  </form>
 </div>
+
 <div id="addWordsStatus">
-</div> 
+</div>
 </div>
 <script type="text/javascript" >
 var words;
 var maxProgress;
 var curProgress;
 var isProcessing = true;
+var theradCount = 5;
 
+var currentAddIndex = 0;
 function submitData(){
 	if($("#wordContent").val() == ''){
 		alert('입력할 단어를 넣고 추가하는것이 좋을 것이야..');
@@ -50,6 +53,7 @@ function submitData(){
 	htmlContent+='전체 입력수.. '+words.length+'개...<a href="#">멈춤</a>&nbsp;<a href="#">계속</a>';
 	htmlContent+='<br><br>';
 	htmlContent+='<div id="progressbar" style="height:5px;"></div><br>';
+	htmlContent+='<div style="height:150px; overflow:auto">';
 	htmlContent+='<table class="ui-widget ui-widget-content">';
 	htmlContent+='<thead>';
 	htmlContent+='<tr class="ui-widget-header ">';
@@ -86,6 +90,7 @@ function submitData(){
 	}
 	htmlContent+='</tbody>';
 	htmlContent+='</table>';
+	htmlContent+='</div>';
 
 	$('#addWordPanel').hide('slow');
 	$('#addWordsStatus').html(htmlContent);
@@ -93,10 +98,10 @@ function submitData(){
 		value: 0 
 	});
 
-	addWord(0, words[0]);
-	//addWordMark(0);
-	//addFinishMark(0, false);
-	//$('#addWordPanel').load('/addWords.do', data); 
+	for(var i = 0 ; i < theradCount && i < words.length ; i++){
+		addWord(currentAddIndex, words[currentAddIndex]);
+		currentAddIndex++;
+	}
 } 
 
 
@@ -118,8 +123,10 @@ function addWord(index, word){
 			addFinishMark(index, isSuccess, resultPart[1], resultPart[2], resultPart[3]);
 			progress();
 
-			if(words.length > index+1 && isProcessing)
-				addWord(index+1, words[index+1]);
+			if(words.length > currentAddIndex && isProcessing){
+				addWord(currentAddIndex, words[currentAddIndex]);
+				currentAddIndex++;
+			}
 		}
 	});
 }

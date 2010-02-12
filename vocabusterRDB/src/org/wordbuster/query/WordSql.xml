@@ -10,12 +10,13 @@
 	</select>
 	
 	<select id="findWord" parameterClass="String" resultClass="org.wordbuster.domain.VBWord">
-		SELECT wordname, imageurl, soundhtml, soundsymbol, insertcount, wordlanguage, meaninglanguage, admindate 
+		SELECT wordname, imageurl, soundhtml, soundsymbol, insertcount, wordlanguage, meaninglanguage, admindate, meaningbundle 
     	FROM vbword 
     	WHERE wordname = '$wordName$'
 	</select>
+	
 	<select id="searchWord" parameterClass="org.wordbuster.domain.VBWordSearchVO" resultClass="org.wordbuster.domain.VBWord">
-		SELECT wordname, imageurl, soundhtml, soundsymbol, insertcount, wordlanguage, meaninglanguage, admindate 
+		SELECT wordname, imageurl, soundhtml, soundsymbol, insertcount, wordlanguage, meaninglanguage, admindate, meaningbundle 
     	FROM vbword
     	WHERE 1=1 
     	<isNotEmpty property="searchKeyword">
@@ -24,7 +25,23 @@
     	<isNotEmpty property="searchOrderString">
     	ORDER BY $searchOrderString$
     	</isNotEmpty>
-    	LIMIT $pageSize$ OFFSET $pageOffset$
+    	<isGreaterThan property="pageSize" compareValue="0">
+	    	<isGreaterEqual property="pageOffset" compareValue="0">
+	    		LIMIT $pageSize$ OFFSET $pageOffset$
+	    	</isGreaterEqual>
+    	</isGreaterThan>
+	</select>
+	
+	<select id="searchWordCount" parameterClass="org.wordbuster.domain.VBWordSearchVO" resultClass="Integer">
+		SELECT count(*) 
+    	FROM vbword
+    	WHERE 1=1 
+    	<isNotEmpty property="searchKeyword">
+    	AND wordname LIKE '%$searchKeyword$%'
+    	</isNotEmpty>
+    	<isNotEmpty property="searchOrderString">
+    	ORDER BY $searchOrderString$
+    	</isNotEmpty>
 	</select>
 	
 	<update id="updateWord" parameterClass="org.wordbuster.domain.VBWord" >
@@ -49,6 +66,10 @@
     		<isNotEmpty property="meaningLanauge">
     		, meaninglanguage='$meaningLanauge$'
     		</isNotEmpty>
+    		<isNotEmpty property="meaningbundle">
+    		, meaningbundle='$meaningbundle$'
+    		</isNotEmpty>
+    		
     	WHERE 
     	     wordname='$wordName$'
     	
@@ -73,7 +94,8 @@
 				insertcount, 
 				wordlanguage, 
 				meaninglanguage, 
-				admindate
+				admindate,
+				meaningbundle
 			) 
     	VALUES(
     			'$wordName$', 
@@ -83,14 +105,19 @@
     			1, 
     			'$wordLanguage$', 
     			'$meaningLanauge$', 
-    			DATE_FORMAT(NOW(), "%Y%m%d%H%i%s")
+    			DATE_FORMAT(NOW(), "%Y%m%d%H%i%s"),
+    			'$meaningbundle$'
     	)
 	</insert>
 	
 	<delete id="deleteWord" parameterClass="org.wordbuster.domain.VBWord" >
 		DELETE 
 			FROM vbword 
-		WHERE wordname = '$wordName$' 
+		WHERE
+			1=1 
+			<isNotEmpty property="wordName">
+			AND wordname = '$wordName$'
+			</isNotEmpty> 
 	</delete>
 </sqlMap>
 

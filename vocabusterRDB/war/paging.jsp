@@ -1,17 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%>
 <%
-
-String actionPath = request.getParameter("actionPath");
-
+String formName = request.getParameter("formName");
 String sNowPage = request.getParameter("nowPage");
 String sTotalCount = request.getParameter("totalCount");
-
-
-
-
 String sCountPerPage = request.getParameter("countPerPage");
 String sblockCount = request.getParameter("blockCount");
-
 String searchColumn = request.getParameter("searchColumn");
 String searchWord = request.getParameter("searchWord");
 
@@ -53,20 +46,15 @@ if( nowBlock < totalBlock ) {
 %>
 <script type="text/javascript">
 function gotoPage(pageNum) {
-	var objForm = document.frmPaging;
-	objForm.nowPage.value = pageNum;
+	var objForm = document.<%=formName%>;
+	objForm.pageIndex.value = pageNum;
 	objForm.submit();
 }
 </script>
-<form name="frmPaging" method="get" action="<%=actionPath%>">
 
-	<input type="hidden" name="nowPage" value=""/>
-	<input type="hidden" name="searchColumn" value="<%=searchColumn %>">
-	<input type="hidden" name="searchWord" value="<%=searchWord %>">
-
-	<table border="0" cellspacing="0" cellpadding="0">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td align="left">
+			<td align="center">
 				<%if (firstPage > 0) { %>
 				<a href="#" onclick="javascript:gotoPage('<%=firstPage%>');">Ã³À½</a>
 				<%} %>
@@ -89,4 +77,3 @@ function gotoPage(pageNum) {
 			</td>
 		</tr>
 	</table>
-</form>
