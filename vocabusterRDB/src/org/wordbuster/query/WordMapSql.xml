@@ -50,8 +50,8 @@
 	</select>
 	
 	<insert id="insertWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
-		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid) 
-    	VALUES($userid$, '$wordName$', 0, 0, 0, 0, 1, '$isvalid$')
+		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid, admindate) 
+    	VALUES($userid$, '$wordName$', 0, 0, 0, 0, 1, '$isvalid$', DATE_FORMAT(now(), "%Y%m%d"))
 	</insert>
 	
 	<update id="updateWordMap" parameterClass="org.wordbuster.domain.VBWordMap">

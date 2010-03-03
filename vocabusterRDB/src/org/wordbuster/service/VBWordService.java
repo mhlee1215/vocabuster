@@ -252,6 +252,11 @@ public class VBWordService {
 		return wordMapDAO.deleteWordMap("", "");
 	}
 	
+	public boolean deleteWordMap(VBMyWordSearchVO searchVO){
+		String userid = searchVO.getSearchUserid();
+		String wordName = searchVO.getSearchKeyword();
+		return wordMapDAO.deleteWordMap(userid, wordName);
+	}
 	
 	//ETC
 	public void updateWordStatus(HttpServletRequest request){

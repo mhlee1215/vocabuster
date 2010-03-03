@@ -10,32 +10,32 @@
 <div id="myWordListPanel" class="ui-widget ui-widget-content vb-page-body-div">
 <h1 id="" class="ui-widget-header vb-page-header">My word</h1>
 <form:form cssStyle="margin:0px;padding:0px;" action="${pageContext.request.contextPath}/myWordList.do" commandName="vBWordSearchVO" name="vBWordSearchVO">
-<form:hidden path="pageIndex"/>
-<form:select id="myWordListSearchIsvalid" path="searchIsvalid">
-<form:option value="Y">일반</form:option>
-<form:option value="N">미스</form:option>
-</form:select>
-<form:select id="myWordListSearchType" path="searchType">
-<form:option value="name">단어명</form:option>
-<form:option value="meaning">의미</form:option>
-</form:select>
-<form:select id="myWordListOrderType" path="searchOrderString">
-<form:option value="wordName asc">알파벳순</form:option>
-<form:option value="insertCount desc">입력횟수순</form:option>
-<form:option value="score asc">점수순</form:option>
-<form:option value="wrongCount desc">오답순</form:option>
-<form:option value="answerCount desc">정답순</form:option>
-<form:option value="answerRate desc">정답률순</form:option>
-<form:option value="wrongRate desc">오답률순</form:option>
-<!--<form:option value="admindateOrder">등록일순</form:option>
---></form:select>
-<form:select id="myWordListSearchResultType" path="searchResultType">
-<form:option value="table">테이블</form:option>
-<form:option value="list">리스트</form:option>
-</form:select>
-<form:input id="myWordListSearchKeyword" path="searchKeyword"></form:input>
-<a href="#" onclick="searchWords();">search</a>
-<button>submit</button>
+	<form:hidden path="pageIndex"/>
+	<form:select id="myWordListSearchIsvalid" path="searchIsvalid">
+	<form:option value="Y">일반</form:option>
+	<form:option value="N">미스</form:option>
+	</form:select>
+	<form:select id="myWordListSearchType" path="searchType">
+	<form:option value="name">단어명</form:option>
+	<form:option value="meaning">의미</form:option>
+	</form:select>
+	<form:select id="myWordListOrderType" path="searchOrderString">
+	<form:option value="wordName asc">알파벳순</form:option>
+	<form:option value="insertCount desc">입력횟수순</form:option>
+	<form:option value="score asc">점수순</form:option>
+	<form:option value="wrongCount desc">오답순</form:option>
+	<form:option value="answerCount desc">정답순</form:option>
+	<form:option value="answerRate desc">정답률순</form:option>
+	<form:option value="wrongRate desc">오답률순</form:option>
+	<!--<form:option value="admindateOrder">등록일순</form:option>
+	--></form:select>
+	<form:select id="myWordListSearchResultType" path="searchResultType">
+	<form:option value="table">테이블</form:option>
+	<form:option value="list">리스트</form:option>
+	</form:select>
+	<form:input id="myWordListSearchKeyword" path="searchKeyword"></form:input>
+	<a href="#" onclick="searchWords();">search</a>
+	<button>submit</button>
 </form:form>
 
 <c:if test="${wordMapList != NULL}" >
@@ -138,7 +138,16 @@ function searchWords(){
 
 function deleteWordMap(wordName){
 	if(confirm(wordName+' 을 사용자 단어 목록에서 삭제 하시겠습니까?')){
-		alert('삭제 ㄱㄱ');
+		$.ajax({
+			type: "POST",
+			url: "${pageContext.request.contextPath}/deleteMyword.do",
+			data: 'searchKeyword='+wordName,
+			success: function(msg){
+				//refresh
+				//alert('삭제 됬음');
+				document.vBWordSearchVO.submit();
+			}
+		});
 	}
 }
 

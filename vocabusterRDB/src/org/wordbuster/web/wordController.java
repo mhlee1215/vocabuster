@@ -258,6 +258,22 @@ public class wordController extends MultiActionController {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/deleteMyword.do")
+	public ModelAndView deleteMyword(HttpServletRequest req, HttpServletResponse resp) throws Exception{
+		String resultStr = "";
+		VBMyWordSearchVO vBWordSearchVO = new VBMyWordSearchVO();
+		bind(req, vBWordSearchVO);
+		String userid = (String) req.getSession().getAttribute("userid");
+		vBWordSearchVO.setSearchUserid(userid);
+		
+		wordService.deleteWordMap(vBWordSearchVO);
+		
+		ModelAndView result = new ModelAndView("ajaxResult/deleteMyWordResult");
+		result.addObject("result", resultStr);
+		return result;
+	}
+	
 	
 	@RequestMapping("/exportAsExcel.do")
 	public ModelAndView exportAsExcel(HttpServletRequest request, HttpServletResponse rsponse) throws Exception{
