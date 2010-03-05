@@ -13,6 +13,11 @@ public class VBWordSearchVO extends VBNavigationVO{
 	 * 조회 키워드
 	 */
 	private String searchKeyword;
+	
+	/**
+	 *  조회 제외 케워드
+	 */
+	private String searchExcludeKeyword;
 	/**
 	 * 정렬 스트링
 	 */
@@ -22,6 +27,12 @@ public class VBWordSearchVO extends VBNavigationVO{
 	 */
 	private String searchResultType;
 	
+	public String getSearchExcludeKeyword() {
+		return searchExcludeKeyword;
+	}
+	public void setSearchExcludeKeyword(String searchExcludeKeyword) {
+		this.searchExcludeKeyword = searchExcludeKeyword;
+	}
 	public String getSearchOrderString() {
 		return searchOrderString;
 	}

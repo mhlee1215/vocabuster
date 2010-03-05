@@ -22,6 +22,9 @@
     	<isNotEmpty property="searchKeyword">
     	AND wordname LIKE '%$searchKeyword$%'
     	</isNotEmpty>
+    	<isNotEmpty property="searchExcludeKeyword">
+    	AND wordname &lt;> '%$searchExcludeKeyword$%'
+    	</isNotEmpty>
     	<isNotEmpty property="searchOrderString">
     	ORDER BY $searchOrderString$
     	</isNotEmpty>

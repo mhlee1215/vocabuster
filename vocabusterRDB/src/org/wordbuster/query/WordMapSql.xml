@@ -20,6 +20,9 @@
     	<isNotEmpty property="searchKeyword">
     	AND a.wordname LIKE '%$searchKeyword$%'
     	</isNotEmpty>
+    	<isNotEmpty property="searchExcludeKeyword">
+    	AND a.wordname &lt;> '$searchExcludeKeyword$'
+    	</isNotEmpty>
     	<isNotEmpty property="searchIsvalid">
     	AND a.isvalid = '$searchIsvalid$'
     	</isNotEmpty>
@@ -50,8 +53,8 @@
 	</select>
 	
 	<insert id="insertWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
-		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid, admindate) 
-    	VALUES($userid$, '$wordName$', 0, 0, 0, 0, 1, '$isvalid$', DATE_FORMAT(now(), "%Y%m%d"))
+		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid, admindate, categoryname) 
+    	VALUES($userid$, '$wordName$', 0, 0, 0, 0, 1, '$isvalid$', DATE_FORMAT(now(), "%Y%m%d"), $categoryName$)
 	</insert>
 	
 	<update id="updateWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
@@ -73,6 +76,9 @@
     		<isNotEmpty property="insertCount">
     		,insertcount = $insertCount$
     		</isNotEmpty>
+    		<isNotEmpty property="categoryName">
+    		,categoryname = $categoryName$
+    		</isNotEmpty>
     	WHERE 
     		userid = $userid$
     		and wordname = '$wordName$' 
@@ -87,8 +93,20 @@
     		</isNotEmpty>
     		<isNotEmpty property="wordName">
     		AND wordname = '$wordName$'
+    		</isNotEmpty>
+    		<isNotEmpty property="categoryName">
+    		AND categoryname = $categoryName$
     		</isNotEmpty>  
 	</delete>
+	
+	<select id="retrieveQuestion" parameterClass="org.wordbuster.domain.VBWordQuizVO" resultClass="org.wordbuster.domain.VBWordMap">
+		select userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid, admindate
+		from vbwordmap 
+		where
+			isvalid = 'Y'
+		order by wrongcount asc, insertcount desc
+    	LIMIT $toIndex$ OFFSET $fromIndex$
+	</select>
 </sqlMap>
 
 

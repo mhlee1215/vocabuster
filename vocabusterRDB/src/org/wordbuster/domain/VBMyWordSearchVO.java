@@ -28,7 +28,17 @@ public class VBMyWordSearchVO extends VBNavigationVO{
 	 */
 	private String searchIsvalid;
 
+	/**
+	 *  조회 제외 케워드
+	 */
+	private String searchExcludeKeyword;
 	
+	public String getSearchExcludeKeyword() {
+		return searchExcludeKeyword;
+	}
+	public void setSearchExcludeKeyword(String searchExcludeKeyword) {
+		this.searchExcludeKeyword = searchExcludeKeyword;
+	}
 	public String getSearchIsvalid() {
 		return searchIsvalid;
 	}

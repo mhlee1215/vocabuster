@@ -53,14 +53,14 @@ public class VBWordService {
 		return wordMapDAO.getVBUserWordCount(wordMap);
 	}
 	
-	public String getRandomMeaning(VBWord word){
+	public String getRandomMeaning(VBWordMap word){
 		List<VBWordInfo> wordInfo = wordInfoDAO.retrieveWordInfo(word.getWordName());
 		Random oRandom = new Random();
 		int meaningIndex = oRandom.nextInt(wordInfo.size());
 		return wordInfo.get(meaningIndex).getShortmeaning();
 	}
 	
-	public String getVBWordRandomMeaningByIndexExceptTarget(int index, VBWord targetWord){
+	public String getVBWordRandomMeaningByIndexExceptTarget(String userid, int index, VBWordMap targetWord){
 		System.out.println("index : "+index);
 		//PersistenceManager pm = PMF.get().getPersistenceManager();
 		//Query wordQuery = pm.newQuery(VBWord.class);
@@ -68,27 +68,38 @@ public class VBWordService {
 		//wordQuery.setFilter("key != targetWordKey");
 		//wordQuery.declareParameters("String targetWordKey");
 		//wordQuery.setRange(index, index+1);
-		VBWord result = null;
+		VBWordMap result = null;
 		String resultMeaning = "";
 		List<VBWord> wordList = null;
+		List<VBWordMap> wordMapList = null;
+		
+		VBMyWordSearchVO searchVO = new VBMyWordSearchVO();
+		searchVO.setSearchExcludeKeyword(targetWord.getWordName());
+		searchVO.setPageOffset(index);
+		searchVO.setPageSize(1);
+		searchVO.setSearchUserid(userid);
+		wordMapList = wordMapDAO.retrieveMyWordMap(searchVO);
+		
 		try{
 			//result = (VBWord) wordQuery.execute(targetWord.getKey());
-			wordList = null;//(List<VBWord>)wordQuery.execute(targetWord.getKey());
-			System.out.println("list size : "+wordList.size());
-			result = wordList.get(0);
+			//wordList = null;//(List<VBWord>)wordQuery.execute(targetWord.getKey());
+			System.out.println("list size : "+wordMapList.size());
+			result = wordMapList.get(0);
 			System.out.println("selected choice: "+result.getWordName());
 			if(result.getWordName().equals(targetWord.getWordName()))
 				return null;
 			else
 				resultMeaning = getRandomMeaning(result);
-		} finally{
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
 			//pm.close();
 		}
 		System.out.println("getVBWord: "+result);
 		return resultMeaning;
 	}
 	
-	public List<String> makeSelection(VBWord targetWord, int selectionSize, int answerIndex){
+	public List<String> makeSelection(String userid, VBWordMap targetWord, int selectionSize, int answerIndex){
 		int maxSize = wordDAO.getVBWordCount();
 		Integer[] selectionQueue = makeRandQueue(selectionSize, maxSize-1);
 		Vector<String> wordList = new Vector<String>();
@@ -101,7 +112,7 @@ public class VBWordService {
 				wordList.add(targetMeaning);
 			}else{
 				System.out.println(selectionQueue[queueIndex]);
-				String candidate = getVBWordRandomMeaningByIndexExceptTarget(selectionQueue[queueIndex], targetWord);
+				String candidate = getVBWordRandomMeaningByIndexExceptTarget(userid, selectionQueue[queueIndex], targetWord);
 				queueIndex++;
 				if(candidate == null){
 					i--;
@@ -146,7 +157,7 @@ public class VBWordService {
 	}
 	
 	public List<VBWordMap> retrieveQuestion(VBWordQuizVO quizVO){
-		return null;
+		return wordMapDAO.retrieveQuestion(quizVO);
 	}
 	
 	//VBWORD

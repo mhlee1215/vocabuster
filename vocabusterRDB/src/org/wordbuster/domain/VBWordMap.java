@@ -63,7 +63,19 @@ public class VBWordMap implements Serializable{
 	 */
 	private String isvalid;
 	
+	/**
+	 * 단어 카테고리 명
+	 */
+	private String categoryName;
 	
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
 	public String getIsvalid() {
 		return isvalid;
 	}

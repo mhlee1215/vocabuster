@@ -48,7 +48,7 @@ public class wordQuizController extends MultiActionController {
 		List<VBWordMap> wordMapList = wordService.retrieveQuestion(vBWordQuizVO);
 
 		Integer selectionSize = vBWordQuizVO.getSelectionCount();
-		VBWord targetWord = null;
+		VBWordMap targetWord = null;
 		int answerNumber = 0;
 		Random nRandom = new Random();
 		answerNumber = nRandom.nextInt(selectionSize);
@@ -63,7 +63,7 @@ public class wordQuizController extends MultiActionController {
 				VBWordMap candidateWordMap = wordService.retrieveWordMap(userid, candidateWordName);//pm.getObjectById(VBWordMap.class, wordMapKey);
 				
 				if(candidateWordMap.isPossibleToSelect()){
-					targetWord = wordService.retrieveWord(candidateWordName);//VBWordService.getVBWord(candidateWordMap.getWordKey());
+					targetWord = candidateWordMap;//wordService.retrieveWord(candidateWordName);//VBWordService.getVBWord(candidateWordMap.getWordKey());
 					candidateWordMap.setDelay();
 					isFindTarget = true;
 					break;
@@ -79,7 +79,7 @@ public class wordQuizController extends MultiActionController {
 		
 		System.out.println("targetWord: "+targetWord);
 		
-		List<String> selectionList = wordService.makeSelection(targetWord, selectionSize, answerNumber);
+		List<String> selectionList = wordService.makeSelection(userid, targetWord, selectionSize, answerNumber);
 		//for(int i = 0 ; i < selectionList.size() ;i++)
 		//	System.out.println(selectionList.get(i));
 		

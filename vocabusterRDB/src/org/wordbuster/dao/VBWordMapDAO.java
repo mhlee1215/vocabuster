@@ -8,6 +8,7 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.wordbuster.domain.VBMyWordSearchVO;
 import org.wordbuster.domain.VBWordMap;
+import org.wordbuster.domain.VBWordQuizVO;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -60,8 +61,13 @@ public class VBWordMapDAO extends SqlMapClientDaoSupport{
 		VBWordMap wordMap = new VBWordMap();
 		wordMap.setUserid(userid);
 		wordMap.setWordName(wordName);
-		getSqlMapClientTemplate().delete("WordMapSql.deleteWordMap", wordMap);
+		getSqlMapClientTemplate().delete("WList<VBWordMap>ordMapSql.deleteWordMap", wordMap);
 		return true;
+	}
+	
+	public List<VBWordMap> retrieveQuestion(VBWordQuizVO quizVO){
+		List<VBWordMap> result = (List<VBWordMap>)getSqlMapClientTemplate().queryForList("WordMapSql.retrieveQuestion", quizVO);
+		return result;
 	}
 	
 }

@@ -3,7 +3,7 @@ package org.wordbuster.domain;
 public class VBNavigationVO {
 	private int pageIndex = 1;
 	//조회 페이지 사이즈
-	private final int pageSize = 15;
+	private int pageSize = 15;
 	//조회 오프셋
 	private int pageOffset = 0;
 	//페이징 블록의 사이즈(갯수)
@@ -12,6 +12,10 @@ public class VBNavigationVO {
 	private String pageName;
 
 	
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
 	public int getBlockSize() {
 		return blockSize;
 	}
