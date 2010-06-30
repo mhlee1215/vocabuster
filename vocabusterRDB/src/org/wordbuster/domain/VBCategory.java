@@ -2,23 +2,24 @@ package org.wordbuster.domain;
 
 
 public class VBCategory {
-	private String name;
+	private String id = "";
+	private String name = "";
 	
-	private VBWord word;
-
-    public VBWord getWord() {
-		return word;
+	public String getId() {
+		return id;
 	}
-
-	public void setWord(VBWord word) {
-		this.word = word;
+	public void setId(String id) {
+		this.id = id;
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+	
+	
+	
 }

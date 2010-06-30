@@ -5,6 +5,7 @@
 <sqlMap namespace="WordMapSql">
 
 	<select id="retrieveWordMapCount" parameterClass="org.wordbuster.domain.VBWordMap" resultClass="Integer">
+		/*	retrieveWordMapCount	*/
 		SELECT count(*)  
     	FROM vbwordmap
     	WHERE 1=1
@@ -14,6 +15,7 @@
 	</select>
 	
 	<select id="retrieveUserWordMapList" parameterClass="org.wordbuster.domain.VBMyWordSearchVO" resultClass="org.wordbuster.domain.VBWordMap">
+		/*	retrieveUserWordMapList	*/
 		SELECT a.userid, a.wordname, a.score, a.delaycount, a.wrongcount, a.answercount, a.insertcount, b.meaningbundle 
     	FROM vbwordmap a left outer join vbword b on a.wordname = b.wordname
     	WHERE a.userid = '$searchUserid$'
@@ -33,6 +35,7 @@
 	</select>
 	
 	<select id="retrieveUserWordMapListCount" parameterClass="org.wordbuster.domain.VBMyWordSearchVO" resultClass="Integer">
+		/*	retrieveUserWordMapListCount	*/
 		SELECT count(*) 
     	FROM vbwordmap a left outer join vbword b on a.wordname = b.wordname
     	WHERE a.userid = '$searchUserid$'
@@ -45,6 +48,7 @@
 	</select>
 	
 	<select id="retrieveWordMap" parameterClass="org.wordbuster.domain.VBWordMap" resultClass="org.wordbuster.domain.VBWordMap">
+		/*	retrieveWordMap	*/
 		SELECT a.userid, a.wordname, a.score, a.delaycount, a.wrongcount, a.answercount, a.insertcount, b.meaningbundle
     	FROM vbwordmap a inner join vbword b on a.wordname = b.wordname
     	WHERE 
@@ -53,11 +57,13 @@
 	</select>
 	
 	<insert id="insertWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
-		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid, admindate, categoryname) 
-    	VALUES($userid$, '$wordName$', 0, 0, 0, 0, 1, '$isvalid$', DATE_FORMAT(now(), "%Y%m%d"), $categoryName$)
+		/*	insertWordMap	*/
+		INSERT INTO vbwordmap(userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid, admindate, categoryid) 
+    	VALUES($userid$, '$wordName$', 0, 0, 0, 0, 1, '$isvalid$', DATE_FORMAT(now(), "%Y%m%d"), '$categoryid$')
 	</insert>
 	
 	<update id="updateWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
+		/*	updateWordMap	*/
 		UPDATE vbwordmap 
     	SET 
     		userid = $userid$ 
@@ -76,8 +82,8 @@
     		<isNotEmpty property="insertCount">
     		,insertcount = $insertCount$
     		</isNotEmpty>
-    		<isNotEmpty property="categoryName">
-    		,categoryname = $categoryName$
+    		<isNotEmpty property="categoryid">
+    		,categoryid = $categoryid$
     		</isNotEmpty>
     	WHERE 
     		userid = $userid$
@@ -85,6 +91,7 @@
 	</update>
 	
 	<delete id="deleteWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
+		/*	deleteWordMap	*/
 		DELETE FROM vbwordmap
     	WHERE 
     		1=1
@@ -94,19 +101,21 @@
     		<isNotEmpty property="wordName">
     		AND wordname = '$wordName$'
     		</isNotEmpty>
-    		<isNotEmpty property="categoryName">
-    		AND categoryname = $categoryName$
+    		<isNotEmpty property="categoryid">
+    		AND categoryid = $categoryid$
     		</isNotEmpty>  
 	</delete>
 	
 	<select id="retrieveQuestion" parameterClass="org.wordbuster.domain.VBWordQuizVO" resultClass="org.wordbuster.domain.VBWordMap">
+		/*	retrieveQuestion	*/
 		select userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid, admindate
-		from vbwordmap 
+		from vbwordmap  
 		where
-			isvalid = 'Y'
+			isvalid = 'Y' and userid = '$userid$'
 		order by wrongcount asc, insertcount desc
     	LIMIT $toIndex$ OFFSET $fromIndex$
 	</select>
+	
 </sqlMap>
 
 

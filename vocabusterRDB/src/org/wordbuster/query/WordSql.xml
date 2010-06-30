@@ -5,17 +5,20 @@
 <sqlMap namespace="WordSql">
 
 	<select id="retrieveWordCountAll" parameterClass="org.wordbuster.domain.VBWord" resultClass="Integer">
+		/*	retrieveWordCountAll	*/
 		SELECT count(*)  
     	FROM vbword
 	</select>
 	
 	<select id="findWord" parameterClass="String" resultClass="org.wordbuster.domain.VBWord">
+		/*	findWord	*/
 		SELECT wordname, imageurl, soundhtml, soundsymbol, insertcount, wordlanguage, meaninglanguage, admindate, meaningbundle 
     	FROM vbword 
     	WHERE wordname = '$wordName$'
 	</select>
 	
 	<select id="searchWord" parameterClass="org.wordbuster.domain.VBWordSearchVO" resultClass="org.wordbuster.domain.VBWord">
+		/*	searchWord	*/
 		SELECT wordname, imageurl, soundhtml, soundsymbol, insertcount, wordlanguage, meaninglanguage, admindate, meaningbundle 
     	FROM vbword
     	WHERE 1=1 
@@ -36,6 +39,7 @@
 	</select>
 	
 	<select id="searchWordCount" parameterClass="org.wordbuster.domain.VBWordSearchVO" resultClass="Integer">
+		/*	searchWordCount	*/
 		SELECT count(*) 
     	FROM vbword
     	WHERE 1=1 
@@ -48,6 +52,7 @@
 	</select>
 	
 	<update id="updateWord" parameterClass="org.wordbuster.domain.VBWord" >
+		/*	updateWord	*/
 		UPDATE vbword 
     	SET 
     		wordname='$wordName$'
@@ -79,6 +84,7 @@
 	</update>
 	
 	<update id="increaseWordInsertCount" parameterClass="org.wordbuster.domain.VBWord" >
+		/*	increaseWordInsertCount	*/
 		UPDATE 
 			vbword 
     	SET
@@ -88,6 +94,7 @@
 	</update>
 	
 	<insert id="insertWord" parameterClass="org.wordbuster.domain.VBWord" >
+		/*	insertWord	*/
 		INSERT INTO 
 			vbword(
 				wordname, 
@@ -114,14 +121,25 @@
 	</insert>
 	
 	<delete id="deleteWord" parameterClass="org.wordbuster.domain.VBWord" >
+		/*	deleteWord	*/
 		DELETE 
 			FROM vbword 
 		WHERE
 			1=1 
 			<isNotEmpty property="wordName">
 			AND wordname = '$wordName$'
-			</isNotEmpty> 
+			</isNotEmpty>
 	</delete>
+	
+	<select id="retrieveCategories" parameterClass="org.wordbuster.domain.VBCategorySearchVO" resultClass="org.wordbuster.domain.VBCategory">
+		/*	retrieveCategories	*/
+		select id, name 
+		from vbcategory
+		where 1=1
+		<isNotEmpty property="searchCategoryName">
+    		AND name like '%$searchCategoryName$%'
+    	</isNotEmpty>  
+	</select>
 </sqlMap>
 
 

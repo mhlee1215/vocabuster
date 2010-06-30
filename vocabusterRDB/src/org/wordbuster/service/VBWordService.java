@@ -13,6 +13,8 @@ import org.wordbuster.dao.VBUserDAO;
 import org.wordbuster.dao.VBWordDAO;
 import org.wordbuster.dao.VBWordInfoDAO;
 import org.wordbuster.dao.VBWordMapDAO;
+import org.wordbuster.domain.VBCategory;
+import org.wordbuster.domain.VBCategorySearchVO;
 import org.wordbuster.domain.VBMyWordSearchVO;
 import org.wordbuster.domain.VBUser;
 import org.wordbuster.domain.VBWord;
@@ -54,10 +56,11 @@ public class VBWordService {
 	}
 	
 	public String getRandomMeaning(VBWordMap word){
-		List<VBWordInfo> wordInfo = wordInfoDAO.retrieveWordInfo(word.getWordName());
-		Random oRandom = new Random();
-		int meaningIndex = oRandom.nextInt(wordInfo.size());
-		return wordInfo.get(meaningIndex).getShortmeaning();
+		return word.getMeaningbundle();
+//		List<VBWordInfo> wordInfo = wordInfoDAO.retrieveWordInfo(word.getWordName());
+//		Random oRandom = new Random();
+//		int meaningIndex = oRandom.nextInt(wordInfo.size());
+//		return wordInfo.get(meaningIndex).getShortmeaning();
 	}
 	
 	public String getVBWordRandomMeaningByIndexExceptTarget(String userid, int index, VBWordMap targetWord){
@@ -101,10 +104,13 @@ public class VBWordService {
 	
 	public List<String> makeSelection(String userid, VBWordMap targetWord, int selectionSize, int answerIndex){
 		int maxSize = wordDAO.getVBWordCount();
+		System.out.println("::selectionSize: "+selectionSize);
+		System.out.println("::maxSize-1: "+(maxSize-1));
 		Integer[] selectionQueue = makeRandQueue(selectionSize, maxSize-1);
 		Vector<String> wordList = new Vector<String>();
 		int queueIndex = 0;
-		for(int i = 0 ; i < selectionSize ; i++)
+		
+		for(int i = 0 ; i < selectionSize && i < selectionQueue.length; i++)
 		{
 			if(i == answerIndex){
 				String targetMeaning = getRandomMeaning(targetWord);
@@ -142,6 +148,9 @@ public class VBWordService {
 			result[i] = sequence[selection];
 			sequence[selection] = sequence[maxSize-1-i];
 		}
+		
+		for(Integer val : result)
+			System.out.println("makeRandQueue: "+val);
 		
 		return result;
 	}
@@ -276,5 +285,21 @@ public class VBWordService {
 		int userWordCount = getVBUserWordCount(userid);
 		request.getSession().setAttribute("wordcount", wordCountAll);
 		request.getSession().setAttribute("userwordcount", userWordCount);
+	}
+	
+	public List<VBCategory> retrieveCategory(VBCategorySearchVO vo){
+		return wordDAO.retrieveCategory(vo);
+	}
+	
+	public int updateCategory(VBCategorySearchVO vo){
+		return wordDAO.updateCategory(vo);
+	}
+	
+	public int deleteCategory(VBCategorySearchVO vo){
+		return wordDAO.deleteCategory(vo);
+	}
+	
+	public Object insertCategory(VBCategorySearchVO vo){
+		return wordDAO.insertCategory(vo);
 	}
 }

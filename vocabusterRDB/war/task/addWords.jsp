@@ -16,10 +16,11 @@
    <div>
    카테고리: 
    <select id="wordCategory" name="wordCategory">
-   		<option value="none">없음</option>
-   		<option value="toefl">토플</option>
-   		<option value="toeic">토익</option>
-   		<option value="etc">기타</option>
+   		<option value="">없음</option>
+   		<c:forEach items="${categories }" var="category">
+   			<option value="${category.id }">${category.name }</option>
+   		</c:forEach>
+   		
    </select>
    </div>	
    <div><textarea id="wordContent" name="content" rows="3" cols="60"></textarea></div>
@@ -110,7 +111,7 @@ function addWord(index, word){
 	$.ajax({
 		type: "POST",
 		url: "${pageContext.request.contextPath}/addOneWord.do",
-		data: 'word='+word,
+		data: {word:word, category:$("#wordCategory :selected").val()},
 		success: function(msg){
 			var Result = msg;
 			var resultPart = Result.split('_/');

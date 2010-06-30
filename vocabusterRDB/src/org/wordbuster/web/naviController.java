@@ -1,5 +1,7 @@
 package org.wordbuster.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,6 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import org.wordbuster.domain.User;
 import org.wordbuster.domain.UserIdMap;
+import org.wordbuster.domain.VBCategory;
+import org.wordbuster.domain.VBCategorySearchVO;
 import org.wordbuster.domain.VBMyWordSearchVO;
 import org.wordbuster.domain.VBNavigationVO;
 import org.wordbuster.domain.VBWordSearchVO;
@@ -85,8 +89,12 @@ public class naviController extends MultiActionController{
 		VBNavigationVO vBNavigationVO = new VBNavigationVO();
 		bind(req,vBNavigationVO);
 		vBNavigationVO.setPageName("addwords");
+		
+		VBCategorySearchVO vo = new VBCategorySearchVO();
+		List<VBCategory> categories = wordService.retrieveCategory(vo);
 		ModelAndView result = new ModelAndView("task/addWords");
 		result.addObject("vBWordSearchVO", vBNavigationVO);
+		result.addObject("categories", categories);
 		return result;
 	}
 	

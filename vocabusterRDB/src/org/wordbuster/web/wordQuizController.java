@@ -66,12 +66,14 @@ public class wordQuizController extends MultiActionController {
 					targetWord = candidateWordMap;//wordService.retrieveWord(candidateWordName);//VBWordService.getVBWord(candidateWordMap.getWordKey());
 					candidateWordMap.setDelay();
 					isFindTarget = true;
-					break;
 				}else{
 					candidateWordMap.decreaseDelay();
 				}
 				
 				wordService.updateWordMap(candidateWordMap);
+				
+				if(isFindTarget)
+					break;
 				
 				
 			}
@@ -98,7 +100,8 @@ public class wordQuizController extends MultiActionController {
         //User user = userService.getCurrentUser();
 		VBWordQuizVO vBWordQuizVO = new VBWordQuizVO();
 		bind(req, vBWordQuizVO);
-		System.out.println("VO: "+vBWordQuizVO);
+		System.out.println("submitAnswer VO: "+vBWordQuizVO);
+		System.out.println("isCorrect: "+req.getParameterValues("isCorrect"));
 		String userid = (String) req.getSession().getAttribute("userid");
 		
 		//Key wordMapKey = VBWordMap.createKey(user, vBWordQuizVO.getQuizWordName());

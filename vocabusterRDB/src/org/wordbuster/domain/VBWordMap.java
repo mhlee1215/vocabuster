@@ -66,14 +66,14 @@ public class VBWordMap implements Serializable{
 	/**
 	 * 단어 카테고리 명
 	 */
-	private String categoryName;
+	private String categoryid;
 	
-	public String getCategoryName() {
-		return categoryName;
+	public String getCategoryid() {
+		return categoryid;
 	}
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+	public void setCategoryid(String categoryid) {
+		this.categoryid = categoryid;
 	}
 
 	public String getIsvalid() {

@@ -15,10 +15,12 @@
  	</resultMap>
  	
  	<select id="readUserList" resultMap="User">
+ 		/*	readUserList	*/
  		SELECT ID, ISACTIVATED, PASSWORD, ISDELETED, REGISTEREDTIME, DELETEDTIME, ACTIVATEDTIME FROM USER_INFO
  	</select>
  	
 	<select id="readUser" resultMap="User">
+		/*	readUser	*/
        SELECT ID, PASSWORD, ISACTIVATED, ISDELETED, REGISTEREDTIME, DELETEDTIME, ACTIVATEDTIME FROM USER_INFO 
        WHERE ID = #id# 
        <isNotEmpty property="password">
@@ -27,12 +29,14 @@
 	</select>
 
 	<insert id="createUser" parameterClass="org.wordbuster.domain.User">
+		/*	createUser	*/
 		 INSERT INTO
 		 USER_INFO (ID, PASSWORD, ISACTIVATED, ISDELETED, REGISTEREDTIME)
 		 VALUES (#id#, #password#, 'N', 'N', DATE_FORMAT(now(), "%Y%m%d%H%i%s"))
 	</insert>
 	
 	<update id="updateUser" parameterClass="org.wordbuster.domain.User">
+		/*	updateUser	*/
 		 UPDATE USER_INFO SET
 		 ID = #id#
 		 <isNotEmpty property="isactivated">
@@ -47,20 +51,24 @@
 	</update>
 	
 	<delete id="deleteUser" parameterClass="org.wordbuster.domain.User">
+		/*	deleteUser	*/
 		 DELETE FROM USER_INFO
 		 WHERE ID = #id#
 	</delete>
 	
 	<select id="getNextId" resultClass="Integer">
+		/*	getNextId	*/
 		SELECT IFNULL(MAX(internalid)+1, '10000') FROM USER_IDMAP
 	</select>
 	
 	<insert id="createUserIdMap" parameterClass="org.wordbuster.domain.UserIdMap">
+		/*	createUserIdMap	*/
 		INSERT INTO USER_IDMAP(externalId, internalid, admindate) 
 		VALUES(#externalId#, #internalId#, DATE_FORMAT(NOW(), "%Y%m%d%H%i%s"))
 	</insert>
 	
 	<select id="getUserIdMap" parameterClass="org.wordbuster.domain.UserIdMap" resultClass="org.wordbuster.domain.UserIdMap">
+		/*	getUserIdMap	*/
 		SELECT internalId, externalId FROM USER_IDMAP WHERE externalId = #externalId#
 	</select>
 	

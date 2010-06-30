@@ -5,23 +5,27 @@
 <sqlMap namespace="WordInfoSql">
 
 	<select id="findWordInfo" parameterClass="org.wordbuster.domain.VBSearchVO" resultClass="org.wordbuster.domain.VBWordInfo">
+		/*	findWordInfo	*/
 		SELECT wordname, seq, fullmeaning, shortmeaning, categoryid 
     	FROM vbwordinfo
     	WHERE 
 	</select>
 	
 	<select id="retrieveWordInfo" parameterClass="org.wordbuster.domain.VBWordInfo" resultClass="org.wordbuster.domain.VBWordInfo">
+		/*	retrieveWordInfo	*/
 		SELECT wordname, seq, fullmeaning, shortmeaning, categoryid 
     	FROM vbwordinfo
     	WHERE wordname = '$wordname$'
 	</select>
 	
 	<insert id="insertWordInfo" parameterClass="org.wordbuster.domain.VBWordInfo" >
+		/*	insertWordInfo	*/
 		INSERT INTO vbwordinfo(wordname, seq, fullmeaning, shortmeaning, categoryid) 
     	VALUES('$wordname$', '$seq$', '$fullmeaning$', '$shortmeaning$', '$categoryid$' )
 	</insert>
 	
 	<delete id="deleteWordInfo" parameterClass="org.wordbuster.domain.VBWordInfo" >
+		/*	deleteWordInfo	*/
 		DELETE FROM vbwordinfo 
 		WHERE 
 			1=1

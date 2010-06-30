@@ -6,6 +6,8 @@ import javax.annotation.Resource;
 
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.wordbuster.domain.VBCategory;
+import org.wordbuster.domain.VBCategorySearchVO;
 import org.wordbuster.domain.VBWord;
 import org.wordbuster.domain.VBWordInfo;
 import org.wordbuster.domain.VBWordMap;
@@ -65,6 +67,26 @@ public class VBWordDAO extends SqlMapClientDaoSupport {
 		return false;
 	}
 	
+	
+	public List<VBCategory> retrieveCategory(VBCategorySearchVO vo){
+		List<VBCategory> result = (List<VBCategory>)getSqlMapClientTemplate().queryForList("WordSql.retrieveCategories", vo);
+		return result;
+	}
+	
+	public int updateCategory(VBCategorySearchVO vo){
+		int result = getSqlMapClientTemplate().update("WordSql.updateCategories", vo);
+		return result;
+	}
+	
+	public int deleteCategory(VBCategorySearchVO vo){
+		int result = getSqlMapClientTemplate().delete("WordSql.deleteCategories", vo);
+		return result;
+	}
+	
+	public Object insertCategory(VBCategorySearchVO vo){
+		Object result = getSqlMapClientTemplate().insert("WordSql.insertCategories", vo);
+		return result;
+	}
 	
 	
 

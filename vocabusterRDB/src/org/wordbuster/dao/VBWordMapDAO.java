@@ -61,7 +61,7 @@ public class VBWordMapDAO extends SqlMapClientDaoSupport{
 		VBWordMap wordMap = new VBWordMap();
 		wordMap.setUserid(userid);
 		wordMap.setWordName(wordName);
-		getSqlMapClientTemplate().delete("WList<VBWordMap>ordMapSql.deleteWordMap", wordMap);
+		getSqlMapClientTemplate().delete("WordMapSql.deleteWordMap", wordMap);
 		return true;
 	}
 	

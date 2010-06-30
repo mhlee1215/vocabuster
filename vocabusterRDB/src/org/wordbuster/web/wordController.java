@@ -57,8 +57,14 @@ public class wordController extends MultiActionController {
 		//인풋 인코딩 = UTF-8
 		req.setCharacterEncoding("utf-8");
 		//추가할 단어 가져옴
+		String category = req.getParameter("category");
 		String wordStr = req.getParameter("word");
+		String wordName = wordStr;
+		if(wordStr.contains("\t")){
+			wordName = wordStr.split("\t")[0];
+		}
 		System.out.println("wordStr: "+wordStr);
+		System.out.println("category: "+category);
 		//사용자 정보 가져옴 
 		//UserService userService = UserServiceFactory.getUserService();
         //User user = userService.getCurrentUser();
@@ -88,7 +94,7 @@ public class wordController extends MultiActionController {
 			List<VBWordInfo> wordInfoList = null;
 			boolean isAlreadyExisted = false;
 			try{
-				word = wordService.retrieveWord(wordStr);// wordPm.getObjectById(VBWord.class, VBWord.createKey(wordStr));
+				word = wordService.retrieveWord(wordName);// wordPm.getObjectById(VBWord.class, VBWord.createKey(wordStr));
 			}catch(Exception e){
 				e.printStackTrace();
 				System.out.println("Couldn't find int word pool.");
@@ -103,8 +109,16 @@ public class wordController extends MultiActionController {
 			}
 			//It is first time to register
 			else{
-				word = mg.analysisWord(wordStr);
-				//
+				if(wordStr.contains("\t")){
+					String[] inputParts = wordStr.split("\t");
+					word = new VBWord();
+					word.setWordName(inputParts[0]);
+					word.setMeaningbundle(inputParts[1]);
+				}else{
+					word = mg.analysisWord(wordStr);
+					//
+				}
+				
 				if(word != null){
 					wordInfoList = word.getWordInfoList();
 					
@@ -140,12 +154,14 @@ public class wordController extends MultiActionController {
 			}
 			
 			if(word != null){
-				if(wordInfoList == null || wordInfoList.size() == 0){
-					isSuccess = "0";
-				}else{
-					isSuccess = "1";
-					sampleMeaning = wordInfoList.get(0).getShortmeaning();
-				}
+//				if(wordInfoList == null || wordInfoList.size() == 0){
+//					isSuccess = "0";
+//				}else{
+//					isSuccess = "1";
+//					sampleMeaning = wordInfoList.get(0).getShortmeaning();
+//				}
+				isSuccess = "1";
+				sampleMeaning = word.getMeaningbundle();
 				
 				if(isAlreadyExisted){
 					//입력수 업데이트
@@ -154,14 +170,14 @@ public class wordController extends MultiActionController {
 					//word 추가
 					wordService.insertWord(word);
 					//wordinfo 추가
-					wordService.insertWordInfoList(wordStr, word.getWordInfoList());
+					//wordService.insertWordInfoList(wordStr, word.getWordInfoList());
 				}
 			}
 			
 			//Now, we have to determine whether the user have already got the word which wanna to register
 			VBWordMap userWordMap = null;
 			try{
-				userWordMap = wordService.retrieveWordMap(userid, wordStr);//wordMapPm.getObjectById(VBWordMap.class, wordMapKey);
+				userWordMap = wordService.retrieveWordMap(userid, word.getWordName());//wordMapPm.getObjectById(VBWordMap.class, wordMapKey);
 			}catch(Exception e){
 				System.out.println("Couldn't find in word map pool.");
 			}
@@ -180,9 +196,10 @@ public class wordController extends MultiActionController {
 			//유저의 단어로 처음 등록되는 경우 
 			else{
 				userWordMap = new VBWordMap();
+				userWordMap.setCategoryid(category);
 				userWordMap.setUserid(userid);
 				userWordMap.init();
-				userWordMap.setWordName(wordStr);
+				userWordMap.setWordName(word.getWordName());
 				if(word == null){
 					userWordMap.setIsvalid("N");
 					addWordMapResult = "fail new";

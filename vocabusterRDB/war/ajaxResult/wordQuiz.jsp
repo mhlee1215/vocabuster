@@ -64,16 +64,13 @@ $(function(){
 	<td align="left">
 		<h1 style="color:#2F3442;font-size:50; margin-bottom:-15px;">${targetWord.wordName}</h1>
 	</td>
-	<td align="left">
-		<h2 style="color:#6F799B;margin-left:15px; margin-bottom:-3px;">${targetWord.soundSymbol}</h2>
-	</td>
 </tr>
 <tr>
 	<td colspan="2">
 		<ul>
-		<c:forEach items="${targetWord.wordInfoList}" var="meaning" varStatus="status">
-			<li>${meaning.shortMeaning}</li>
-		</c:forEach>
+		
+			<li>${targetWord.meaningbundle}</li>
+		
 		</ul>
 	</td>
 </tr>
@@ -103,6 +100,7 @@ function quizProgressStart${vBWordQuizVO.questionCount%maxQuizPanel}(){
 
 function submitAnswer${vBWordQuizVO.questionCount%maxQuizPanel}(isCorrect){
 	clearInterval(timeoutID${vBWordQuizVO.questionCount%maxQuizPanel});
+	
 	var data;
 	var isAnswer = false;
 	if(isCorrect){
@@ -120,7 +118,7 @@ function submitAnswer${vBWordQuizVO.questionCount%maxQuizPanel}(isCorrect){
 		isAnswer = false;
 	}
 
-	$.post("/submitAnswer.do", data);
+	$.post("${pageContext.request.contextPath}/submitAnswer.do", data);
 	answerTimeUp($('#quizWordAnswer${vBWordQuizVO.questionCount%maxQuizPanel}').html(), isAnswer);
 }
 
