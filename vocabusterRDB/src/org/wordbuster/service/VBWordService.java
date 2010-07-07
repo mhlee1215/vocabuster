@@ -256,8 +256,11 @@ public class VBWordService {
 		return true;
 	}
 	////SEARCH
+	public VBWordMap retrieveWordMap(String userid, String wordName, String category){
+		return wordMapDAO.retrieveWordMap(userid, wordName, category);
+	}
 	public VBWordMap retrieveWordMap(String userid, String wordName){
-		return wordMapDAO.retrieveWordMap(userid, wordName);
+		return wordMapDAO.retrieveWordMap(userid, wordName, "");
 	}
 	public List<VBWordMap> retrieveWordMapListAll(){
 		return wordMapDAO.retrieveUserWordMap("");
@@ -301,5 +304,9 @@ public class VBWordService {
 	
 	public Object insertCategory(VBCategorySearchVO vo){
 		return wordDAO.insertCategory(vo);
+	}
+	
+	public String retrieveLearningRate(VBWordQuizVO searchVO){
+		return wordMapDAO.retrieveLearningRate(searchVO);
 	}
 }

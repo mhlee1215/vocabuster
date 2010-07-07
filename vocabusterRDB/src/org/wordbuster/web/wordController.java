@@ -21,6 +21,8 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+import org.wordbuster.domain.VBCategory;
+import org.wordbuster.domain.VBCategorySearchVO;
 import org.wordbuster.domain.VBMyWordSearchVO;
 import org.wordbuster.domain.VBUser;
 import org.wordbuster.domain.VBWord;
@@ -177,7 +179,7 @@ public class wordController extends MultiActionController {
 			//Now, we have to determine whether the user have already got the word which wanna to register
 			VBWordMap userWordMap = null;
 			try{
-				userWordMap = wordService.retrieveWordMap(userid, word.getWordName());//wordMapPm.getObjectById(VBWordMap.class, wordMapKey);
+				userWordMap = wordService.retrieveWordMap(userid, word.getWordName(), category);//wordMapPm.getObjectById(VBWordMap.class, wordMapKey);
 			}catch(Exception e){
 				System.out.println("Couldn't find in word map pool.");
 			}
@@ -268,10 +270,14 @@ public class wordController extends MultiActionController {
 		int myWordListCount = wordService.retrieveMyWordCount(vBWordSearchVO);
 		//wordService.syncWordMapWithWord(wordMapList);
 		
+		VBCategorySearchVO vo = new VBCategorySearchVO();
+		List<VBCategory> categories = wordService.retrieveCategory(vo);
+		
 		ModelAndView result = new ModelAndView("task/showMyWords");
 		result.addObject("wordMapList", wordMapList);
 		result.addObject("wordMapListCount", myWordListCount);
 		result.addObject("vBWordSearchVO", vBWordSearchVO);
+		result.addObject("categories", categories);
 		return result;
 	}
 	

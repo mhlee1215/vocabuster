@@ -9,9 +9,11 @@
 <title>Insert title here</title>
 </head>
 <body>
+스테이지 ${vBWordQuizVO.stageIndex} / ${vBWordQuizVO.stageMaxIndex}
+<h3>학습 진척률 ${learningRate}%</h3>
 ${vBWordQuizVO.questionCount} 번째 문제
 <h1 style="font-size:40;">${targetWord.wordName}</h1>
-answer : ${answerNumber }
+<!-- answer : ${answerNumber } -->
 
 <br></br>
 

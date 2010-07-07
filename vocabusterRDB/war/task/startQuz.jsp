@@ -13,7 +13,21 @@
 Validation...<img src="${pageContext.request.contextPath}/images/vb-word-loader.gif" />
 </div>
 <div id="startWordQuizPanel" style="display:none">
-시작해볼까? ㄷㄷㄷ<br></br>
+퀴즈에 필요한 정보를 입력 해주세요! 귀찮으면 바로 스타트! <a href="#" onclick="quizMainStart();"><span style="font-size:20px;">시작하기</span></a><br></br>
+
+  카테고리: 
+   <select id="wordCategory" name="wordCategory">
+   		<option value="">전체</option>
+   		<c:forEach items="${categories }" var="category">
+   			<option value="${category.id }">${category.name }</option>
+   		</c:forEach>
+   		
+   </select>
+   <br></br>
+스테이지( 시작할 스테이지 / 최대 스테이지, ex) 1/10 : 전체를 10개로 나눈것중 첫번째 스테이지를 진행)<br>
+<span style="font-size:11px; color:#ff0000">생략하면 전체</span><br>
+	<input id="stageIndex" type="text" style="width:40px;"/> /	<input id="stageMaxIndex" type="text" style="width:40px;"/>
+	<br></br>
 보기 수: 
 <select id="selectionCount">
 	<option value="2">2개</option>
@@ -24,9 +38,11 @@ Validation...<img src="${pageContext.request.contextPath}/images/vb-word-loader.
 	<option value="7">7개</option>
 	<option value="8">8개</option>
 </select>
-<a href="#" onclick="quizMainStart();">start</a>
+<br></br>
+<a href="#" onclick="quizMainStart();"><span style="font-size:20px;">시작하기</span></a>
 </div>
-<div id="introWordQuizPanel" style="display:none">
+<div id="introWordQuizPanel" style="display:none; text-align: center">
+준비하세열... ㄷㄷㄷ 갑니다
 <h1 id="introCount"></h1>
 </div>
 <div id="leftWordQuizPanel" style="display:none">
@@ -51,7 +67,8 @@ Validation...<img src="${pageContext.request.contextPath}/images/vb-word-loader.
 </div>
 <script type="text/javascript">
 $(function(){
-	$.get("${pageContext.request.contextPath}/getWordQuestion.do", '', valid);
+	//$.get("${pageContext.request.contextPath}/getWordQuestion.do", '', valid);
+	valid();
 });
 function valid(){
 	$('#quizValid').hide('slow');
@@ -79,7 +96,10 @@ function startQuiz(){
 function getQuiz(div, selectionCount, questionCount, callback){
 	var data = { 
 		selectionCount: selectionCount,
-		questionCount: questionCount
+		questionCount: questionCount,
+		stageIndex: $("#stageIndex").val(),
+		stageMaxIndex: $("#stageMaxIndex").val(),
+		questionCategory: $("#wordCategory").val()
 	};
 	$('#'+div).load('${pageContext.request.contextPath}/getWordQuestion.do', data, callback);	
 }
@@ -133,19 +153,22 @@ function getAnswer(){
 }
 
 function showAnswer(wordName, isAnswer){
-	answerCount = answerCountInit;
-	answerTimeoutID = setInterval(progressAnswer, eval(1000));	
 	if(isAnswer){
-		$('#isCorrectMark').html('<h1 style="font-color:green;font-size:40;">O</h1>');
+		nextQuiz();
+	}else{
+		answerCount = answerCountInit;
+		answerTimeoutID = setInterval(progressAnswer, eval(1000));	
+		if(isAnswer){
+			$('#isCorrectMark').html('<h1 style="font-color:green;font-size:40;">O</h1>');
+		}
+		else{
+			$('#isCorrectMark').html('<h1 style="font-size:40;">X</h1>');
+		}
+		$('#answerDetail').html(wordName);
+		$('#leftWordQuizPanel').hide('slow');
+		$('#answerWordQuizPanel').show('slow');
+		$('#rightWordQuizPanel').hide('slow');
 	}
-	else{
-		$('#isCorrectMark').html('<h1 style="font-size:40;">X</h1>');
-	}
-	$('#answerDetail').html(wordName);
-	$('#leftWordQuizPanel').hide('slow');
-	$('#answerWordQuizPanel').show('slow');
-	$('#rightWordQuizPanel').hide('slow');
-	
 } 
 
 var answerCountInit = 3;

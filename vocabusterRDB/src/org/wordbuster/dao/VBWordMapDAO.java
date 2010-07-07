@@ -29,12 +29,16 @@ public class VBWordMapDAO extends SqlMapClientDaoSupport{
 		return null;
 	}
 	
-	public VBWordMap retrieveWordMap(String userid, String wordName){
+	public VBWordMap retrieveWordMap(String userid, String wordName, String category){
 		VBWordMap param = new VBWordMap();
 		param.setUserid(userid);
 		param.setWordName(wordName);
-		VBWordMap result = (VBWordMap)getSqlMapClientTemplate().queryForObject("WordMapSql.retrieveWordMap", param);
-		return result;
+		param.setCategoryid(category);
+		List<VBWordMap> result = (List<VBWordMap>)getSqlMapClientTemplate().queryForList("WordMapSql.retrieveWordMap", param);
+		if(result.size() > 0)
+			return result.get(0);
+		else
+			return null;
 	}
 	
 	public List<VBWordMap> retrieveMyWordMap(VBMyWordSearchVO searchVO){
@@ -67,6 +71,11 @@ public class VBWordMapDAO extends SqlMapClientDaoSupport{
 	
 	public List<VBWordMap> retrieveQuestion(VBWordQuizVO quizVO){
 		List<VBWordMap> result = (List<VBWordMap>)getSqlMapClientTemplate().queryForList("WordMapSql.retrieveQuestion", quizVO);
+		return result;
+	}
+	
+	public String retrieveLearningRate(VBWordQuizVO searchVO){
+		String result = (String)getSqlMapClientTemplate().queryForObject("WordMapSql.retrieveLearningRate", searchVO);
 		return result;
 	}
 	

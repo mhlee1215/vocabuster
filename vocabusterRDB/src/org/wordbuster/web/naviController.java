@@ -104,7 +104,12 @@ public class naviController extends MultiActionController{
 		bind(req,vBNavigationVO);
 		vBNavigationVO.setPageName("quiz");
 		ModelAndView result = new ModelAndView("task/startQuz");
+		
+		VBCategorySearchVO vo = new VBCategorySearchVO();
+		List<VBCategory> categories = wordService.retrieveCategory(vo);
+		
 		result.addObject("vBWordSearchVO", vBNavigationVO);
+		result.addObject("categories", categories);
 		return result;
 	}
 	
@@ -123,8 +128,13 @@ public class naviController extends MultiActionController{
 		VBMyWordSearchVO vBWordSearchVO = new VBMyWordSearchVO();
 		bind(req, vBWordSearchVO);
 		vBWordSearchVO.setPageName("mywords");
+		
+		VBCategorySearchVO vo = new VBCategorySearchVO();
+		List<VBCategory> categories = wordService.retrieveCategory(vo);
+		
 		ModelAndView result = new ModelAndView("task/showMyWords");
 		result.addObject("vBWordSearchVO", vBWordSearchVO);
+		result.addObject("categories", categories);
 		return result;
 	}
 	

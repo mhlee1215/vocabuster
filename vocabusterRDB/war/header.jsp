@@ -95,7 +95,7 @@
  				<button onclick="showLogin();" id="loginBtn" >LOGIN</button>
  				<button onclick="showRegister();" id="registerBtn" >REGISTER</button>
 				<%}else{%>
-				<button onclick="document.location='/logout.do'" id="logoutBtn" >LOGOUT</button>
+				<button onclick="document.location='${pageContext.request.contextPath}/logout.do'" id="logoutBtn" >LOGOUT</button>
 				안녕! <%=externalId%>(<%=userid%>)
 				<%} %>
   			

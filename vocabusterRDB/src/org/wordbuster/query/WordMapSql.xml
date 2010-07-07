@@ -28,6 +28,9 @@
     	<isNotEmpty property="searchIsvalid">
     	AND a.isvalid = '$searchIsvalid$'
     	</isNotEmpty>
+    	<isNotEmpty property="searchCategory">
+    	AND a.categoryid = '$searchCategory$'
+    	</isNotEmpty>
     	<isNotEmpty property="searchOrderString">
     	ORDER BY $searchOrderString$
     	</isNotEmpty>
@@ -45,6 +48,15 @@
     	<isNotEmpty property="searchIsvalid">
     	AND a.isvalid = '$searchIsvalid$'
     	</isNotEmpty>
+    	<isNotEmpty property="searchKeyword">
+    	AND a.wordname LIKE '%$searchKeyword$%'
+    	</isNotEmpty>
+    	<isNotEmpty property="searchExcludeKeyword">
+    	AND a.wordname &lt;> '$searchExcludeKeyword$'
+    	</isNotEmpty>
+    	<isNotEmpty property="searchCategory">
+    	AND a.categoryid = '$searchCategory$'
+    	</isNotEmpty>
 	</select>
 	
 	<select id="retrieveWordMap" parameterClass="org.wordbuster.domain.VBWordMap" resultClass="org.wordbuster.domain.VBWordMap">
@@ -54,6 +66,9 @@
     	WHERE 
     	a.userid = $userid$
     	AND a.wordname = '$wordName$' 
+    	<isNotEmpty property="categoryid">
+    	AND a.categoryid = '$categoryid$'
+    	</isNotEmpty>
 	</select>
 	
 	<insert id="insertWordMap" parameterClass="org.wordbuster.domain.VBWordMap">
@@ -108,13 +123,41 @@
 	
 	<select id="retrieveQuestion" parameterClass="org.wordbuster.domain.VBWordQuizVO" resultClass="org.wordbuster.domain.VBWordMap">
 		/*	retrieveQuestion	*/
-		select userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid, admindate
-		from vbwordmap  
-		where
-			isvalid = 'Y' and userid = '$userid$'
-		order by wrongcount asc, insertcount desc
-    	LIMIT $toIndex$ OFFSET $fromIndex$
+		select * from (
+			select userid, wordname, score, delaycount, wrongcount, answercount, insertcount, isvalid, admindate
+			from vbwordmap  
+			where
+				isvalid = 'Y' and userid = '$userid$'
+				<isNotEmpty property="questionCategory">
+	    		and categoryid = '$questionCategory$'
+	    		</isNotEmpty>
+			order by score asc, insertcount desc
+	    	LIMIT $toIndex$ OFFSET $fromIndex$
+    	) a
+    	<isNotEmpty property="questionToIndex">
+	    	<isNotEmpty property="questionFromIndex">
+	    	LIMIT $questionToIndex$ OFFSET $questionFromIndex$
+	    	</isNotEmpty>
+    	</isNotEmpty>
 	</select>
+	
+	<select id="retrieveLearningRate" parameterClass="org.wordbuster.domain.VBWordQuizVO" resultClass="String">
+		/*	retrieve Learning Rate	*/
+		select ( sum(score) / (2 * count(*))) * 100 as lrate
+		from vbwordmap 
+		where userid = '$userid$'
+			<isNotEmpty property="questionCategory">
+    		and categoryid = '$questionCategory$'
+    		</isNotEmpty>
+		order by score desc
+		<isNotEmpty property="questionToIndex">
+	    	<isNotEmpty property="questionFromIndex">
+	    	LIMIT $questionToIndex$ OFFSET $questionFromIndex$
+	    	</isNotEmpty>
+    	</isNotEmpty>
+	</select>
+	
+	
 	
 </sqlMap>
 

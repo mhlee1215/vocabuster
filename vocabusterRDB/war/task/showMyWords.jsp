@@ -11,10 +11,16 @@
 <h1 id="" class="ui-widget-header vb-page-header">My word</h1>
 <form:form cssStyle="margin:0px;padding:0px;" action="${pageContext.request.contextPath}/myWordList.do" commandName="vBWordSearchVO" name="vBWordSearchVO">
 	<form:hidden path="pageIndex"/>
-	<form:select id="myWordListSearchIsvalid" path="searchIsvalid">
+	<form:select id="myWordListSearchIsvalid" path="searchIsvalid" cssStyle="display:none">
 	<form:option value="Y">일반</form:option>
 	<form:option value="N">미스</form:option>
 	</form:select>
+    <form:select id="myWordSearchCategory" path="searchCategory">
+   		<form:option value="">전체</form:option>
+   		<c:forEach items="${categories }" var="category">
+   			<form:option value="${category.id }">${category.name }</form:option>
+   		</c:forEach>
+   </form:select>
 	<form:select id="myWordListSearchType" path="searchType">
 	<form:option value="name">단어명</form:option>
 	<form:option value="meaning">의미</form:option>
@@ -29,7 +35,7 @@
 	<form:option value="wrongRate desc">오답률순</form:option>
 	<!--<form:option value="admindateOrder">등록일순</form:option>
 	--></form:select>
-	<form:select id="myWordListSearchResultType" path="searchResultType">
+	<form:select id="myWordListSearchResultType" path="searchResultType" cssStyle="display:none">
 	<form:option value="table">테이블</form:option>
 	<form:option value="list">리스트</form:option>
 	</form:select>
