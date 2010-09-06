@@ -19,9 +19,9 @@
 	 
 	<bean id="dataSource"  class="org.apache.commons.dbcp.BasicDataSource">
     	<property name="driverClassName" value="core.log.jdbc.driver.MysqlDriver" />
-    	<property name="url" value="jdbc:mysql://wepa.ccmedia.co.kr:1217/vocabuster" />
-    	<property name="username" value="mhlee" />
-    	<property name="password" value="1124421" />
+    	<property name="url" value="jdbc:mysql://220.70.1.76:3306/maadm" />
+    	<property name="username" value="maadm" />
+    	<property name="password" value="12345" />
     	<property name="testOnBorrow" value="true" />
         <property name="testWhileIdle" value="true" />
         <property name="maxActive" value="10" />
